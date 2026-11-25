@@ -456,14 +456,14 @@ export class LeMansGame {
         const name = (child.name || '').toLowerCase();
 
         if (name.includes('body')) {
-          // Authentic 1966 Le Mans #2 Black with White Racing Stripes Livery
+          // Authentic 1966 Le Mans #2 Satin-Matte Black with Crisp White Racing Stripes
           const bodyMat = new THREE.MeshStandardMaterial({
             map: bodyLivery,
             roughnessMap: bodyRoughness,
             metalnessMap: bodyMetallic,
-            roughness: 0.32,
-            metalness: 0.15,
-            envMapIntensity: 1.1,
+            roughness: 0.68,
+            metalness: 0.04,
+            envMapIntensity: 0.35,
             side: THREE.DoubleSide
           });
 
@@ -490,32 +490,32 @@ export class LeMansGame {
               '#include <color_fragment>',
               `#include <color_fragment>
                float ax = abs(vBodyPos.x);
-               bool isExteriorTop = (vBodyPos.y > 0.16) && (vBodyNorm.y > -0.05) && !(vBodyPos.z > 0.95 && vBodyPos.y < 0.26 && vBodyNorm.y < 0.4);
+               bool isExteriorTop = (vBodyPos.y > 0.08) && (abs(vBodyNorm.y) > 0.12) && !(vBodyPos.z > 0.95 && vBodyPos.y < 0.26 && abs(vBodyNorm.y) < 0.4);
 
                bool isStripe = false;
                if (isExteriorTop) {
-                 if (ax >= 0.012 && ax <= 0.068) isStripe = true;
-                 if (ax >= 0.076 && ax <= 0.082) isStripe = true;
-                 if (length(vec2(vBodyPos.x - 0.24, vBodyPos.z - 1.16)) < 0.16 && vBodyPos.y > 0.20 && vBodyNorm.y > 0.35) isStripe = true;
+                 if (ax >= 0.018 && ax <= 0.128) isStripe = true;
+                 if (ax >= 0.142 && ax <= 0.158) isStripe = true;
+                 if (length(vec2(vBodyPos.x - 0.24, vBodyPos.z - 1.16)) < 0.16 && vBodyPos.y > 0.18 && abs(vBodyNorm.y) > 0.32) isStripe = true;
                }
 
                bool isRocker = (vBodyPos.y >= -0.02 && vBodyPos.y <= 0.065) && (abs(vBodyNorm.x) > 0.6) && (vBodyPos.z > -0.75 && vBodyPos.z < 0.85);
                if (isRocker && (vBodyPos.y >= 0.012 && vBodyPos.y <= 0.038)) isStripe = true;
 
                if (isStripe) {
-                 diffuseColor.rgb = vec3(0.96, 0.96, 0.98);
+                 diffuseColor.rgb = vec3(0.94, 0.94, 0.96);
                } else {
-                 diffuseColor.rgb = diffuseColor.rgb * vec3(0.14, 0.14, 0.16) + vec3(0.045, 0.045, 0.05);
+                 diffuseColor.rgb = vec3(0.022, 0.024, 0.028);
                }
               `
             ).replace(
               '#include <roughnessmap_fragment>',
               `#include <roughnessmap_fragment>
-               if (isStripe) roughnessFactor = 0.22; else roughnessFactor = 0.30;`
+               roughnessFactor = isStripe ? 0.56 : 0.68;`
             ).replace(
               '#include <metalnessmap_fragment>',
               `#include <metalnessmap_fragment>
-               metalnessFactor = 0.12;`
+               metalnessFactor = 0.04;`
             );
           };
           child.material = bodyMat;
