@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>GT40 AR USDZ Exporter</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "../assets/js/three.module.js",
+      "three/addons/": "../assets/js/"
+    }
+  }
+  </script>
+</head>
+<body style="background:#0a0c10; color:#f4f3ee; font-family:monospace; padding:24px;">
+  <h3>GT40 AR USDZ Generator</h3>
+  <pre id="log">Starting...</pre>
+  <script type="module">
+    import * as THREE from '../assets/js/three.module.js';
+    import { GLTFLoader } from '../assets/js/GLTFLoader.js';
+    import { USDZExporter } from '../assets/js/USDZExporter.js';
+
+    const logEl = document.getElementById('log');
+    const log = (s) => { logEl.textContent += '\n' + s; console.log(s); };
+
+    async function run() {
+      try {
+        const loader = new GLTFLoader();
+        const gltf = await new Promise((resolve, reject) => {
+          loader.load('./tmp-ar-plain.glb?t=' + Date.now(), resolve, undefined, reject);
+        });
+
+        gltf.scene.updateMatrixWorld(true);
+        const exporter = new USDZExporter();
+        const usdzBytes = await exporter.parse(gltf.scene, {
+          quickLookCompatible: true,
+          ar: {
+            anchoring: { type: 'plane' },
+            planeAnchoring: { alignment: 'horizontal' }
+          }
+        });
+
+        log('USDZ bytes generated: ' + usdzBytes.byteLength);
+        const res = await fetch('/api/save-ar-usdz', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/octet-stream' },
+          body: usdzBytes
+        });
+        const txt = await res.text();
+        log('Upload result: ' + txt);
+        window.__AR_USDZ_DONE__ = { ok: true, bytes: usdzBytes.byteLength, result: txt };
+      } catch (e) {
+        log('ERROR: ' + e.message + '\n' + e.stack);
+        window.__AR_USDZ_DONE__ = { ok: false, error: e.message };
+      }
+    }
+
+    run();
+  </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+.DS_Store
+.netlify
+.vercel
+node_modules
+*.log
+assets/models/car/source/gt40_base_cad.glb
+assets/models/car/source/gt40.usdz
+tools/tmp-*

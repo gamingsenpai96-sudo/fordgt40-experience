@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>GT40 USDZ Converter</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "../assets/js/three.module.js",
+      "three/addons/": "../assets/js/"
+    }
+  }
+  </script>
+</head>
+<body style="background:#0b0d12; color:#fff; font-family:sans-serif; padding:40px;">
+  <h2>1966 Ford GT40 Mk II USDZ Exporter for Apple Quick Look</h2>
+  <div id="status" style="font-size:18px; color:#38bdf8;">Initializing GLTF Loader...</div>
+  <pre id="log" style="background:#111; padding:20px; border-radius:8px; margin-top:20px;"></pre>
+
+  <script type="module">
+    import * as THREE from '../assets/js/three.module.js';
+    import { GLTFLoader } from '../assets/js/GLTFLoader.js';
+    import { USDZExporter } from '../assets/js/USDZExporter.js';
+
+    const status = document.getElementById('status');
+    const log = document.getElementById('log');
+
+    function logMsg(msg) {
+      log.textContent += msg + '\n';
+      status.textContent = msg;
+    }
+
+    const loader = new GLTFLoader();
+    const modelUrl = '../assets/models/car/source/gt40.glb?t=' + Date.now();
+    logMsg('Loading ' + modelUrl + '...');
+
+    loader.load(modelUrl, async (gltf) => {
+      logMsg('GLTF loaded successfully. Nodes: ' + gltf.scene.children.length);
+      try {
+        const exporter = new USDZExporter();
+        logMsg('Parsing scene with USDZExporter (quickLookCompatible: true)...');
+
+        const usdzData = await exporter.parse(gltf.scene, {
+          quickLookCompatible: true,
+          ar: {
+            anchoring: { type: 'plane' },
+            planeAnchoring: { alignment: 'horizontal' }
+          }
+        });
+
+        logMsg('USDZ conversion finished. Byte size: ' + usdzData.byteLength + ' bytes.');
+        logMsg('Uploading binary payload to /api/save-usdz...');
+
+        const resp = await fetch('/api/save-usdz', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/octet-stream' },
+          body: usdzData
+        });
+
+        const resultText = await resp.text();
+        logMsg('Server Response: ' + resultText);
+        window.__USDZ_SUCCESS__ = true;
+      } catch (err) {
+        logMsg('ERROR: ' + err.message + '\n' + err.stack);
+      }
+    }, (progress) => {
+      if (progress.total) {
+        const p = Math.round((progress.loaded / progress.total) * 100);
+        status.textContent = 'Streaming GLTF: ' + p + '%';
+      }
+    }, (err) => {
+      logMsg('GLTF load error: ' + err.message);
+    });
+  </script>
+</body>
+</html>

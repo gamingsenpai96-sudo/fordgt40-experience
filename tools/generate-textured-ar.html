@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Generate Authentic Textured AR Model</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "../assets/js/three.module.js",
+      "three/addons/": "../assets/js/"
+    }
+  }
+  </script>
+</head>
+<body style="background:#090a0f; color:#f0f4f8; font-family:monospace; padding:30px;">
+  <h2 style="color:#e11d48;">1966 Ford GT40 Mk II — Authentic PBR AR Model Generator</h2>
+  <div id="status" style="font-size:16px; color:#38bdf8; margin-bottom:15px;">Initializing...</div>
+  <pre id="log" style="background:#11151c; border:1px solid #222b38; padding:15px; border-radius:6px; max-height:500px; overflow-y:auto;"></pre>
+
+  <script type="module">
+    import * as THREE from '../assets/js/three.module.js';
+    import { GLTFLoader } from '../assets/js/GLTFLoader.js';
+    import { GLTFExporter } from '../assets/js/GLTFExporter.js';
+    import { USDZExporter } from '../assets/js/USDZExporter.js';
+
+    const statusEl = document.getElementById('status');
+    const logEl = document.getElementById('log');
+
+    function log(msg) {
+      logEl.textContent += msg + '\n';
+      statusEl.textContent = msg;
+      console.log(msg);
+    }
+
+    async function run() {
+      try {
+        log('1. Initializing texture loader...');
+        const texLoader = new THREE.TextureLoader();
+
+        const loadTex = (path, isSRGB = true) => {
+          return new Promise((resolve, reject) => {
+            texLoader.load(path, (tex) => {
+              if (isSRGB) tex.colorSpace = THREE.SRGBColorSpace;
+              tex.flipY = false;
+              resolve(tex);
+            }, undefined, reject);
+          });
+        };
+
+        log('2. Loading PBR textures for authentic GT40 Mk II livery & interior...');
+        const [
+          bodyTex,
+          bodyRoughTex,
+          bodyMetalTex,
+          wheelsTex,
+          wheelsNormTex,
+          interiorTex,
+          interiorNormTex,
+          engineTex,
+          lightsTex,
+          redlightTex,
+          glassTex
+        ] = await Promise.all([
+          loadTex('../assets/models/car/textures_web/Body_Livery_Baked.png', true),
+          loadTex('../assets/models/car/textures_web/Body_Roughness_AR.png', false),
+          loadTex('../assets/models/car/textures_web/Body_Metallic_AR.png', false),
+          loadTex('../assets/models/car/textures_web/Wheels_BaseColor_AR.png', true),
+          loadTex('../assets/models/car/textures_web/Wheels_Normal.png', false),
+          loadTex('../assets/models/car/textures_web/Interior_BaseColor_AR.png', true),
+          loadTex('../assets/models/car/textures_web/Interior_Normal.1001.png', false),
+          loadTex('../assets/models/car/textures_web/Engine_BaseColor_AR.png', true),
+          loadTex('../assets/models/car/textures_web/LIGHTS_BaseColor_AR.png', true),
+          loadTex('../assets/models/car/textures_web/REDLIGHT_BaseColor_AR.png', true),
+          loadTex('../assets/models/car/textures_web/Glass_BaseColor.png', true)
+        ]);
+
+        log('All PBR texture maps loaded successfully.');
+
+        log('3. Loading optimized GT40 CAD geometry (assets/models/car/source/gt40_mobile_base.glb)...');
+        const gltfLoader = new GLTFLoader();
+        const gltf = await new Promise((resolve, reject) => {
+          gltfLoader.load('../assets/models/car/source/gt40_mobile_base.glb', resolve, undefined, reject);
+        });
+
+        const root = gltf.scene;
+        log('Pristine base CAD mesh loaded. Processing meshes and binding authentic PBR materials...');
+
+        root.traverse((child) => {
+          if (!child.isMesh) return;
+          const name = child.name || '';
+          log(`Configuring material for mesh: ${name}`);
+
+          if (name.includes('Body')) {
+            // Authentic 1966 Le Mans #2 Gloss Black with Twin White Center Racing Stripes
+            child.material = new THREE.MeshStandardMaterial({
+              name: 'GT40_Body_Livery',
+              color: new THREE.Color(0xffffff),
+              map: bodyTex,
+              roughness: 0.18,
+              metalness: 0.0,
+              side: THREE.DoubleSide
+            });
+          } else if (name.includes('Wheels')) {
+            // Authentic Solid Goodyear Blue Streak Racing Tires
+            child.material = new THREE.MeshStandardMaterial({
+              name: 'GT40_Solid_Tires',
+              color: new THREE.Color(0xffffff),
+              map: wheelsTex,
+              normalMap: wheelsNormTex,
+              roughness: 0.90,
+              metalness: 0.02,
+              side: THREE.DoubleSide
+            });
+          } else if (name.includes('Disk')) {
+            // Halibrand Magnesium 15" Vintage Le Mans Gold Rims & Chrome Knockoff Spinner
+            child.material = new THREE.MeshStandardMaterial({
+              name: 'GT40_Halibrand_Rims',
+              color: new THREE.Color(0xffffff),
+              map: wheelsTex,
+              normalMap: wheelsNormTex,
+              roughness: 0.28,
+              metalness: 0.75,
+              side: THREE.DoubleSide
+            });
+          } else if (name.includes('Interior')) {
+            // Cockpit Interior Upholstery and Panels
+            child.material = new THREE.MeshStandardMaterial({
+              name: 'GT40_Cockpit_Interior',
+              color: new THREE.Color(0xffffff),
+              map: interiorTex,
+              normalMap: interiorNormTex,
+              roughness: 0.85,
+              metalness: 0.12,
+              side: THREE.DoubleSide
+            });
+          } else if (name.includes('Engine')) {
+            // 427 FE Big-Block V8 Engine & Crossover Exhaust
+            child.material = new THREE.MeshStandardMaterial({
+              name: 'GT40_427_V8_Engine',
+              color: new THREE.Color(0xffffff),
+              map: engineTex,
+              roughness: 0.35,
+              metalness: 0.75,
+              side: THREE.DoubleSide
+            });
+          } else if (name.includes('Glass')) {
+            child.material = new THREE.MeshStandardMaterial({
+              name: 'GT40_Competition_Glass',
+              map: glassTex,
+              transparent: true,
+              roughness: 0.1,
+              metalness: 0.1,
+              side: THREE.DoubleSide
+            });
+          } else if (name.includes('REDLIGHT')) {
+            child.material = new THREE.MeshStandardMaterial({
+              name: 'GT40_Tail_Lights',
+              map: redlightTex,
+              color: 0xff1122,
+              roughness: 0.2,
+              metalness: 0.5
+            });
+          } else if (name.includes('Lights-noopacity')) {
+            child.material = new THREE.MeshStandardMaterial({
+              name: 'GT40_Headlight_Lenses',
+              color: 0xffffff,
+              transparent: true,
+              opacity: 0.65,
+              roughness: 0.1,
+              metalness: 0.3
+            });
+          } else if (name.includes('Lights')) {
+            child.material = new THREE.MeshStandardMaterial({
+              name: 'GT40_Headlights',
+              map: lightsTex,
+              roughness: 0.12,
+              metalness: 0.85
+            });
+          }
+        });
+
+        // 4. Add Solid Wheel Backing Drums (eliminates hollow tire appearance without covering Halibrand rims)
+        log('4. Adding solid inner wheel well drums and inner bead closures...');
+        const drumMat = new THREE.MeshStandardMaterial({
+          name: 'GT40_Solid_Wheel_Drums',
+          color: 0x111215,
+          roughness: 0.95,
+          metalness: 0.10,
+          side: THREE.DoubleSide
+        });
+
+        const tireCoreMat = new THREE.MeshStandardMaterial({
+          name: 'GT40_Solid_Tire_Core',
+          color: 0x141518,
+          roughness: 0.92,
+          metalness: 0.04,
+          side: THREE.DoubleSide
+        });
+
+        const wheelConfigs = [
+          { name: 'Front-Left',  y:  0.019, z:  1.230, rTire: 0.316, rHub: 0.180, drumX: -0.551, sideSign: -1 },
+          { name: 'Front-Right', y:  0.019, z:  1.230, rTire: 0.316, rHub: 0.180, drumX:  0.551, sideSign:  1 },
+          { name: 'Rear-Left',   y: -0.027, z: -1.107, rTire: 0.344, rHub: 0.190, drumX: -0.547, sideSign: -1 },
+          { name: 'Rear-Right',  y: -0.027, z: -1.107, rTire: 0.344, rHub: 0.190, drumX:  0.547, sideSign:  1 }
+        ];
+
+        wheelConfigs.forEach(wc => {
+          // Inner backing drum (covers open back of wheel well completely)
+          const drum = new THREE.Mesh(new THREE.CylinderGeometry(wc.rTire, wc.rTire, 0.06, 32, 1, false), drumMat);
+          drum.rotation.z = Math.PI / 2;
+          drum.position.set(wc.drumX, wc.y, wc.z);
+          root.add(drum);
+
+          // Inner rim barrel (cylinder placed behind the outer rim face, closing tire interior from drum to rim back)
+          const barrelDepth = 0.10;
+          const barrelX = wc.drumX + (wc.sideSign * (barrelDepth / 2));
+          const barrel = new THREE.Mesh(new THREE.CylinderGeometry(wc.rHub, wc.rHub, barrelDepth, 32, 1, false), drumMat);
+          barrel.rotation.z = Math.PI / 2;
+          barrel.position.set(barrelX, wc.y, wc.z);
+          root.add(barrel);
+
+          // Inner tire sidewall ring (closes inner tire bead between rim barrel and tire tread)
+          const innerSidewall = new THREE.Mesh(new THREE.RingGeometry(wc.rHub * 0.90, wc.rTire, 32), tireCoreMat);
+          innerSidewall.rotation.y = Math.PI / 2;
+          innerSidewall.position.set(wc.drumX, wc.y, wc.z);
+          root.add(innerSidewall);
+        });
+
+        // 5. Add high-detail RHD cockpit interior components
+        log('5. Adding authentic RHD cockpit interior details (Stewart-Warner cluster, Moto-Lita wheel, gated shifter)...');
+        const cockpitGroup = new THREE.Group();
+        cockpitGroup.name = 'Authentic_Cockpit_Details';
+
+        const brushedAlum = new THREE.MeshStandardMaterial({ color: 0xc8cdd4, metalness: 0.85, roughness: 0.28 });
+        const chromeMat = new THREE.MeshStandardMaterial({ color: 0xf5f7fa, metalness: 0.95, roughness: 0.12 });
+        const blackFlock = new THREE.MeshStandardMaterial({ color: 0x121417, metalness: 0.05, roughness: 0.92 });
+        const leatherMat = new THREE.MeshStandardMaterial({ color: 0x181a1e, metalness: 0.05, roughness: 0.82 });
+
+        // Center ventilation tube
+        const ventTube = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.068, 0.90, 24), brushedAlum);
+        ventTube.rotation.x = Math.PI / 2;
+        ventTube.position.set(0.0, -0.04, 0.15);
+        cockpitGroup.add(ventTube);
+
+        // Steering column & Moto-Lita wheel on Right-Hand Side (X = -0.28m)
+        const wheelGroup = new THREE.Group();
+        wheelGroup.position.set(-0.28, 0.25, 0.44);
+        wheelGroup.rotation.x = 0.28;
+
+        const column = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.022, 0.30, 16), blackFlock);
+        column.rotation.x = Math.PI / 2;
+        column.position.set(0, 0, -0.15);
+        wheelGroup.add(column);
+
+        const wheelRim = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.013, 16, 32), leatherMat);
+        wheelGroup.add(wheelRim);
+
+        for (let i = 0; i < 3; i++) {
+          const spokeAngle = (i * Math.PI * 2) / 3 - Math.PI / 2;
+          const spoke = new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.16, 0.004), brushedAlum);
+          spoke.position.set(Math.cos(spokeAngle) * 0.08, Math.sin(spokeAngle) * 0.08, 0);
+          spoke.rotation.z = spokeAngle + Math.PI / 2;
+          wheelGroup.add(spoke);
+        }
+
+        const centerCap = new THREE.Mesh(new THREE.CylinderGeometry(0.038, 0.040, 0.012, 24), chromeMat);
+        centerCap.rotation.x = Math.PI / 2;
+        wheelGroup.add(centerCap);
+
+        // Ford GT Horn Emblem (using MeshStandardMaterial for universal USDZ/GLTF export)
+        const emblemCanvas = document.createElement('canvas');
+        emblemCanvas.width = 128;
+        emblemCanvas.height = 128;
+        const eCtx = emblemCanvas.getContext('2d');
+        eCtx.fillStyle = '#0f172a';
+        eCtx.fillRect(0, 0, 128, 128);
+        eCtx.fillStyle = '#1d4ed8';
+        eCtx.fillRect(0, 0, 128, 64);
+        eCtx.fillStyle = '#dc2626';
+        eCtx.fillRect(0, 64, 128, 64);
+        eCtx.fillStyle = '#ffffff';
+        eCtx.font = 'bold 22px sans-serif';
+        eCtx.textAlign = 'center';
+        eCtx.textBaseline = 'middle';
+        eCtx.fillText('FORD G.T.', 64, 64);
+        const emblemTex = new THREE.CanvasTexture(emblemCanvas);
+        emblemTex.colorSpace = THREE.SRGBColorSpace;
+        const emblemMesh = new THREE.Mesh(
+          new THREE.CircleGeometry(0.028, 24),
+          new THREE.MeshStandardMaterial({ map: emblemTex, roughness: 0.35, metalness: 0.25 })
+        );
+        emblemMesh.position.set(0, 0, 0.008);
+        wheelGroup.add(emblemMesh);
+
+        cockpitGroup.add(wheelGroup);
+
+        // Stewart-Warner Gauges Dashboard Cluster facing driver on Right Side (X = -0.28m)
+        const dashCluster = new THREE.Group();
+        dashCluster.position.set(-0.28, 0.28, 0.62);
+
+        const tachCanvas = document.createElement('canvas');
+        tachCanvas.width = 256;
+        tachCanvas.height = 256;
+        const tCtx = tachCanvas.getContext('2d');
+        tCtx.fillStyle = '#0f1115';
+        tCtx.fillRect(0, 0, 256, 256);
+        tCtx.strokeStyle = '#f8fafc';
+        tCtx.lineWidth = 6;
+        tCtx.beginPath();
+        tCtx.arc(128, 128, 110, 0, Math.PI * 2);
+        tCtx.stroke();
+        tCtx.fillStyle = '#f8fafc';
+        tCtx.font = 'bold 24px monospace';
+        tCtx.textAlign = 'center';
+        tCtx.fillText('RPM x1000', 128, 175);
+        tCtx.strokeStyle = '#ef4444';
+        tCtx.lineWidth = 5;
+        tCtx.beginPath();
+        tCtx.moveTo(128, 128);
+        tCtx.lineTo(195, 75);
+        tCtx.stroke();
+
+        const tachTex = new THREE.CanvasTexture(tachCanvas);
+        tachTex.colorSpace = THREE.SRGBColorSpace;
+        const tachMesh = new THREE.Mesh(
+          new THREE.CircleGeometry(0.055, 24),
+          new THREE.MeshStandardMaterial({ map: tachTex, roughness: 0.4, metalness: 0.1 })
+        );
+        tachMesh.position.set(0, 0, 0);
+        dashCluster.add(tachMesh);
+
+        const bezel = new THREE.Mesh(new THREE.TorusGeometry(0.056, 0.005, 12, 24), chromeMat);
+        dashCluster.add(bezel);
+
+        // Secondary gauges (oil pressure, water temperature, fuel level)
+        [-0.11, 0.11, 0.20].forEach((gx) => {
+          const smallGauge = new THREE.Mesh(
+            new THREE.CircleGeometry(0.028, 20),
+            new THREE.MeshStandardMaterial({ color: 0x111317, roughness: 0.5, metalness: 0.1 })
+          );
+          smallGauge.position.set(gx, 0, 0);
+          dashCluster.add(smallGauge);
+          const smBezel = new THREE.Mesh(new THREE.TorusGeometry(0.029, 0.0035, 8, 20), chromeMat);
+          smBezel.position.set(gx, 0, 0);
+          dashCluster.add(smBezel);
+        });
+
+        cockpitGroup.add(dashCluster);
+
+        // Kar-Kraft Gated Shifter on Right Door Sill (X = -0.52m)
+        const shifterGroup = new THREE.Group();
+        shifterGroup.position.set(-0.52, 0.03, 0.14);
+        const shiftGate = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.012, 0.12), brushedAlum);
+        shifterGroup.add(shiftGate);
+        const shiftLever = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.18, 12), chromeMat);
+        shiftLever.position.set(0, 0.09, 0);
+        shiftLever.rotation.x = -0.15;
+        shifterGroup.add(shiftLever);
+        const shiftKnob = new THREE.Mesh(new THREE.SphereGeometry(0.016, 16, 16), blackFlock);
+        shiftKnob.position.set(0, 0.18, -0.025);
+        shifterGroup.add(shiftKnob);
+        cockpitGroup.add(shifterGroup);
+
+        // 12-bolt oval inspection hatch on right sill (X = -0.54m)
+        const hatchMesh = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.006, 0.16), brushedAlum);
+        hatchMesh.position.set(-0.54, -0.095, 0.22);
+        cockpitGroup.add(hatchMesh);
+
+        root.add(cockpitGroup);
+        log('RHD cockpit interior integrated with car root.');
+
+        // 6. Exporting GLTF Binary (GLB) with embedded textures for WebAR / Android Scene Viewer
+        log('6. Exporting fully-textured GLB for Android & WebAR...');
+        const glbExporter = new GLTFExporter();
+        const glbData = await new Promise((resolve, reject) => {
+          glbExporter.parse(root, resolve, reject, {
+            binary: true,
+            embedImages: true,
+            maxTextureSize: 1024
+          });
+        });
+
+        log(`GLB export ready! Total payload: ${(glbData.byteLength / 1024 / 1024).toFixed(2)} MB`);
+        log('Saving GLB to server...');
+        const glbResp = await fetch('/api/save-glb', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/octet-stream' },
+          body: glbData
+        });
+        log(`Server GLB response: ${await glbResp.text()}`);
+
+        // 7. Exporting USDZ for Apple AR Quick Look
+        log('7. Exporting fully-textured USDZ for iOS Quick Look...');
+        const usdzExporter = new USDZExporter();
+        const usdzData = await usdzExporter.parse(root, {
+          quickLookCompatible: true,
+          ar: {
+            anchoring: { type: 'plane' },
+            planeAnchoring: { alignment: 'horizontal' }
+          }
+        });
+
+        log(`USDZ export ready! Total payload: ${(usdzData.byteLength / 1024 / 1024).toFixed(2)} MB`);
+        log('Saving USDZ to server...');
+        const usdzResp = await fetch('/api/save-usdz', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/octet-stream' },
+          body: usdzData
+        });
+        log(`Server USDZ response: ${await usdzResp.text()}`);
+
+        log('🎉 ALL EXPORTS COMPLETED SUCCESSFULLY!');
+        window.__ALL_SAVED__ = true;
+      } catch (err) {
+        log(`ERROR: ${err.message}\n${err.stack}`);
+        window.__ERROR__ = err.message;
+      }
+    }
+
+    run();
+  </script>
+</body>
+</html>
