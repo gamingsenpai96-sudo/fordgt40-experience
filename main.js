@@ -257,7 +257,7 @@
         }
       } else if (dest === 'game') {
         markJourneyMilestone('drive');
-        if (lenisInstance) lenisInstance.stop();
+        if (lenisInstance) lenisInstance.start();
         window.leMansGame?.resume?.().then(() => {
           if (opts.autoStartDrive) {
             setTimeout(() => {

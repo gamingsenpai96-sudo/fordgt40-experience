@@ -1055,6 +1055,7 @@ export class LeMansGame {
   enterDriveMode() {
     this.isActive = true;
     this.hasStarted = true;
+    window.lenisInstance?.stop?.();
     this.onResize();
     this.snapCarToGround();
     this.initAudio();
@@ -1077,6 +1078,7 @@ export class LeMansGame {
 
   exitDriveMode(notifyOrchestrator = true) {
     this.isActive = false;
+    window.lenisInstance?.start?.();
     this.keys.forward = false;
     this.keys.backward = false;
     this.keys.left = false;
@@ -1423,7 +1425,11 @@ export class LeMansGame {
   }
 }
 
-// Auto-initialize when DOM is ready
-window.addEventListener('DOMContentLoaded', () => {
+// Auto-initialize when DOM is ready (handles both static and dynamic module import)
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', () => {
+    window.leMansGame = new LeMansGame();
+  });
+} else {
   window.leMansGame = new LeMansGame();
-});
+}
