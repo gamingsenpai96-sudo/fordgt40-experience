@@ -14,26 +14,22 @@ const BAKED_DIR = '/tmp/gt40_ar_baked';
 const OUT_GLB = '/Users/perfectlyimperfect/Downloads/fordgt40-experience/assets/models/ar/gt40-ar.glb';
 const OUT_PLAIN_GLB = '/Users/perfectlyimperfect/Downloads/fordgt40-experience/tools/tmp-ar-plain.glb';
 
-// Assemblies completely hidden inside the closed body in exterior AR view
+// Only prune hidden internal plumbing not visible through exterior glass
 const PRUNE_NODE_PREFIXES = [
-  'Engine_Intake_Assembly',
-  'Engine_Valve_Covers',
-  'Engine_Accessories',
-  'Fuel_System_Assembly',
   'Dry_Sump_Oil_System'
 ];
 
 // Target per-material triangle caps for heavy CAD meshes so silhouette & rims remain razor-sharp
 const TRI_TARGETS = {
-  GT40_Body_Livery: 210000,
-  GT40_427_V8_Powertrain: 14000,
-  GT40_Cockpit_Interior: 28000,
-  GT40_Halibrand_Rims: 72000,
-  GT40_Solid_Tires: 24000,
-  GT40_Competition_Glass: 8500,
-  GT40_Headlights: 6500,
-  GT40_Tail_Lights: 6500,
-  GT40_Headlight_Lenses: 6500
+  GT40_Body_Livery: 240000,
+  GT40_427_V8_Powertrain: 18000,
+  GT40_Cockpit_Interior: 40000,
+  GT40_Halibrand_Rims: 80000,
+  GT40_Solid_Tires: 30000,
+  GT40_Competition_Glass: 10000,
+  GT40_Headlights: 7500,
+  GT40_Tail_Lights: 7500,
+  GT40_Headlight_Lenses: 7500
 };
 
 function triCount(prim) {
@@ -60,7 +56,44 @@ async function run() {
   const root = doc.getRoot();
   const scene = root.listScenes()[0];
 
-  // 2. Remove deep hidden subassemblies not visible in exterior AR
+  // 2. Remove deep hidden subassemblies & bake LHD -> RHD (-X) into Cockpit_Details geometry
+  // (USDZ does not support negative node scales, so we bake X -> -X directly into vertices)
+  const cockpitDetailsNode = root.listNodes().find((n) => n.getName() === 'Cockpit_Details');
+  if (cockpitDetailsNode) {
+    const mirrorSubtree = (node) => {
+      const tr = node.getTranslation();
+      if (tr[0] !== 0) node.setTranslation([-tr[0], tr[1], tr[2]]);
+      const m = node.getMesh();
+      if (m) {
+        for (const prim of m.listPrimitives()) {
+          const pos = prim.getAttribute('POSITION');
+          if (pos) {
+            const arr = pos.getArray();
+            for (let i = 0; i < arr.length; i += 3) arr[i] = -arr[i];
+            pos.setArray(arr);
+          }
+          const norm = prim.getAttribute('NORMAL');
+          if (norm) {
+            const arr = norm.getArray();
+            for (let i = 0; i < arr.length; i += 3) arr[i] = -arr[i];
+            norm.setArray(arr);
+          }
+          const idx = prim.getIndices();
+          if (idx) {
+            const arr = idx.getArray();
+            for (let k = 0; k < arr.length; k += 3) {
+              const tmp = arr[k + 1];
+              arr[k + 1] = arr[k + 2];
+              arr[k + 2] = tmp;
+            }
+            idx.setArray(arr);
+          }
+        }
+      }
+      for (const ch of node.listChildren()) mirrorSubtree(ch);
+    };
+    mirrorSubtree(cockpitDetailsNode);
+  }
   for (const node of root.listNodes()) {
     const nName = node.getName() || '';
     if (PRUNE_NODE_PREFIXES.some((p) => nName.startsWith(p))) {
@@ -279,6 +312,42 @@ async function run() {
   }
 
   await doc.transform(prune(), dedup());
+
+  // 5b. Fix inverted triangle winding (94%+ of CAD triangles in gt40.glb have backwards index order
+  // relative to their outward vertex normals, causing iOS Quick Look single-sided culling of the hood!)
+  let totalFixed = 0;
+  for (const mesh of root.listMeshes()) {
+    for (const prim of mesh.listPrimitives()) {
+      const pos = prim.getAttribute('POSITION')?.getArray();
+      const norm = prim.getAttribute('NORMAL')?.getArray();
+      const idxAttr = prim.getIndices();
+      const idx = idxAttr?.getArray();
+      if (!pos || !norm || !idx) continue;
+      let fixedHere = 0;
+      for (let k = 0; k < idx.length; k += 3) {
+        const a = idx[k], b = idx[k + 1], c = idx[k + 2];
+        const ax = pos[a * 3], ay = pos[a * 3 + 1], az = pos[a * 3 + 2];
+        const ux = pos[b * 3] - ax, uy = pos[b * 3 + 1] - ay, uz = pos[b * 3 + 2] - az;
+        const vx = pos[c * 3] - ax, vy = pos[c * 3 + 1] - ay, vz = pos[c * 3 + 2] - az;
+        const fx = uy * vz - uz * vy;
+        const fy = uz * vx - ux * vz;
+        const fz = ux * vy - uy * vx;
+        const nx = norm[a * 3] + norm[b * 3] + norm[c * 3];
+        const ny = norm[a * 3 + 1] + norm[b * 3 + 1] + norm[c * 3 + 1];
+        const nz = norm[a * 3 + 2] + norm[b * 3 + 2] + norm[c * 3 + 2];
+        if (fx * nx + fy * ny + fz * nz < 0) {
+          idx[k + 1] = c;
+          idx[k + 2] = b;
+          fixedHere++;
+        }
+      }
+      if (fixedHere > 0) {
+        idxAttr.setArray(idx);
+        totalFixed += fixedHere;
+      }
+    }
+  }
+  console.log(`Fixed inverted triangle winding on ${totalFixed} triangles for solid iOS Quick Look rendering`);
 
   // 6. Ground flush on Y = 0 floor plane for 1:1 AR (lowest tire patch was y = -0.372)
   const carRootNode = doc.createNode('GT40_MK2_P1046_AR')

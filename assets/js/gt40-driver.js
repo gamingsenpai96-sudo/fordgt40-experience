@@ -104,16 +104,39 @@ export function buildBruceMcLarenDriver(THREE, options = {}) {
   belt.position.set(0, 0.03, 0);
   torsoPivot.add(belt);
 
+  const lapBuckle = new THREE.Mesh(new THREE.BoxGeometry(0.056, 0.044, 0.022), goggleChromeMat);
+  lapBuckle.position.set(0, 0.03, 0.105);
+  torsoPivot.add(lapBuckle);
+
+  // 4-point competition racing harness shoulder straps
+  const harnessMat = new THREE.MeshStandardMaterial({ color: 0x1a202c, roughness: 0.78, metalness: 0.08 });
+  [-0.078, 0.078].forEach((sx) => {
+    const strapFront = new THREE.Mesh(new THREE.BoxGeometry(0.036, 0.34, 0.016), harnessMat);
+    strapFront.position.set(sx, 0.19, 0.102);
+    strapFront.rotation.x = 0.04;
+    torsoPivot.add(strapFront);
+  });
+
+  // Suit center brass/silver zipper seam
+  const zipper = new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.30, 0.008), goggleChromeMat);
+  zipper.position.set(0, 0.20, 0.104);
+  torsoPivot.add(zipper);
+
   // Race suit high mandarin collar
   const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.068, 0.078, 0.055, 16), suitMat);
   collar.position.set(0, 0.36, 0.005);
   torsoPivot.add(collar);
 
-  // Subtle Dunlop breast patch hint
+  // Subtle Dunlop & Ford team breast patches
   const patchMat = new THREE.MeshBasicMaterial({ color: 0xfacc15 });
   const patch = new THREE.Mesh(new THREE.BoxGeometry(0.048, 0.022, 0.01), patchMat);
   patch.position.set(0.08, 0.24, 0.095);
   torsoPivot.add(patch);
+
+  const fordPatchMat = new THREE.MeshBasicMaterial({ color: 0xf4f3ee });
+  const fordPatch = new THREE.Mesh(new THREE.BoxGeometry(0.050, 0.020, 0.01), fordPatchMat);
+  fordPatch.position.set(-0.08, 0.24, 0.095);
+  torsoPivot.add(fordPatch);
 
   // 2. Period 1966 Open-Face Helmet & Neck/Head Assembly
   const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, 0.05, 12), skinMat);
@@ -157,6 +180,19 @@ export function buildBruceMcLarenDriver(THREE, options = {}) {
   faceHead.scale.set(0.86, 1.05, 0.92);
   headPivot.add(registerPart(faceHead, tagName));
 
+  // Sculpted nose bridge & helmet ear-cup padding
+  const nose = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.032, 0.024), skinMat);
+  nose.position.set(0, -0.022, 0.094);
+  nose.rotation.x = -0.18;
+  headPivot.add(nose);
+
+  [-0.095, 0.095].forEach((ex) => {
+    const earCup = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.018, 12), bootLeatherMat);
+    earCup.rotation.z = Math.PI / 2;
+    earCup.position.set(ex, -0.022, 0.008);
+    headPivot.add(earCup);
+  });
+
   // Vintage 1960s split-bridge racing goggles
   const makeGoggleEye = (gx) => {
     const g = new THREE.Group();
@@ -170,6 +206,9 @@ export function buildBruceMcLarenDriver(THREE, options = {}) {
   };
   headPivot.add(makeGoggleEye(-0.030));
   headPivot.add(makeGoggleEye(0.030));
+  const goggleBridge = new THREE.Mesh(new THREE.BoxGeometry(0.022, 0.005, 0.006), goggleChromeMat);
+  goggleBridge.position.set(0, 0.008, 0.098);
+  headPivot.add(goggleBridge);
 
   // Leather goggle strap around helmet sides
   const strap = new THREE.Mesh(new THREE.TorusGeometry(0.102, 0.007, 8, 24), leatherGloveMat);

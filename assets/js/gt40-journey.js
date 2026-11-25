@@ -455,11 +455,11 @@ export class GT40LeMansJourney {
 
   setupLightingAndEnv() {
     // Rich Circuit de la Sarthe late-afternoon golden dusk lighting
-    const hemi = new THREE.HemisphereLight(0xd9e4f5, 0x262932, 1.05);
+    const hemi = new THREE.HemisphereLight(0xe4eeff, 0x262932, 1.25);
     this.scene.add(hemi);
 
     // Moving sunlight tracking the GT40 so high-res chassis shadows stay crisp across all 13.6km
-    this.sunLight = new THREE.DirectionalLight(0xfff1db, 2.35);
+    this.sunLight = new THREE.DirectionalLight(0xfff1db, 2.65);
     this.sunLight.castShadow = true;
     this.sunLight.shadow.mapSize.set(2048, 2048);
     this.sunLight.shadow.camera.near = 2;
@@ -473,26 +473,30 @@ export class GT40LeMansJourney {
     this.scene.add(this.sunLight);
     this.scene.add(this.sunLight.target);
 
-    // Subtle cool sky fill opposite sun
-    const fillLight = new THREE.DirectionalLight(0x9fc2f0, 0.85);
+    // Cool sky fill opposite sun + crisp rear rim light for fender & louver highlights
+    const fillLight = new THREE.DirectionalLight(0xa8ccf8, 1.05);
     fillLight.position.set(-45, 35, 50);
     this.scene.add(fillLight);
+
+    const rimLight = new THREE.DirectionalLight(0xdbeafe, 0.95);
+    rimLight.position.set(38, 22, -45);
+    this.scene.add(rimLight);
 
     // Le Mans horizon + forest reflection PMREM for glossy obsidian lacquer & glass
     try {
       const pmrem = new THREE.PMREMGenerator(this.renderer);
       const envScene = new THREE.Scene();
-      envScene.background = new THREE.Color(0x161f2e);
+      envScene.background = new THREE.Color(0x1b2638);
 
       const skyBand = new THREE.Mesh(
         new THREE.SphereGeometry(40, 24, 12),
-        new THREE.MeshBasicMaterial({ color: 0x3b4d6b, side: THREE.BackSide })
+        new THREE.MeshBasicMaterial({ color: 0x4b6287, side: THREE.BackSide })
       );
       envScene.add(skyBand);
 
       const sunDisk = new THREE.Mesh(
-        new THREE.CircleGeometry(7, 24),
-        new THREE.MeshBasicMaterial({ color: new THREE.Color(2.2, 1.8, 1.35) })
+        new THREE.CircleGeometry(8, 24),
+        new THREE.MeshBasicMaterial({ color: new THREE.Color(2.6, 2.1, 1.55) })
       );
       sunDisk.position.set(22, 18, -24);
       sunDisk.lookAt(0, 0, 0);
@@ -689,12 +693,12 @@ export class GT40LeMansJourney {
       map: bodyLiveryTex,
       roughnessMap: bodyRoughTex,
       metalnessMap: bodyMetalTex,
-      roughness: 0.25,
+      roughness: 0.22,
       metalness: 0.04,
-      clearcoat: 0.55,
-      clearcoatRoughness: 0.12,
-      reflectivity: 0.6,
-      envMapIntensity: 0.9,
+      clearcoat: 0.72,
+      clearcoatRoughness: 0.10,
+      reflectivity: 0.75,
+      envMapIntensity: 1.25,
       side: THREE.DoubleSide
     });
 
@@ -724,12 +728,12 @@ export class GT40LeMansJourney {
           '#include <color_fragment>',
           `#include <color_fragment>
            float ax = abs(vBodyPos.x);
-           bool isExteriorTop = (vBodyPos.y > 0.04 && vBodyNorm.y > 0.12) && !(vBodyPos.z > 1.85 && vBodyNorm.y < 0.35);
+           bool isExteriorTop = (vBodyPos.y > 0.04 && abs(vBodyNorm.y) > 0.12) && !(vBodyPos.z > 1.85 && abs(vBodyNorm.y) < 0.35);
            bool isStripe = false;
            if (isExteriorTop) {
-             if (ax >= 0.014 && ax <= 0.088) isStripe = true;
-             if (ax >= 0.098 && ax <= 0.108) isStripe = true;
-             if (length(vec2(vBodyPos.x - 0.26, vBodyPos.z - 1.16)) < 0.16 && vBodyPos.y > 0.18 && vBodyNorm.y > 0.32) {
+             if (ax >= 0.020 && ax <= 0.136) isStripe = true;
+             if (ax >= 0.150 && ax <= 0.168) isStripe = true;
+             if (length(vec2(vBodyPos.x - 0.26, vBodyPos.z - 1.16)) < 0.16 && vBodyPos.y > 0.18 && abs(vBodyNorm.y) > 0.32) {
                isStripe = true;
              }
            }
@@ -1920,9 +1924,9 @@ export class GT40LeMansJourney {
         const dy = e.clientY - this.userOrbit.lastY;
         this.userOrbit.lastX = e.clientX;
         this.userOrbit.lastY = e.clientY;
-        const maxYaw = this.mode === 'inspect_front' || this.mode === 'inspect_wheel' ? 0.65 : 2.95;
+        const maxYaw = this.mode === 'inspect_front' || this.mode === 'inspect_wheel' ? 0.65 : 2.45;
         this.userOrbit.yaw = THREE.MathUtils.clamp(this.userOrbit.yaw - dx * 0.0052, -maxYaw, maxYaw);
-        this.userOrbit.pitch = THREE.MathUtils.clamp(this.userOrbit.pitch + dy * 0.0038, -0.16, 0.42);
+        this.userOrbit.pitch = THREE.MathUtils.clamp(this.userOrbit.pitch + dy * 0.0038, -0.14, 0.44);
         return;
       }
 
@@ -2720,16 +2724,8 @@ export class GT40LeMansJourney {
       }
     }
 
-    // Smooth auto-return toward default hero Front 3/4 orbit after user releases drag
-    if (!this.userOrbit.dragging && (Math.abs(this.userOrbit.yaw) > 0.001 || Math.abs(this.userOrbit.pitch) > 0.001)) {
-      if (now - this.userOrbit.lastReleaseTime > 380) {
-        const ret = Math.min(1.0, dt * 3.2);
-        this.userOrbit.yaw += (0 - this.userOrbit.yaw) * ret;
-        this.userOrbit.pitch += (0 - this.userOrbit.pitch) * ret;
-        if (Math.abs(this.userOrbit.yaw) < 0.002) this.userOrbit.yaw = 0;
-        if (Math.abs(this.userOrbit.pitch) < 0.002) this.userOrbit.pitch = 0;
-      }
-    }
+    // Camera orbit stays freely where the user placed it (no auto-snap back while moving)
+    // Reset only happens explicitly on CAM preset click or component interaction.
 
     if (this.isReady && this.carGroup) {
       // 1. Keep car posed (stationary on start grid or continuously driving along Circuit de la Sarthe)

@@ -1,0 +1,296 @@
+/* ============================================================================
+   FORD GT40 — GO LIKE HELL | ARCHITECTURAL MOTORSPORT UI OVERHAUL (V2)
+   1966 Le Mans Pit-Wall & Swiss Editorial Grid
+   ============================================================================ */
+
+:root {
+  --bg-deep: #08090b;
+  --bg-charcoal: #111317;
+  --bg-card: #0e1014;
+  --bg-surface: #14171d;
+  --bg-surface-hover: #1c2028;
+  --border-subtle: rgba(243, 239, 230, 0.10);
+  --border-medium: rgba(243, 239, 230, 0.20);
+  --border-accent: #e12d25;
+  --text-main: #f3efe6;
+  --text-secondary: #d2cec4;
+  --text-muted: #8a919e;
+  --accent-red: #e12d25;
+  --accent-blue: #2563eb;
+}
+
+body {
+  background: #08090b !important;
+  color: #f3efe6 !important;
+}
+
+/* ---------- Top Journey Telemetry Strip ---------- */
+.journey-top-hud {
+  background: rgba(8, 9, 11, 0.88) !important;
+  border-bottom: 1px solid rgba(243, 239, 230, 0.12) !important;
+  backdrop-filter: blur(10px) !important;
+  padding: 10px 22px !important;
+}
+
+.journey-brand-pill,
+.journey-hud-pill,
+.journey-progress-rail,
+.journey-action-btn {
+  border-radius: 2px !important;
+  background: #111317 !important;
+  border: 1px solid rgba(243, 239, 230, 0.16) !important;
+  box-shadow: none !important;
+  font-family: 'Space Mono', monospace !important;
+  color: #f3efe6 !important;
+}
+
+.journey-brand-pill {
+  border-left: 2px solid #e12d25 !important;
+}
+
+.journey-action-btn:hover {
+  border-color: #e12d25 !important;
+  background: #1a1d24 !important;
+}
+
+.journey-action-btn.is-ar {
+  background: #e12d25 !important;
+  border-color: #e12d25 !important;
+  color: #ffffff !important;
+}
+
+.journey-action-btn.is-ar:hover {
+  background: #c4231c !important;
+}
+
+.jp-pip {
+  border-radius: 1px !important;
+  width: 8px !important;
+  height: 8px !important;
+  background: rgba(243, 239, 230, 0.2) !important;
+}
+
+.jp-pip.done {
+  background: #e12d25 !important;
+  box-shadow: none !important;
+}
+
+/* ---------- Mechanical Ignition Switch Plate (Start Engine) ---------- */
+.journey-start-hud {
+  bottom: 34px !important;
+}
+
+.journey-start-btn {
+  border-radius: 2px !important;
+  background: #111317 !important;
+  border: 1px solid rgba(243, 239, 230, 0.28) !important;
+  border-left: 4px solid #e12d25 !important;
+  padding: 14px 26px !important;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.75) !important;
+  transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease !important;
+}
+
+.journey-start-btn:hover,
+.journey-start-btn.is-cranking {
+  background: #181b22 !important;
+  border-color: #e12d25 !important;
+  transform: translateY(-1px) !important;
+}
+
+.start-ring-wrap {
+  border-radius: 2px !important;
+  background: #e12d25 !important;
+}
+
+.start-title {
+  font-family: 'Oswald', sans-serif !important;
+  letter-spacing: 0.22em !important;
+  color: #f3efe6 !important;
+}
+
+.start-sub {
+  font-family: 'Space Mono', monospace !important;
+  color: #8a919e !important;
+}
+
+/* ---------- Architectural Car Hotspots ---------- */
+.journey-hotspot .jh-ring {
+  border-radius: 2px !important;
+  transform: rotate(45deg) !important;
+  border: 1px solid rgba(243, 239, 230, 0.65) !important;
+}
+
+.journey-hotspot .jh-dot {
+  border-radius: 1px !important;
+  background: #e12d25 !important;
+  box-shadow: none !important;
+}
+
+.journey-hotspot .jh-pill {
+  border-radius: 2px !important;
+  background: rgba(8, 9, 11, 0.92) !important;
+  border: 1px solid rgba(243, 239, 230, 0.22) !important;
+  border-left: 2px solid #e12d25 !important;
+  font-family: 'Space Mono', monospace !important;
+  letter-spacing: 0.14em !important;
+  color: #f3efe6 !important;
+  box-shadow: none !important;
+}
+
+.journey-hover-prompt,
+.journey-inspect-bar,
+.journey-opening-cue {
+  border-radius: 2px !important;
+  background: rgba(8, 9, 11, 0.92) !important;
+  border: 1px solid rgba(243, 239, 230, 0.16) !important;
+  box-shadow: none !important;
+}
+
+.journey-opening-cue {
+  padding: 10px 22px !important;
+  border-bottom: 2px solid #e12d25 !important;
+}
+
+.journey-opening-cue.faded {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* ---------- Two-Stage Door Choice Architectural Plates ---------- */
+.door-choice-target {
+  border-radius: 2px !important;
+  background: rgba(8, 9, 11, 0.94) !important;
+  border: 1px solid rgba(243, 239, 230, 0.26) !important;
+  border-left: 3px solid #e12d25 !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7) !important;
+}
+
+.door-choice-target:hover,
+.door-choice-target.hovered {
+  background: #181b22 !important;
+  border-color: #f3efe6 !important;
+}
+
+.dc-dot {
+  border-radius: 1px !important;
+  background: #e12d25 !important;
+}
+
+.door-choice-close {
+  border-radius: 2px !important;
+  background: rgba(8, 9, 11, 0.94) !important;
+  border: 1px solid rgba(243, 239, 230, 0.26) !important;
+}
+
+/* ---------- Destination Top Navigation Bar ---------- */
+.portal-return-bar {
+  background: rgba(8, 9, 11, 0.96) !important;
+  border-bottom: 1px solid rgba(243, 239, 230, 0.14) !important;
+  padding: 10px 24px !important;
+}
+
+.portal-back-btn,
+.portal-pill {
+  border-radius: 2px !important;
+  font-family: 'Space Mono', monospace !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.16em !important;
+  box-shadow: none !important;
+}
+
+.portal-back-btn {
+  background: #111317 !important;
+  border: 1px solid rgba(243, 239, 230, 0.24) !important;
+  border-left: 3px solid #e12d25 !important;
+  color: #f3efe6 !important;
+}
+
+.portal-back-btn:hover {
+  background: #e12d25 !important;
+  border-color: #e12d25 !important;
+  color: #ffffff !important;
+}
+
+.portal-pill {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-bottom: 2px solid transparent !important;
+  color: #8a919e !important;
+}
+
+.portal-pill:hover {
+  color: #f3efe6 !important;
+  border-bottom-color: rgba(243, 239, 230, 0.35) !important;
+}
+
+.portal-pill.active {
+  background: #14171d !important;
+  border: 1px solid rgba(243, 239, 230, 0.14) !important;
+  border-bottom: 2px solid #e12d25 !important;
+  color: #f3efe6 !important;
+}
+
+/* ---------- Unified Sharp Architectural Cards & Controls ---------- */
+.chronicle-card,
+.ar-deck-card,
+.ar-stage-container,
+.ar-stage-header,
+.cockpit-hud-card,
+.exploded-telemetry-card,
+.exploded-quick-hud,
+.game-container,
+.hud-cluster,
+.inspect-btn-primary,
+.inspect-btn-secondary,
+.exploded-system-btn,
+.ar-light-btn,
+.cockpit-ctrl-btn,
+.game-start-btn,
+.ar-mobile-launch-btn,
+.ar-direct-trigger-btn {
+  border-radius: 2px !important;
+  box-shadow: none !important;
+}
+
+.chronicle-card,
+.ar-deck-card,
+.cockpit-hud-card,
+.exploded-telemetry-card,
+.exploded-quick-hud {
+  background: #111317 !important;
+  border: 1px solid rgba(243, 239, 230, 0.12) !important;
+}
+
+.game-start-btn,
+.ar-mobile-launch-btn,
+.ar-direct-trigger-btn,
+.inspect-btn-primary {
+  background: #e12d25 !important;
+  border: 1px solid #e12d25 !important;
+  color: #ffffff !important;
+}
+
+.game-start-btn:hover,
+.ar-mobile-launch-btn:hover,
+.ar-direct-trigger-btn:hover,
+.inspect-btn-primary:hover {
+  background: #c4231c !important;
+}
+
+.ar-hud-pill,
+.ar-compat-status,
+.p-pill,
+.chronicle-year-pill,
+.game-badge,
+.hud-tag,
+.hud-controls-pill,
+.cockpit-driver-badge {
+  border-radius: 2px !important;
+  background: rgba(8, 9, 11, 0.9) !important;
+  border: 1px solid rgba(243, 239, 230, 0.18) !important;
+}
+
+.site-footer {
+  background: #08090b !important;
+  border-top: 1px solid rgba(243, 239, 230, 0.12) !important;
+}
