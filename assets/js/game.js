@@ -659,7 +659,7 @@ export class LeMansGame {
 
     // Mount Bruce McLaren (race_car_driver.glb in Gulf cream suit) in RHD seat (1x local carModel space)
     const { group: driverGroup } = loadBruceMcLarenDriverGLB(THREE, createGLTFLoader(), {
-      scale: 0.46,
+      scale: 0.43,
       hotspotName: 'bruce_mclaren_driver'
     });
     this.carModel.add(driverGroup);

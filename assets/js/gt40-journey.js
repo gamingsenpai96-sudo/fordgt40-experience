@@ -1182,7 +1182,7 @@ export class GT40LeMansJourney {
     this.exteriorDriver.root.position.z = 0.02;
     this.chassisGroup.add(this.exteriorDriver.root);
     loadBruceMcLarenDriverGLB(THREE, createGLTFLoader(), {
-      scale: 0.46,
+      scale: 0.43,
       hotspotName: 'bruce_mclaren_driver',
       onLoaded: (glbGroup, model) => {
         // Replace procedural torso/head meshes with detailed 3D race_car_driver.glb while keeping pivot

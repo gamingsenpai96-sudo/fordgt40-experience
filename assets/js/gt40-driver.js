@@ -370,14 +370,15 @@ export function buildBruceMcLarenDriver(THREE, options = {}) {
 export function loadBruceMcLarenDriverGLB(THREE, loader, options = {}) {
   const {
     url = 'assets/models/driver/race_car_driver.glb',
-    scale = 0.46,
+    scale = 0.43,
     hotspotName = 'bruce_mclaren_driver',
     onLoaded = null
   } = options;
 
   const group = new THREE.Group();
   group.name = 'BruceMcLarenGLBDriver';
-  group.position.set(-0.28, 0.14, 0.06);
+  // Seatback sits at z=-0.14, pedals at z=+0.74, wheel at z=+0.44; y=0.25 keeps pelvis & boots inside floorpan
+  group.position.set(-0.28, 0.25, 0.30);
 
   const suitMat = new THREE.MeshStandardMaterial({
     color: 0xffffff,
@@ -412,68 +413,61 @@ export function loadBruceMcLarenDriverGLB(THREE, loader, options = {}) {
       .replace(
         '#include <color_fragment>',
         `#include <color_fragment>
-         // Centered approximate local coords (raw center ~ [0.62, 1.15, 0.03])
-         float lx = vDrvPos.x - 0.62;
-         float ly = vDrvPos.y - 1.15;
-         float lz = vDrvPos.z - 0.03;
+         // Geometry is baked & centered: X in [-0.44..0.44], Y in [-0.77..0.77], Z in [-1.02..1.02]
+         float lx = vDrvPos.x;
+         float ly = vDrvPos.y;
+         float lz = vDrvPos.z;
          float ax = abs(lx);
 
          // Default: Bruce McLaren Cream / Off-White Nomex Racing Suit
-         vec3 col = vec3(0.84, 0.79, 0.67);
-         float rFactor = 0.82;
+         vec3 col = vec3(0.86, 0.81, 0.69);
 
          // Helmet (top head region)
          if (ly > 0.36) {
-           col = vec3(0.90, 0.88, 0.82); // Ivory white helmet shell
-           rFactor = 0.28;
-           // Helmet visor / face opening
-           if (lz > 0.06 && ly > 0.38 && ly < 0.56 && ax < 0.15) {
-             col = (ly > 0.45 && ly < 0.53) ? vec3(0.08, 0.10, 0.13) : vec3(0.72, 0.48, 0.36);
-             rFactor = (ly > 0.45 && ly < 0.53) ? 0.15 : 0.65;
+           col = vec3(0.92, 0.90, 0.84); // Ivory white helmet shell
+           if (lz > 0.02 && ly > 0.40 && ly < 0.60 && ax < 0.16) {
+             col = (ly > 0.48 && ly < 0.57) ? vec3(0.08, 0.10, 0.14) : vec3(0.74, 0.50, 0.38);
            } else if (ly > 0.36 && ly < 0.41) {
-             col = vec3(0.08, 0.18, 0.36); // Classic navy trim band
+             col = vec3(0.08, 0.18, 0.38); // Classic navy trim band
            }
          } else {
            // Gulf Navy-Blue & Burnt-Orange dual shoulder & sleeve stripes
-           if (ly > -0.05 && ax > 0.18) {
-             if (ax > 0.22 && ax < 0.27) {
+           if (ly > -0.02 && ax > 0.16) {
+             if (ax > 0.18 && ax < 0.25) {
                col = vec3(0.07, 0.16, 0.38); // Gulf Navy
-             } else if (ax >= 0.27 && ax < 0.32) {
-               col = vec3(0.82, 0.26, 0.07); // Gulf Orange
+             } else if (ax >= 0.25 && ax < 0.33) {
+               col = vec3(0.84, 0.28, 0.08); // Gulf Orange
              }
            }
 
            // Gulf circular patch (right chest: lx < 0)
-           float dGulf = length(vec2(lx + 0.10, ly - 0.18));
-           if (lz > 0.04 && dGulf < 0.065) {
-             col = (ly > 0.18) ? vec3(0.85, 0.32, 0.10) : vec3(0.08, 0.20, 0.44);
+           float dGulf = length(vec2(lx + 0.11, ly - 0.16));
+           if (lz > -0.15 && dGulf < 0.075) {
+             col = (ly > 0.16) ? vec3(0.86, 0.32, 0.10) : vec3(0.08, 0.20, 0.44);
            }
 
            // Reynolds / Goodyear chest patches (left chest: lx > 0)
-           if (lz > 0.04 && lx > 0.04 && lx < 0.18 && ly > 0.12 && ly < 0.26) {
-             col = vec3(0.09, 0.16, 0.32);
-             if (abs(ly - 0.19) < 0.014) col = vec3(0.90, 0.88, 0.84);
+           if (lz > -0.15 && lx > 0.04 && lx < 0.20 && ly > 0.10 && ly < 0.26) {
+             col = vec3(0.09, 0.16, 0.34);
+             if (abs(ly - 0.18) < 0.016) col = vec3(0.92, 0.90, 0.86);
            }
 
            // Racing harness straps & silver waist buckle
-           if (lz > 0.03 && ax > 0.05 && ax < 0.11 && ly > -0.15 && ly < 0.34) {
+           if (lz > -0.22 && ax > 0.05 && ax < 0.12 && ly > -0.18 && ly < 0.34) {
              col = vec3(0.10, 0.11, 0.14);
            }
-           if (lz > 0.06 && ax < 0.07 && ly > -0.18 && ly < -0.06) {
-             col = vec3(0.75, 0.77, 0.80); // Silver buckle
-             rFactor = 0.25;
+           if (lz > -0.15 && ax < 0.08 && ly > -0.20 && ly < -0.06) {
+             col = vec3(0.76, 0.78, 0.82);
            }
 
            // Tan leather driving gloves on forward hands
-           if (lz > 0.32 && ly > 0.02 && ly < 0.30 && ax > 0.14) {
-             col = vec3(0.38, 0.20, 0.10);
-             rFactor = 0.58;
+           if (lz > 0.12 && ly > 0.04 && ly < 0.32 && ax > 0.12) {
+             col = vec3(0.40, 0.22, 0.11);
            }
 
            // Dark leather racing boots at feet
-           if (lz > 0.65 && ly < -0.25) {
+           if (lz > 0.55 && ly < -0.20) {
              col = vec3(0.07, 0.07, 0.09);
-             rFactor = 0.50;
            }
          }
 
@@ -484,28 +478,29 @@ export function loadBruceMcLarenDriverGLB(THREE, loader, options = {}) {
 
   loader.load(url, (gltf) => {
     const model = gltf.scene;
-    const box = new THREE.Box3().setFromObject(model);
-    const center = box.getCenter(new THREE.Vector3());
-    model.position.sub(center);
+    model.updateMatrixWorld(true);
 
     const holder = new THREE.Group();
     holder.scale.setScalar(scale);
-    holder.add(model);
 
     model.traverse((obj) => {
       if (obj.isMesh) {
-        obj.name = hotspotName;
-        obj.userData.driverHotspot = true;
-        obj.userData.isDriverInteractive = true;
-        obj.material = suitMat;
-        obj.castShadow = true;
-        obj.receiveShadow = true;
+        const bakedGeom = obj.geometry.clone();
+        bakedGeom.applyMatrix4(obj.matrixWorld);
+        bakedGeom.center();
+        const mesh = new THREE.Mesh(bakedGeom, suitMat);
+        mesh.name = hotspotName;
+        mesh.userData.driverHotspot = true;
+        mesh.userData.isDriverInteractive = true;
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        holder.add(mesh);
       }
     });
 
     group.add(holder);
     if (typeof onLoaded === 'function') {
-      onLoaded(group, model, suitMat);
+      onLoaded(group, holder, suitMat);
     }
   });
 
