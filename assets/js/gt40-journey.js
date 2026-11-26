@@ -1649,8 +1649,8 @@ export class GT40LeMansJourney {
     } else if (choiceKey === 'steering_wheel') {
       this.mode = 'entering_cockpit';
       this.glideLocalCamera(
-        new THREE.Vector3(-0.28, 0.52, 0.06),
-        new THREE.Vector3(-0.22, 0.48, 1.35),
+        new THREE.Vector3(-0.26, 0.87, 0.14),
+        new THREE.Vector3(-0.24, 0.78, 1.35),
         650,
         () => {
           window.gt40JourneyOrchestrator?.markMilestone?.('cockpit');
