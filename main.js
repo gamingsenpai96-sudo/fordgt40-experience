@@ -429,7 +429,7 @@
     enterExplodedFromMovingCar: (sys) => enterJourneyDestination('exploded', { system: sys || 'engine', fromMovingCar: true }),
     enterDriveFromCockpit: () => enterJourneyDestination('game', { fromCockpit: true, autoStartDrive: true }),
     enterDriverChronicles: () => enterJourneyDestination('chronicles', { fromCockpit: true, anchor: '#bruce-mclaren-dossier' }),
-    enterDriverChroniclesFromDoor: () => enterJourneyDestination('chronicles', { fromDoorChoice: true, anchor: '#bruce-mclaren-dossier' }),
+    enterDriverChroniclesFromDoor: () => enterJourneyDestination('chronicles', { fromDoorChoice: true, anchor: '#act-1' }),
     onExitDriveMode: () => {
       if (portalBusy) return;
       if (driveReturnTarget === 'cockpit') {
