@@ -531,16 +531,16 @@ export class GT40CockpitSimulator {
   }
 
   setupLighting() {
-    // 1. Natural daylight overcast ambient base
-    const ambient = new THREE.AmbientLight(0xffffff, 0.85);
+    // 1. Natural daylight overcast ambient base (balanced so driver suit never blows out)
+    const ambient = new THREE.AmbientLight(0xffffff, 0.44);
     this.scene.add(ambient);
 
     // 2. Realistic sky/ground hemisphere light (cool sky, dark tarmac bounce)
-    const hemiLight = new THREE.HemisphereLight(0xdde8f5, 0x181a20, 0.80);
+    const hemiLight = new THREE.HemisphereLight(0xdde8f5, 0x181a20, 0.50);
     this.scene.add(hemiLight);
 
     // 3. Primary Key Sunlight through Windscreen and Side Windows
-    const keyLight = new THREE.DirectionalLight(0xfff8ea, 1.65);
+    const keyLight = new THREE.DirectionalLight(0xfff8ea, 1.35);
     keyLight.position.set(6.5, 12.0, 7.5);
     keyLight.castShadow = true;
     keyLight.shadow.mapSize.width = 1024;
@@ -555,12 +555,12 @@ export class GT40CockpitSimulator {
     this.scene.add(keyLight);
 
     // 4. Dedicated Interior Gauge & Dashboard Inspection Warm Light
-    const dashWarmLight = new THREE.PointLight(0xffeedb, 1.45, 1.8);
+    const dashWarmLight = new THREE.PointLight(0xffeedb, 0.85, 1.6);
     dashWarmLight.position.set(0.28, 0.32, 0.45);
     this.scene.add(dashWarmLight);
 
-    // 5. Passenger side soft ambient bounce
-    const cabinLight = new THREE.PointLight(0xbad4ea, 0.70, 2.4);
+    // 5. Soft cabin bounce (kept subtle so driver's cream Nomex suit retains rich fabric shading)
+    const cabinLight = new THREE.PointLight(0xbad4ea, 0.20, 2.0);
     cabinLight.position.set(-0.20, 0.40, 0.12);
     this.scene.add(cabinLight);
 
@@ -938,8 +938,8 @@ export class GT40CockpitSimulator {
 
     this.scene.add(trackGroup);
 
-    // Mount real 3D Circuit de la Sarthe (lemans.glb) aligned to the Mulsanne Straight
-    // so the car sits directly on the authentic 1966 Mulsanne tarmac & countryside
+    // Mount real 3D Circuit de la Sarthe (source/lemans.glb) scaled 1:1 with the cockpit car
+    // and aligned directly to the Mulsanne Straight tarmac
     const mountRealMulsanneTrack = (gltf) => {
       if (!gltf?.scene || !this.scene) return;
       const trackClone = prepareLeMansTrackClone(gltf.scene);
@@ -949,10 +949,14 @@ export class GT40CockpitSimulator {
 
       const mulsanneAnchor = new THREE.Group();
       mulsanneAnchor.name = 'MulsanneStraightRealTrack';
+      mulsanneAnchor.scale.setScalar(1 / 3);
       mulsanneAnchor.rotation.y = -yaw;
-      trackClone.position.set(-p0x, -p0y - 0.378, -p0z);
+      trackClone.position.set(-p0x, -p0y - 0.378 * 3, -p0z);
       mulsanneAnchor.add(trackClone);
       this.scene.add(mulsanneAnchor);
+      // Hide procedural fallback road once real Mulsanne track is mounted
+      road.visible = false;
+      groove.visible = false;
     };
 
     if (window.__LEMANS_GLTF_PROMISE__) {
@@ -960,7 +964,7 @@ export class GT40CockpitSimulator {
     } else {
       const trackLoader = createGLTFLoader();
       window.__LEMANS_GLTF_PROMISE__ = new Promise((resolve, reject) => {
-        trackLoader.load('assets/models/track/lemans.glb', resolve, undefined, reject);
+        trackLoader.load('assets/models/track/source/lemans.glb?v=smooth2', resolve, undefined, reject);
       });
       window.__LEMANS_GLTF_PROMISE__.then(mountRealMulsanneTrack).catch(() => {});
     }
@@ -2368,8 +2372,31 @@ export class GT40CockpitSimulator {
       onLoaded: (glbGroup, holder, suitMat) => {
         this.driver.root.visible = false;
         if (suitMat) {
-          suitMat.envMapIntensity = 0.16;
-          suitMat.roughness = 0.92;
+          // Calibrated matte Nomex cloth weave texture & muted cream albedo so driver never looks blown out
+          const weaveCanvas = document.createElement('canvas');
+          weaveCanvas.width = 128;
+          weaveCanvas.height = 128;
+          const wCtx = weaveCanvas.getContext('2d');
+          wCtx.fillStyle = '#808080';
+          wCtx.fillRect(0, 0, 128, 128);
+          for (let y = 0; y < 128; y += 2) {
+            for (let x = 0; x < 128; x += 2) {
+              const v = ((x + y) % 4 === 0) ? 148 : 108;
+              wCtx.fillStyle = `rgb(${v},${v},${v})`;
+              wCtx.fillRect(x, y, 2, 2);
+            }
+          }
+          const weaveTex = new THREE.CanvasTexture(weaveCanvas);
+          weaveTex.wrapS = THREE.RepeatWrapping;
+          weaveTex.wrapT = THREE.RepeatWrapping;
+          weaveTex.repeat.set(16, 16);
+          suitMat.color.setHex(0xb5aa95);
+          suitMat.bumpMap = weaveTex;
+          suitMat.bumpScale = 0.008;
+          suitMat.roughnessMap = weaveTex;
+          suitMat.envMapIntensity = 0.08;
+          suitMat.roughness = 0.96;
+          suitMat.needsUpdate = true;
         }
         cockpitGroup.add(glbGroup);
         holder.traverse((obj) => {

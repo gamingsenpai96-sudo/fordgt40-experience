@@ -71,8 +71,8 @@ export class LeMansGame {
     // Car center is placed at Y = -3.55 + 1.116 = -2.434m (tires flush on asphalt)
     // Pit straight heading is along +X axis (towards Dunlop chicane at X ~ -3300)
     this.carState = {
-      position: new THREE.Vector3(-3873.0, -2.434, -4839.7),
-      rotation: 0,                                // 0 rad = facing +X down pit straight
+      position: new THREE.Vector3(-3888.0, -2.434, -4839.7),
+      rotation: -1.5532,                          // Facing -Z straight down Le Mans pit straight from starting line
       speed: 0,                                   // m/s
       maxSpeed: 94.5,                             // ~340 km/h (Mulsanne top speed)
       maxReverseSpeed: -14.0,                     // ~50 km/h
@@ -86,9 +86,9 @@ export class LeMansGame {
       rpm: 1000
     };
 
-    // Camera follow state (Scaled for 3x GT40 proportions)
-    this.currentCamPos  = new THREE.Vector3(-3892, 2.5, -4839.7);
-    this.currentCamLook = new THREE.Vector3(-3840, -1.5, -4839.7);
+    // Camera follow state (Scaled for 3x GT40 proportions, behind car facing -Z)
+    this.currentCamPos  = new THREE.Vector3(-3888.0, 2.5, -4820.0);
+    this.currentCamLook = new THREE.Vector3(-3888.0, -1.5, -4875.0);
 
     // Collision & ground raycasters
     this.downRay        = new THREE.Raycaster();
@@ -1216,12 +1216,22 @@ export class LeMansGame {
     window.lenisInstance?.stop?.();
     this.onResize();
 
-    // Always spawn squarely on the Le Mans starting line for the race countdown
-    this.carState.position.set(-3873.0, -2.434, -4839.7);
-    this.carState.rotation = 0;
+    // Always spawn squarely on the Le Mans starting line facing down the pit straight (-Z)
+    this.carState.position.set(-3888.0, -2.434, -4839.7);
+    this.carState.rotation = -1.5532;
     this.carState.speed = 0;
     this.carState.steerAngle = 0;
     this.snapCarToGround();
+    this.currentCamPos.set(
+      this.carState.position.x,
+      this.carState.position.y + 4.8,
+      this.carState.position.z + 17.5
+    );
+    this.currentCamLook.set(
+      this.carState.position.x,
+      this.carState.position.y + 1.8,
+      this.carState.position.z - 35.0
+    );
 
     this.initAudio();
     this.resumeAudio();
@@ -1356,7 +1366,7 @@ export class LeMansGame {
     s.steerAngle += (targetSteer - s.steerAngle) * s.steerSpeed * delta;
 
     // 2. Throttle & Acceleration calibrated to match the uploaded audio
-    const prevX = s.position.x;
+    const prevZ = s.position.z;
     let throttle = 0;
     let isBraking = false;
     const currentKmh = Math.abs(Math.round(s.speed * 3.6));
@@ -1536,8 +1546,8 @@ export class LeMansGame {
       }
       this.lapDistance += Math.abs(s.speed) * delta;
 
-      // Crossed Start/Finish Line (X = -3873.0, Z ~ -4839.7) after completing circuit
-      if (prevX < -3873.0 && s.position.x >= -3873.0 && Math.abs(s.position.z - (-4839.7)) < 45 && this.lapDistance > 1500) {
+      // Crossed Start/Finish Line (Z = -4839.7, X ~ -3888) moving down -Z after completing circuit
+      if (prevZ > -4839.7 && s.position.z <= -4839.7 && Math.abs(s.position.x - (-3888.0)) < 45 && this.lapDistance > 1500) {
         if (!this.bestLapMs || elapsed < this.bestLapMs) {
           this.bestLapMs = elapsed;
           try { localStorage.setItem('gt40_best_lap_ms', String(Math.round(elapsed))); } catch {}
