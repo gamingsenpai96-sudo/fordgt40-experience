@@ -373,12 +373,10 @@ export class GT40LeMansJourney {
     this._lastHoverTime = 0;
     this._lastHudTime = 0;
 
-    // 4 main interactive hotspots along the exterior moving GT40
+    // Main interactive hotspots along the exterior moving GT40 (Door & Rear Engine only)
     this.hotspotDefs = [
       { key: 'driver_door', badge: '01', short: 'DOOR • COCKPIT', anchor: null, localOffset: new THREE.Vector3(-0.79, 0.24, 0.02) },
-      { key: 'rear_engine', badge: '02', short: 'ENGINE • ENGINEERING 3D', anchor: null, localOffset: new THREE.Vector3(-0.34, 0.45, -1.25) },
-      { key: 'front_bonnet', badge: '03', short: 'BONNET • FRONT BAY', anchor: null, localOffset: new THREE.Vector3(0.0, 0.23, 1.56) },
-      { key: 'wheel', badge: '04', short: 'WHEEL • SUSPENSION', anchor: null, localOffset: new THREE.Vector3(-0.84, 0.03, 1.23) }
+      { key: 'rear_engine', badge: '02', short: 'ENGINE • ENGINEERING 3D', anchor: null, localOffset: new THREE.Vector3(-0.34, 0.45, -1.25) }
     ];
     this.hotspotNodes = new Map();
     this.calloutNodes = [];
@@ -1226,32 +1224,17 @@ export class GT40LeMansJourney {
       this.zoneMeshes.set(part, 'bruce_mclaren_driver');
     });
 
-    // Clickable Moto-Lita Steering Wheel synced with driver's hands at (-0.28, 0.25, 0.44)
+    // Invisible Moto-Lita Steering Wheel hit target (uses GLB steering wheel mesh so no duplicate wheel renders)
     this.exteriorSteeringWheel = new THREE.Group();
     this.exteriorSteeringWheel.position.set(-0.28, 0.23, 0.46);
     this.exteriorSteeringWheel.rotation.x = -0.32;
-    const wheelRimMat = new THREE.MeshStandardMaterial({ color: 0x181412, roughness: 0.42, metalness: 0.15 });
-    const wheelSpokeMat = new THREE.MeshStandardMaterial({ color: 0xb8bec6, roughness: 0.28, metalness: 0.85 });
-    const wheelRim = new THREE.Mesh(new THREE.TorusGeometry(0.184, 0.014, 10, 28), wheelRimMat);
-    const wheelHub = new THREE.Mesh(new THREE.CylinderGeometry(0.038, 0.038, 0.024, 16), wheelSpokeMat);
-    wheelHub.rotation.x = Math.PI / 2;
-    const spokeAngles = [Math.PI / 2, Math.PI * 1.18, Math.PI * 1.82];
-    spokeAngles.forEach((ang) => {
-      const spoke = new THREE.Mesh(new THREE.BoxGeometry(0.022, 0.17, 0.008), wheelSpokeMat);
-      spoke.position.set(Math.cos(ang) * 0.085, Math.sin(ang) * 0.085, 0);
-      spoke.rotation.z = ang - Math.PI / 2;
-      this.exteriorSteeringWheel.add(spoke);
-      this.zoneMeshes.set(spoke, 'steering_wheel');
-    });
     const wheelHitDisc = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.21, 0.21, 0.04, 16),
+      new THREE.CylinderGeometry(0.18, 0.18, 0.04, 16),
       new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.0, depthWrite: false })
     );
     wheelHitDisc.rotation.x = Math.PI / 2;
-    this.exteriorSteeringWheel.add(wheelRim, wheelHub, wheelHitDisc);
+    this.exteriorSteeringWheel.add(wheelHitDisc);
     this.chassisGroup.add(this.exteriorSteeringWheel);
-    this.zoneMeshes.set(wheelRim, 'steering_wheel');
-    this.zoneMeshes.set(wheelHub, 'steering_wheel');
     this.zoneMeshes.set(wheelHitDisc, 'steering_wheel');
 
     this.initExhaustPuffPool();
@@ -1930,6 +1913,9 @@ export class GT40LeMansJourney {
     const hits = this._raycaster.intersectObjects(targets, false);
     if (hits.length > 0) {
       const rawZone = this.zoneMeshes.get(hits[0].object) || null;
+      if (rawZone === 'front_bonnet' || rawZone === 'wheel') {
+        return null;
+      }
       if (this.mode === 'door_open_choice') {
         return (rawZone === 'bruce_mclaren_driver' || rawZone === 'steering_wheel') ? rawZone : null;
       }

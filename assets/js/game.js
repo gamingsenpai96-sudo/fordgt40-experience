@@ -1342,25 +1342,33 @@ export class LeMansGame {
     // Check barrier and guardrail collisions
     this.checkBarrierCollisions(forwardX, forwardZ, delta);
 
-    // 5. Robust Ground Tracking (Prevents the car from EVER going underground)
-    // Cast ray straight down from 30 meters above the car across all ground/terrain meshes
+    // 5. Robust Ground Tracking (Prevents the car from EVER going underground or wobbling)
     if (this.groundMeshes.length > 0) {
-      this.downRay.set(
-        new THREE.Vector3(s.position.x, s.position.y + 30.0, s.position.z),
-        this.downDir
-      );
-      this.downRay.far = 100.0;
-      const hits = this.downRay.intersectObjects(this.groundMeshes, true);
-
-      if (hits.length > 0) {
-        // Prefer main asphalt/road surface so overlapping curb/line triangles don't cause bumps
+      const sampleGroundY = (px, pz) => {
+        this.downRay.set(new THREE.Vector3(px, s.position.y + 30.0, pz), this.downDir);
+        this.downRay.far = 100.0;
+        const hits = this.downRay.intersectObjects(this.groundMeshes, true);
+        if (hits.length === 0) return null;
         const roadHit = hits.find((h) => {
           const n = (h.object?.material?.name || h.object?.name || '').toLowerCase();
           return n.includes('road') || n.includes('asphalt') || n.includes('start');
         });
-        const targetGroundY = (roadHit || hits[0]).point.y + this.wheelOffset;
-        const stepY = THREE.MathUtils.clamp((targetGroundY - s.position.y) * Math.min(1.0, 4.5 * delta), -0.06, 0.06);
-        s.position.y += stepY;
+        return (roadHit || hits[0]).point.y;
+      };
+
+      const centerY = sampleGroundY(s.position.x, s.position.z);
+      const frontY = sampleGroundY(s.position.x + forwardX * 2.4, s.position.z + forwardZ * 2.4);
+      const rearY = sampleGroundY(s.position.x - forwardX * 2.4, s.position.z - forwardZ * 2.4);
+      const validYs = [centerY, frontY, rearY].filter((v) => v !== null);
+      if (validYs.length > 0) {
+        const roadY = Math.max(...validYs);
+        const targetGroundY = roadY + this.wheelOffset;
+        const followAlpha = 1 - Math.exp(-24 * delta);
+        s.position.y += (targetGroundY - s.position.y) * followAlpha;
+        // Hard floor clamp so car never dips below the track surface at high speed
+        if (s.position.y < targetGroundY) {
+          s.position.y = targetGroundY;
+        }
       }
     }
 
@@ -1369,12 +1377,17 @@ export class LeMansGame {
     // In car model local space, front is +Z. Map forward (+X) to local +Z:
     this.carGroup.rotation.y = -s.rotation + Math.PI / 2;
 
-    // Suspension pitch & roll dynamics
-    const rollAngle = s.steerAngle * (s.speed / s.maxSpeed) * 0.12;
-    const pitchAngle = isBraking ? 0.025 : (throttle > 0 ? -0.02 : 0);
+    // Smoothly damped suspension pitch & roll (no high-speed wobble or tire clipping)
+    const suspSpeedRatio = Math.min(1, Math.abs(s.speed) / s.maxSpeed);
+    const targetRoll = s.steerAngle * suspSpeedRatio * 0.045;
+    const targetPitch = isBraking ? 0.012 : (throttle > 0 ? -0.008 : 0);
+    const suspAlpha = 1 - Math.exp(-10 * delta);
+    this._smoothRoll = (this._smoothRoll || 0) + (targetRoll - (this._smoothRoll || 0)) * suspAlpha;
+    this._smoothPitch = (this._smoothPitch || 0) + (targetPitch - (this._smoothPitch || 0)) * suspAlpha;
     if (this.carModel) {
-      this.carModel.rotation.z = rollAngle;
-      this.carModel.rotation.x = pitchAngle;
+      this.carModel.rotation.z = this._smoothRoll;
+      this.carModel.rotation.x = this._smoothPitch;
+      this.carModel.position.y = Math.abs(this._smoothPitch) * 0.45 + Math.abs(this._smoothRoll) * 0.25;
     }
 
     // Keep sunlight target centered on car for crisp dynamic shadows
@@ -1447,9 +1460,11 @@ export class LeMansGame {
       const forwardX = Math.cos(s.rotation);
       const forwardZ = Math.sin(s.rotation);
 
-      // Camera distance and height scaled for the 3x car
-      const followDist = 17.5 + (Math.abs(s.speed) / s.maxSpeed) * 3.5;
-      const followHeight = 4.8 + (Math.abs(s.speed) / s.maxSpeed) * 0.8;
+      // Camera distance and height scaled for the 3x car with smooth speed damping (no wobble)
+      const rawSpeedRatio = Math.min(1, Math.abs(s.speed) / s.maxSpeed);
+      this._camSpeedRatio = (this._camSpeedRatio || 0) + (rawSpeedRatio - (this._camSpeedRatio || 0)) * (1 - Math.exp(-5 * delta));
+      const followDist = 17.5 + this._camSpeedRatio * 3.0;
+      const followHeight = 4.8 + this._camSpeedRatio * 0.65;
 
       const targetCamPos = new THREE.Vector3(
         s.position.x - forwardX * followDist,
@@ -1465,9 +1480,12 @@ export class LeMansGame {
         s.position.z + forwardZ * lookDist
       );
 
-      const lerpSpeed = Math.min(1.0, 8.5 * delta);
-      this.currentCamPos.lerp(targetCamPos, lerpSpeed);
-      this.currentCamLook.lerp(targetLook, lerpSpeed);
+      const xzAlpha = 1 - Math.exp(-18 * delta);
+      const yAlpha = 1 - Math.exp(-12 * delta);
+      this.currentCamPos.x += (targetCamPos.x - this.currentCamPos.x) * xzAlpha;
+      this.currentCamPos.z += (targetCamPos.z - this.currentCamPos.z) * xzAlpha;
+      this.currentCamPos.y += (targetCamPos.y - this.currentCamPos.y) * yAlpha;
+      this.currentCamLook.lerp(targetLook, xzAlpha);
 
       // Impact shake on barrier collision
       if (this.impactShake > 0.001) {

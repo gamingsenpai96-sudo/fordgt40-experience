@@ -45,9 +45,9 @@ export class GT40CockpitSimulator {
     this.telemetryStatus = document.getElementById('cockpit-engine-status');
 
     // Stationary driver eye position inside Ford GT40 Mk II (Right-Hand Drive)
-    // Positioned slightly forward/inboard of Bruce McLaren's reclined helmet so windshield,
-    // Stewart-Warner cluster, Moto-Lita wheel, gated shifter & Telemetry Screen frame naturally.
-    this.eyePosition = new THREE.Vector3(-0.22, 0.53, 0.30);
+    // Positioned back in the driver's seat pocket so windshield, A-pillars,
+    // full Stewart-Warner cluster, Moto-Lita wheel, gated shifter & Telemetry Screen frame naturally.
+    this.eyePosition = new THREE.Vector3(-0.23, 0.535, 0.16);
     this.lookTarget = new THREE.Vector3();
 
     // Look-around rotation angles (radians)
@@ -79,8 +79,8 @@ export class GT40CockpitSimulator {
     // Integrated In-Car Telemetry Screen, Interactive Driver & Drive Takeover State
     this.baseEyePosition = this.eyePosition.clone();
     this.targetEyePosition = this.eyePosition.clone();
-    this.baseFov = 62;
-    this.targetFov = 62;
+    this.baseFov = 64;
+    this.targetFov = 64;
     this.screenZoomActive = false;
     this.screenTakeoverTriggered = false;
     this.screenTakeoverTimer = null;
@@ -443,7 +443,7 @@ export class GT40CockpitSimulator {
     // 2. Camera: Wide immersive cockpit perspective with near clipping set to 4cm
     const width = this.canvas.clientWidth || (this.container ? this.container.clientWidth : 0) || window.innerWidth || 1440;
     const height = this.canvas.clientHeight || (this.container ? this.container.clientHeight : 0) || 680;
-    this.camera = new THREE.PerspectiveCamera(65, width / height, 0.04, 350);
+    this.camera = new THREE.PerspectiveCamera(64, width / height, 0.04, 350);
     this.camera.position.copy(this.eyePosition);
 
     // 3. Renderer with HDR ACES Filmic Tone Mapping
@@ -617,7 +617,31 @@ export class GT40CockpitSimulator {
     groove.position.set(0.28, -0.373, 40);
     trackGroup.add(groove);
 
-    // 3. Starting Grid Slot #2 (Bruce McLaren & Chris Amon - Chassis P/1046)
+    // 3. Starting Grid Slot #2 & Checkered Start/Finish Line
+    const sfCanvas = document.createElement('canvas');
+    sfCanvas.width = 512;
+    sfCanvas.height = 128;
+    const sfCtx = sfCanvas.getContext('2d');
+    const sq = 32;
+    for (let r = 0; r < 4; r++) {
+      for (let c = 0; c < 16; c++) {
+        sfCtx.fillStyle = (r + c) % 2 === 0 ? '#e5e7eb' : '#111827';
+        sfCtx.fillRect(c * sq, r * sq, sq, sq);
+      }
+    }
+    const sfTex = new THREE.CanvasTexture(sfCanvas);
+    sfTex.colorSpace = THREE.SRGBColorSpace;
+    sfTex.wrapS = THREE.RepeatWrapping;
+    sfTex.repeat.set(3, 1);
+    const sfLine = new THREE.Mesh(
+      new THREE.PlaneGeometry(16.0, 1.1),
+      new THREE.MeshStandardMaterial({ map: sfTex, roughness: 0.85, metalness: 0.05 })
+    );
+    sfLine.rotation.x = -Math.PI / 2;
+    sfLine.position.set(-5.4, -0.371, 6.2);
+    sfLine.receiveShadow = true;
+    trackGroup.add(sfLine);
+
     const gridMat = new THREE.MeshBasicMaterial({ color: 0xdedede });
     const frontLine = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 0.22), gridMat);
     frontLine.rotation.x = -Math.PI / 2;
@@ -633,6 +657,32 @@ export class GT40CockpitSimulator {
     rightLine.rotation.x = -Math.PI / 2;
     rightLine.position.set(1.88, -0.372, 0.05);
     trackGroup.add(rightLine);
+
+    // Painted Le Mans Red/White Trackside Curbs (Kerbs)
+    const kerbCanvas = document.createElement('canvas');
+    kerbCanvas.width = 64;
+    kerbCanvas.height = 512;
+    const kCtx = kerbCanvas.getContext('2d');
+    for (let i = 0; i < 8; i++) {
+      kCtx.fillStyle = i % 2 === 0 ? '#b91c1c' : '#e2e8f0';
+      kCtx.fillRect(0, i * 64, 64, 64);
+    }
+    const kerbTex = new THREE.CanvasTexture(kerbCanvas);
+    kerbTex.colorSpace = THREE.SRGBColorSpace;
+    kerbTex.wrapS = THREE.RepeatWrapping;
+    kerbTex.wrapT = THREE.RepeatWrapping;
+    kerbTex.repeat.set(1, 45);
+    const kerbMat = new THREE.MeshStandardMaterial({ map: kerbTex, roughness: 0.85, metalness: 0.05 });
+
+    const leftKerb = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.05, 220), kerbMat);
+    leftKerb.position.set(-13.4, -0.355, 30);
+    leftKerb.receiveShadow = true;
+    trackGroup.add(leftKerb);
+
+    const rightKerb = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.05, 220), kerbMat);
+    rightKerb.position.set(2.55, -0.355, 30);
+    rightKerb.receiveShadow = true;
+    trackGroup.add(rightKerb);
 
     // Grid Slot numeral "2" on track
     const canvasSlot = document.createElement('canvas');
@@ -704,20 +754,37 @@ export class GT40CockpitSimulator {
     boardMesh.rotation.y = -Math.PI / 2;
     trackGroup.add(boardMesh);
 
-    // 6. Stack of Goodyear Tires by the Pit Wall
-    const tireMat = new THREE.MeshStandardMaterial({ color: 0x181a1e, roughness: 0.92 });
-    for (let i = 0; i < 4; i++) {
-      const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.38, 0.28, 20), tireMat);
-      tire.position.set(3.9, -0.23 + (i * 0.29), 0.5);
-      tire.castShadow = true;
-      trackGroup.add(tire);
+    // 6. Stack of Goodyear Tires by the Pit Wall (with painted sidewall stripes)
+    const tireMat = new THREE.MeshStandardMaterial({ color: 0x16181d, roughness: 0.92 });
+    const tireStripeMat = new THREE.MeshStandardMaterial({ color: 0xeab308, roughness: 0.65 });
+    for (let stackIdx = 0; stackIdx < 2; stackIdx++) {
+      const zOff = stackIdx === 0 ? 0.5 : 8.5;
+      for (let i = 0; i < 4; i++) {
+        const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.38, 0.28, 22), tireMat);
+        tire.position.set(3.9, -0.23 + (i * 0.29), zOff);
+        tire.castShadow = true;
+        trackGroup.add(tire);
+        const stripe = new THREE.Mesh(new THREE.TorusGeometry(0.29, 0.015, 6, 20), tireStripeMat);
+        stripe.rotation.x = Math.PI / 2;
+        stripe.position.set(3.9, -0.09 + (i * 0.29), zOff);
+        trackGroup.add(stripe);
+      }
     }
 
-    // 7. Trackside Steel Armco Guardrail & 1966 Banners (Driver's Left Side)
+    // 7. Trackside Double-Rail Armco Steel Guardrail, Posts & 1966 Banners (Driver's Left Side)
     const armcoMat = new THREE.MeshStandardMaterial({ color: 0x9ca3af, metalness: 0.85, roughness: 0.35 });
-    const armco = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.65, 220), armcoMat);
-    armco.position.set(-14.2, 0.05, 30);
-    trackGroup.add(armco);
+    const postMat = new THREE.MeshStandardMaterial({ color: 0x4b5563, metalness: 0.75, roughness: 0.45 });
+    const armcoUpper = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.28, 220), armcoMat);
+    armcoUpper.position.set(-14.2, 0.22, 30);
+    trackGroup.add(armcoUpper);
+    const armcoLower = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.24, 220), armcoMat);
+    armcoLower.position.set(-14.2, -0.08, 30);
+    trackGroup.add(armcoLower);
+    for (let pz = -40; pz <= 130; pz += 5) {
+      const post = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.78, 0.12), postMat);
+      post.position.set(-14.32, 0.0, pz);
+      trackGroup.add(post);
+    }
 
     // Historic Sponsor Banners
     const makeBanner = (brand, bgColor, textColor, zPos) => {
@@ -750,24 +817,72 @@ export class GT40CockpitSimulator {
     makeBanner('SEV MARCHAL', '#0f172a', '#38bdf8', 5);
     makeBanner('CHAMPION', '#ffffff', '#dc2626', -5);
 
-    // 8. Covered Main Grandstand (Opposite Pit Straight)
-    const standMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.85 });
+    // 8. Covered Main Grandstand with Tiered Seating, Columns & Floodlight Towers
+    const standMat = new THREE.MeshStandardMaterial({ color: 0x3f4c5e, roughness: 0.85 });
+    const standStepMat = new THREE.MeshStandardMaterial({ color: 0x283241, roughness: 0.9 });
     const standRoofMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.70 });
 
     const standBody = new THREE.Mesh(new THREE.BoxGeometry(8.0, 6.5, 140), standMat);
-    standBody.position.set(-19.5, 2.9, 30);
+    standBody.position.set(-20.2, 2.9, 30);
     trackGroup.add(standBody);
 
-    const standRoof = new THREE.Mesh(new THREE.BoxGeometry(10.5, 0.45, 142), standRoofMat);
+    for (let tier = 0; tier < 4; tier++) {
+      const tierMesh = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.55, 138), standStepMat);
+      tierMesh.position.set(-15.8 - tier * 1.1, 0.9 + tier * 0.85, 30);
+      trackGroup.add(tierMesh);
+    }
+    for (let cz = -30; cz <= 90; cz += 15) {
+      const col = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.16, 6.4, 8), postMat);
+      col.position.set(-14.8, 2.8, cz);
+      trackGroup.add(col);
+    }
+
+    const standRoof = new THREE.Mesh(new THREE.BoxGeometry(10.8, 0.45, 142), standRoofMat);
     standRoof.position.set(-18.5, 6.3, 30);
     standRoof.rotation.z = -0.15;
     trackGroup.add(standRoof);
 
-    // 9. Iconic Dunlop Tire Bridge
+    // Trackside Night-Race Floodlight Towers
+    const floodLampMat = new THREE.MeshBasicMaterial({ color: 0xfff3d1 });
+    [-10, 28, 68].forEach((fz) => {
+      const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.26, 12.5, 8), postMat);
+      mast.position.set(-15.2, 5.8, fz);
+      trackGroup.add(mast);
+      const head = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.75, 1.4), postMat);
+      head.position.set(-14.5, 12.1, fz);
+      head.rotation.z = -0.35;
+      trackGroup.add(head);
+      const lamp = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.6), floodLampMat);
+      lamp.position.set(-13.8, 11.85, fz);
+      lamp.rotation.y = Math.PI / 2;
+      lamp.rotation.x = 0.35;
+      trackGroup.add(lamp);
+    });
+
+    // 9. Iconic Dunlop Tire Bridge with Tire Tread Texture & Sidewalk Railings
     const bridgeGroup = new THREE.Group();
     bridgeGroup.position.set(-4.0, 0.0, 115);
-    const bridgeArchMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.4, roughness: 0.6 });
-    const arch = new THREE.Mesh(new THREE.CylinderGeometry(14, 14, 4.5, 32, 1, false, 0, Math.PI), bridgeArchMat);
+    const treadCanvas = document.createElement('canvas');
+    treadCanvas.width = 256;
+    treadCanvas.height = 256;
+    const trCtx = treadCanvas.getContext('2d');
+    trCtx.fillStyle = '#181c24';
+    trCtx.fillRect(0, 0, 256, 256);
+    trCtx.strokeStyle = '#2d3442';
+    trCtx.lineWidth = 10;
+    for (let y = 16; y < 256; y += 32) {
+      trCtx.beginPath();
+      trCtx.moveTo(0, y);
+      trCtx.lineTo(128, y + 18);
+      trCtx.lineTo(256, y);
+      trCtx.stroke();
+    }
+    const treadTex = new THREE.CanvasTexture(treadCanvas);
+    treadTex.wrapS = THREE.RepeatWrapping;
+    treadTex.wrapT = THREE.RepeatWrapping;
+    treadTex.repeat.set(12, 3);
+    const bridgeArchMat = new THREE.MeshStandardMaterial({ map: treadTex, metalness: 0.25, roughness: 0.75 });
+    const arch = new THREE.Mesh(new THREE.CylinderGeometry(14, 14, 4.5, 36, 1, false, 0, Math.PI), bridgeArchMat);
     arch.rotation.z = Math.PI / 2;
     arch.rotation.y = Math.PI / 2;
     arch.position.set(0, 2.5, 0);
@@ -779,6 +894,9 @@ export class GT40CockpitSimulator {
     const dCtx = dunlopCanvas.getContext('2d');
     dCtx.fillStyle = '#0f172a';
     dCtx.fillRect(0, 0, 512, 128);
+    dCtx.strokeStyle = '#facc15';
+    dCtx.lineWidth = 6;
+    dCtx.strokeRect(6, 6, 500, 116);
     dCtx.font = 'bold 72px Oswald, sans-serif';
     dCtx.fillStyle = '#facc15';
     dCtx.textAlign = 'center';
@@ -791,23 +909,30 @@ export class GT40CockpitSimulator {
     bridgeGroup.add(dunlopBanner);
     trackGroup.add(bridgeGroup);
 
-    // 10. Countryside Trees
-    const treeMat = new THREE.MeshStandardMaterial({ color: 0x1b3b22, roughness: 0.95 });
+    // 10. Multi-layered Countryside Trees
+    const treeMatA = new THREE.MeshStandardMaterial({ color: 0x1a3a21, roughness: 0.95 });
+    const treeMatB = new THREE.MeshStandardMaterial({ color: 0x224829, roughness: 0.92 });
     const trunkMat = new THREE.MeshStandardMaterial({ color: 0x3d2b1f, roughness: 0.90 });
 
     for (let i = 0; i < 18; i++) {
       const z = -40 + (i * 18);
-      const treeL = new THREE.Mesh(new THREE.ConeGeometry(3.5, 9, 8), treeMat);
-      treeL.position.set(-28 + (Math.sin(i) * 3), 4.5, z);
-      trackGroup.add(treeL);
+      const lx = -28 + (Math.sin(i) * 3);
+      const treeL1 = new THREE.Mesh(new THREE.DodecahedronGeometry(3.2, 1), treeMatA);
+      treeL1.position.set(lx, 5.2, z);
+      const treeL2 = new THREE.Mesh(new THREE.DodecahedronGeometry(2.4, 1), treeMatB);
+      treeL2.position.set(lx + 1.2, 6.8, z - 0.8);
+      trackGroup.add(treeL1, treeL2);
 
-      const trunkL = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.45, 2.5, 8), trunkMat);
-      trunkL.position.set(-28 + (Math.sin(i) * 3), 0.8, z);
+      const trunkL = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.45, 3.2, 8), trunkMat);
+      trunkL.position.set(lx, 1.2, z);
       trackGroup.add(trunkL);
 
-      const treeR = new THREE.Mesh(new THREE.ConeGeometry(3.2, 8.5, 8), treeMat);
-      treeR.position.set(16 + (Math.cos(i) * 3), 4.2, z);
-      trackGroup.add(treeR);
+      const rx = 16 + (Math.cos(i) * 3);
+      const treeR = new THREE.Mesh(new THREE.DodecahedronGeometry(3.0, 1), treeMatA);
+      treeR.position.set(rx, 4.8, z);
+      const trunkR = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.42, 3.0, 8), trunkMat);
+      trunkR.position.set(rx, 1.1, z);
+      trackGroup.add(treeR, trunkR);
     }
 
     this.scene.add(trackGroup);
@@ -1188,11 +1313,18 @@ export class GT40CockpitSimulator {
     colMesh.rotation.x = Math.PI / 2;
     wheelGroup.add(colMesh);
 
-    // Dark vintage rim with countersunk rivets
+    // Dark vintage stitched leather rim with 12 o'clock marker & countersunk rivets
     const rimRadius = 0.185;
-    const rimTube = 0.015;
-    const rimMesh = new THREE.Mesh(new THREE.TorusGeometry(rimRadius, rimTube, 16, 48), leatherMat);
+    const rimTube = 0.0155;
+    const rimMesh = new THREE.Mesh(new THREE.TorusGeometry(rimRadius, rimTube, 22, 64), leatherMat);
     wheelGroup.add(rimMesh);
+
+    const topMarker = new THREE.Mesh(
+      new THREE.TorusGeometry(rimRadius, rimTube + 0.0008, 12, 16, 0.16),
+      new THREE.MeshStandardMaterial({ color: 0xeab308, roughness: 0.5, metalness: 0.05 })
+    );
+    topMarker.rotation.z = Math.PI / 2 - 0.08;
+    wheelGroup.add(topMarker);
 
     // 18 Countersunk aluminum rivets around rim perimeter
     const rivetMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.92, roughness: 0.2 });
@@ -1507,20 +1639,30 @@ export class GT40CockpitSimulator {
       const gGroup = new THREE.Group();
 
       const c = document.createElement('canvas');
-      c.width = 512;
-      c.height = 512;
+      c.width = 1024;
+      c.height = 1024;
       const ctx = c.getContext('2d');
+      ctx.scale(2, 2);
 
-      ctx.fillStyle = '#0a0c10';
+      const dialGrad = ctx.createRadialGradient(256, 256, 30, 256, 256, 250);
+      dialGrad.addColorStop(0, '#131720');
+      dialGrad.addColorStop(0.85, '#090b10');
+      dialGrad.addColorStop(1, '#040507');
+      ctx.fillStyle = dialGrad;
       ctx.beginPath();
       ctx.arc(256, 256, 250, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.strokeStyle = '#e2e8f0';
-      ctx.lineWidth = 5;
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 4;
       ctx.beginPath();
       ctx.arc(256, 256, 238, 0, Math.PI * 2);
       ctx.stroke();
+
+      ctx.font = '600 14px Space Mono, monospace';
+      ctx.fillStyle = '#94a3b8';
+      ctx.textAlign = 'center';
+      ctx.fillText('STEWART-WARNER', 256, 338);
 
       const startAngle = Math.PI * 0.75;
       const endAngle = Math.PI * 2.25;

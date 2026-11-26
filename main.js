@@ -1222,8 +1222,15 @@
     }
 
     function ensureArModelLoaded() {
-      if (modelViewer && !modelViewer.getAttribute('src') && modelViewer.dataset.deferredSrc) {
-        modelViewer.setAttribute('src', modelViewer.dataset.deferredSrc);
+      if (!modelViewer) return;
+      const absGlb = new URL('assets/models/ar/gt40-ar.glb', window.location.href).href;
+      const curSrc = modelViewer.getAttribute('src');
+      if (!curSrc || curSrc !== absGlb) {
+        modelViewer.setAttribute('src', absGlb);
+      }
+      const absUsdz = new URL('assets/models/ar/gt40-ar.usdz', window.location.href).href;
+      if (modelViewer.getAttribute('ios-src') !== absUsdz) {
+        modelViewer.setAttribute('ios-src', absUsdz);
       }
     }
 
@@ -1270,6 +1277,7 @@
     // Direct Mobile AR Trigger Button Hook
     if (directTrigger && modelViewer) {
       directTrigger.addEventListener('click', () => {
+        ensureArModelLoaded();
         if (typeof modelViewer.activateAR === 'function') {
           modelViewer.activateAR();
         } else {
@@ -1281,6 +1289,7 @@
 
     // Auto-launch AR when visiting via QR scan on a mobile device
     if (window.location.search.includes('ar=true') && isMobileDevice && modelViewer) {
+      ensureArModelLoaded();
       setTimeout(() => {
         if (typeof modelViewer.activateAR === 'function') {
           modelViewer.activateAR();
@@ -1341,6 +1350,8 @@
         } else if (status === 'failed') {
           updateCompatStatus('AR SESSION UNAVAILABLE ON THIS DEVICE', 'is-error');
         } else if (status === 'not-presenting') {
+          modelViewer.cameraOrbit = '36deg 74deg 6.8m';
+          modelViewer.fieldOfView = '36deg';
           updateCompatStatus();
         }
       });
