@@ -238,7 +238,7 @@ export class LeMansGame {
     if (!window.__LEMANS_GLTF_PROMISE__) {
       window.__LEMANS_GLTF_PROMISE__ = new Promise((resolve, reject) => {
         loader.load(
-          'assets/models/track/source/lemans.glb',
+          'assets/models/track/source/lemans.glb?v=smooth2',
           (gltf) => resolve(gltf),
           (p) => {
             if (p.total) {
@@ -1359,7 +1359,8 @@ export class LeMansGame {
           return n.includes('road') || n.includes('asphalt') || n.includes('start');
         });
         const targetGroundY = (roadHit || hits[0]).point.y + this.wheelOffset;
-        s.position.y += (targetGroundY - s.position.y) * Math.min(1.0, 6.0 * delta);
+        const stepY = THREE.MathUtils.clamp((targetGroundY - s.position.y) * Math.min(1.0, 4.5 * delta), -0.06, 0.06);
+        s.position.y += stepY;
       }
     }
 
@@ -1475,11 +1476,7 @@ export class LeMansGame {
         this.impactShake *= 0.82;
       }
 
-      // High-speed vibration over 220 km/h (Mulsanne Straight feeling)
-      if (Math.abs(s.speed) > 60.0) {
-        const shake = (Math.random() - 0.5) * 0.04;
-        this.currentCamPos.y += shake;
-      }
+      // Smooth vertical ride over track elevation without artificial camera jitter
 
       this.camera.position.copy(this.currentCamPos);
       this.camera.lookAt(this.currentCamLook);

@@ -580,7 +580,7 @@ export class GT40LeMansJourney {
     if (!window.__LEMANS_GLTF_PROMISE__) {
       window.__LEMANS_GLTF_PROMISE__ = new Promise((resolve, reject) => {
         loader.load(
-          'assets/models/track/source/lemans.glb',
+          'assets/models/track/source/lemans.glb?v=smooth2',
           (gltf) => resolve(gltf),
           (p) => {
             if (p.total) {
@@ -2556,9 +2556,10 @@ export class GT40LeMansJourney {
     this.trackCurve.getTangentAt(u, this._tanOnSpline).normalize();
     this.trackCurve.getTangentAt(uAhead, this._tanNext).normalize();
 
-    // Raycast road height smoothly below car + front/rear probes for silky suspension along slopes
-    const rayCenterY = this.sampleGroundY(this._posOnSpline.x, this._posOnSpline.y, this._posOnSpline.z);
-    this.lastSmoothedGroundY += (rayCenterY - this.lastSmoothedGroundY) * Math.min(1.0, dt * 5.0);
+    // Raycast road height smoothly below car (clamped near smooth spline Y to prevent spikes)
+    const rawRayY = this.sampleGroundY(this._posOnSpline.x, this._posOnSpline.y, this._posOnSpline.z);
+    const clampedRayY = THREE.MathUtils.clamp(rawRayY, this._posOnSpline.y - 0.35, this._posOnSpline.y + 0.35);
+    this.lastSmoothedGroundY += (clampedRayY - this.lastSmoothedGroundY) * Math.min(1.0, dt * 4.5);
 
     this._probeFront.copy(this._posOnSpline).addScaledVector(this._tanOnSpline, 3.6);
     this._probeRear.copy(this._posOnSpline).addScaledVector(this._tanOnSpline, -3.6);
@@ -2599,9 +2600,9 @@ export class GT40LeMansJourney {
       engineHeave = Math.sin(t * 38) * 0.0055;
       engineRoll = Math.sin(t * 44) * 0.011;
     } else if (this.engineRunning) {
-      const idleAmt = 1.0 - speedFactor * 0.55;
-      engineHeave = Math.sin(t * 28) * 0.0022 * idleAmt;
-      engineRoll = Math.cos(t * 19) * 0.004 * idleAmt;
+      const idleAmt = Math.max(0, 1.0 - speedFactor * 3.0);
+      engineHeave = Math.sin(t * 28) * 0.0018 * idleAmt;
+      engineRoll = Math.cos(t * 19) * 0.003 * idleAmt;
       if (this.mode === 'cruise' && this.launchElapsed < 1.6) {
         squatPitch = -0.024 * Math.sin((this.launchElapsed / 1.6) * Math.PI);
       }
