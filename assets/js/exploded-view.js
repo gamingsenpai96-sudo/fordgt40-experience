@@ -1722,6 +1722,8 @@ export class GT40ExplodedViewer {
 
       } else if (name.includes('interior')) {
         this.parts.interior = child;
+        // Mirror GLB interior along X so the steering wheel sits on the right-hand drive (-X) side
+        child.scale.x = -1;
         child.userData.subsystem = 'cockpit';
         this.interactiveMeshes.push(child);
 
