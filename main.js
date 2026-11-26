@@ -1235,7 +1235,8 @@
     }
 
     // Dynamic High-Contrast Monochrome QR Code Generation
-    if (qrContainer && typeof QRCode !== 'undefined') {
+    const renderArQr = () => {
+      if (!qrContainer || typeof QRCode === 'undefined') return false;
       try {
         qrContainer.innerHTML = '';
         new QRCode(qrContainer, {
@@ -1246,9 +1247,14 @@
           colorLight: '#ffffff',
           correctLevel: QRCode.CorrectLevel.H
         });
+        return true;
       } catch (e) {
         console.warn('QR Code generation notice:', e);
+        return false;
       }
+    };
+    if (!renderArQr()) {
+      window.addEventListener('DOMContentLoaded', renderArQr, { once: true });
     }
 
     // Mobile / Touch Device Detection
