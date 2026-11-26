@@ -6288,18 +6288,19 @@ body.dest-chronicles #mission-top-bar.visible {
   bottom: 28px;
   left: 28px;
   z-index: 24;
-  max-width: 390px;
-  padding: 16px 20px;
-  background: rgba(8, 12, 20, 0.78);
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  border-left: 3px solid #38bdf8;
-  border-radius: 10px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55);
+  max-width: 410px;
+  padding: 20px 24px;
+  background: linear-gradient(145deg, rgba(10, 14, 24, 0.9), rgba(7, 10, 18, 0.82));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 3px solid #f0cc52;
+  border-radius: 12px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.06);
   pointer-events: none;
   opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.65s ease, transform 0.65s ease;
+  transform: translateY(16px);
+  transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .journey-glh-card.visible {
@@ -6308,44 +6309,75 @@ body.dest-chronicles #mission-top-bar.visible {
   pointer-events: auto;
 }
 
+.glh-header {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 10px;
+}
+
 .glh-kicker {
   font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
-  color: #38bdf8;
-  margin-bottom: 4px;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: #f0cc52;
+  text-transform: uppercase;
 }
 
 .glh-heading {
   font-family: var(--font-hero);
-  font-size: clamp(1.35rem, 2.1vw, 1.75rem);
-  letter-spacing: 0.16em;
-  color: #f8fafc;
-  margin: 0 0 8px 0;
-  line-height: 1.05;
+  font-size: clamp(1.75rem, 2.4vw, 2.15rem);
+  letter-spacing: 0.14em;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
 }
 
 .glh-summary {
   font-family: var(--font-body);
-  font-size: 0.92rem;
-  line-height: 1.45;
-  color: rgba(226, 232, 240, 0.9);
-  margin: 0 0 10px 0;
+  font-weight: 500;
+  font-size: 0.98rem;
+  line-height: 1.52;
+  letter-spacing: 0.015em;
+  color: rgba(236, 242, 248, 0.9);
+  margin: 0 0 14px 0;
+}
+
+.glh-summary em {
+  color: #ffffff;
+  font-style: italic;
 }
 
 .glh-guide {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  line-height: 1.45;
-  letter-spacing: 0.04em;
-  color: rgba(248, 250, 252, 0.88);
-  padding-top: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding-top: 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  margin: 0;
 }
 
-.glh-guide strong {
-  color: #fbbf24;
+.glh-guide-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.85);
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.glh-guide-text {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.88rem;
+  line-height: 1.42;
+  letter-spacing: 0.02em;
+  color: rgba(226, 232, 240, 0.86);
+}
+
+.glh-guide-text strong {
+  color: #f0cc52;
   font-weight: 700;
 }
 
@@ -7059,16 +7091,16 @@ body.dest-chronicles #mission-top-bar.visible {
   }
 
   .glh-heading {
-    font-size: 1.2rem;
+    font-size: 1.45rem;
   }
 
   .glh-summary {
-    font-size: 0.82rem;
-    margin-bottom: 8px;
+    font-size: 0.86rem;
+    margin-bottom: 10px;
   }
 
-  .glh-guide {
-    font-size: 0.62rem;
+  .glh-guide-text {
+    font-size: 0.78rem;
   }
 
   .journey-inspect-bar {
