@@ -2197,6 +2197,10 @@ export class GT40CockpitSimulator {
       hotspotName: 'bruce_mclaren_driver',
       onLoaded: (glbGroup, holder, suitMat) => {
         this.driver.root.visible = false;
+        if (suitMat) {
+          suitMat.envMapIntensity = 0.16;
+          suitMat.roughness = 0.92;
+        }
         cockpitGroup.add(glbGroup);
         holder.traverse((obj) => {
           if (obj.isMesh) {

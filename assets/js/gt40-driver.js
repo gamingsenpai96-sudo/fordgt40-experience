@@ -382,8 +382,9 @@ export function loadBruceMcLarenDriverGLB(THREE, loader, options = {}) {
 
   const suitMat = new THREE.MeshStandardMaterial({
     color: 0xffffff,
-    roughness: 0.78,
-    metalness: 0.05,
+    roughness: 0.88,
+    metalness: 0.02,
+    envMapIntensity: 0.25,
     emissive: new THREE.Color(0x000000),
     emissiveIntensity: 0.0
   });
@@ -419,37 +420,37 @@ export function loadBruceMcLarenDriverGLB(THREE, loader, options = {}) {
          float lz = vDrvPos.z;
          float ax = abs(lx);
 
-         // Default: Bruce McLaren Cream / Off-White Nomex Racing Suit
-         vec3 col = vec3(0.86, 0.81, 0.69);
+         // Default: Bruce McLaren Cream / Off-White Nomex Racing Suit (calibrated linear PBR albedo)
+         vec3 col = vec3(0.42, 0.37, 0.28);
 
          // Helmet (top head region)
          if (ly > 0.36) {
-           col = vec3(0.92, 0.90, 0.84); // Ivory white helmet shell
+           col = vec3(0.54, 0.51, 0.45); // Ivory white helmet shell
            if (lz > 0.02 && ly > 0.40 && ly < 0.60 && ax < 0.16) {
-             col = (ly > 0.48 && ly < 0.57) ? vec3(0.08, 0.10, 0.14) : vec3(0.74, 0.50, 0.38);
+             col = (ly > 0.48 && ly < 0.57) ? vec3(0.05, 0.06, 0.09) : vec3(0.42, 0.24, 0.17);
            } else if (ly > 0.36 && ly < 0.41) {
-             col = vec3(0.08, 0.18, 0.38); // Classic navy trim band
+             col = vec3(0.05, 0.11, 0.26); // Classic navy trim band
            }
          } else {
            // Gulf Navy-Blue & Burnt-Orange dual shoulder & sleeve stripes
            if (ly > -0.02 && ax > 0.16) {
              if (ax > 0.18 && ax < 0.25) {
-               col = vec3(0.07, 0.16, 0.38); // Gulf Navy
+               col = vec3(0.04, 0.10, 0.26); // Gulf Navy
              } else if (ax >= 0.25 && ax < 0.33) {
-               col = vec3(0.84, 0.28, 0.08); // Gulf Orange
+               col = vec3(0.56, 0.16, 0.04); // Gulf Orange
              }
            }
 
            // Gulf circular patch (right chest: lx < 0)
            float dGulf = length(vec2(lx + 0.11, ly - 0.16));
            if (lz > -0.15 && dGulf < 0.075) {
-             col = (ly > 0.16) ? vec3(0.86, 0.32, 0.10) : vec3(0.08, 0.20, 0.44);
+             col = (ly > 0.16) ? vec3(0.58, 0.18, 0.05) : vec3(0.05, 0.12, 0.30);
            }
 
            // Reynolds / Goodyear chest patches (left chest: lx > 0)
            if (lz > -0.15 && lx > 0.04 && lx < 0.20 && ly > 0.10 && ly < 0.26) {
-             col = vec3(0.09, 0.16, 0.34);
-             if (abs(ly - 0.18) < 0.016) col = vec3(0.92, 0.90, 0.86);
+             col = vec3(0.05, 0.10, 0.24);
+             if (abs(ly - 0.18) < 0.016) col = vec3(0.55, 0.52, 0.48);
            }
 
            // Racing harness straps & silver waist buckle
