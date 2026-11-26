@@ -2505,28 +2505,28 @@ export class GT40ExplodedViewer {
     cockpitDetails.name = 'Cockpit_Details';
     cockpitDetails.userData.subsystem = 'cockpit';
 
-    // Right-Hand Sill Gated Shifter & Knob
+    // Right-Hand Sill Gated Shifter & Knob (RHD = -X side when facing +Z)
     const shiftGate = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.018, 0.12), alumSpunMat);
-    shiftGate.position.set(0.48, 0.18, -0.05);
+    shiftGate.position.set(-0.48, 0.18, -0.05);
     cockpitDetails.add(shiftGate);
 
     const shiftLever = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.16, 8), chromeDamperMat);
-    shiftLever.position.set(0.48, 0.25, -0.05);
+    shiftLever.position.set(-0.48, 0.25, -0.05);
     shiftLever.rotation.x = -0.15;
     cockpitDetails.add(shiftLever);
 
     const shiftKnob = new THREE.Mesh(new THREE.SphereGeometry(0.016, 12, 12), steelShaftMat);
-    shiftKnob.position.set(0.48, 0.33, -0.07);
+    shiftKnob.position.set(-0.48, 0.33, -0.07);
     cockpitDetails.add(shiftKnob);
 
-    // Graviner Halon Fire Bottle
+    // Graviner Halon Fire Bottle (Passenger side = +X)
     const fireBottle = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.20, 14), anFittingRed);
     fireBottle.rotation.z = Math.PI / 2;
-    fireBottle.position.set(-0.25, 0.14, 0.32);
+    fireBottle.position.set(0.25, 0.14, 0.32);
     cockpitDetails.add(fireBottle);
 
     const fireValve = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.035, 8), carbGoldMat);
-    fireValve.position.set(-0.14, 0.14, 0.32);
+    fireValve.position.set(0.14, 0.14, 0.32);
     fireValve.rotation.z = Math.PI / 2;
     cockpitDetails.add(fireValve);
 
@@ -2537,7 +2537,7 @@ export class GT40ExplodedViewer {
 
     const tach = new THREE.Mesh(new THREE.CylinderGeometry(0.038, 0.038, 0.015, 20), alumSpunMat);
     tach.rotation.x = Math.PI / 2;
-    tach.position.set(0.24, 0.36, 0.47);
+    tach.position.set(-0.24, 0.36, 0.47);
     cockpitDetails.add(tach);
 
     [-0.12, -0.04, 0.04, 0.12].forEach((gX) => {
@@ -2547,26 +2547,26 @@ export class GT40ExplodedViewer {
       cockpitDetails.add(dial);
     });
 
-    // 14" Dished 3-Spoke Competition Steering Wheel
+    // 14" Dished 3-Spoke Competition Steering Wheel (RHD = -X)
     const steerCol = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.28, 12), steelShaftMat);
     steerCol.rotation.x = -Math.PI / 4;
-    steerCol.position.set(0.24, 0.28, 0.34);
+    steerCol.position.set(-0.24, 0.28, 0.34);
     cockpitDetails.add(steerCol);
 
     const steerRim = new THREE.Mesh(new THREE.TorusGeometry(0.12, 0.011, 12, 28), steelShaftMat);
     steerRim.rotation.x = -Math.PI / 4;
-    steerRim.position.set(0.24, 0.34, 0.26);
+    steerRim.position.set(-0.24, 0.34, 0.26);
     cockpitDetails.add(steerRim);
 
-    // Triple Drilled Aluminum Pedal Box
+    // Triple Drilled Aluminum Pedal Box (RHD = -X)
     [-0.04, 0.0, 0.04].forEach((pX) => {
       const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.14, 8), steelShaftMat);
-      arm.position.set(0.24 + pX, 0.12, 0.62);
+      arm.position.set(-0.24 + pX, 0.12, 0.62);
       arm.rotation.x = 0.25;
       cockpitDetails.add(arm);
 
       const pad = new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.038, 0.006), alumSpunMat);
-      pad.position.set(0.24 + pX, 0.07, 0.60);
+      pad.position.set(-0.24 + pX, 0.07, 0.60);
       cockpitDetails.add(pad);
     });
 
