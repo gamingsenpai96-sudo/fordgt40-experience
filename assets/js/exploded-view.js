@@ -2547,16 +2547,7 @@ export class GT40ExplodedViewer {
       cockpitDetails.add(dial);
     });
 
-    // 14" Dished 3-Spoke Competition Steering Wheel (RHD = -X)
-    const steerCol = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.28, 12), steelShaftMat);
-    steerCol.rotation.x = -Math.PI / 4;
-    steerCol.position.set(-0.24, 0.28, 0.34);
-    cockpitDetails.add(steerCol);
-
-    const steerRim = new THREE.Mesh(new THREE.TorusGeometry(0.12, 0.011, 12, 28), steelShaftMat);
-    steerRim.rotation.x = -Math.PI / 4;
-    steerRim.position.set(-0.24, 0.34, 0.26);
-    cockpitDetails.add(steerRim);
+    // (GLB interior mesh already includes the authentic RHD steering wheel)
 
     // Triple Drilled Aluminum Pedal Box (RHD = -X)
     [-0.04, 0.0, 0.04].forEach((pX) => {
