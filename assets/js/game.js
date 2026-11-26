@@ -169,19 +169,26 @@ export class LeMansGame {
     const hemiLight = new THREE.HemisphereLight(0xdde8ff, 0x334455, 1.1);
     this.scene.add(hemiLight);
 
-    this.sunLight = new THREE.DirectionalLight(0xffeed8, 2.8);
-    this.sunLight.position.set(-3600, 450, -4600);
+    this.sunLight = new THREE.DirectionalLight(0xfff2dc, 3.0);
+    this.sunLight.position.set(-3835, 56, -4865);
     this.sunLight.castShadow = true;
-    this.sunLight.shadow.mapSize.width = 1024;
-    this.sunLight.shadow.mapSize.height = 1024;
-    this.sunLight.shadow.camera.near = 10;
-    this.sunLight.shadow.camera.far = 1600;
-    this.sunLight.shadow.camera.left = -150;
-    this.sunLight.shadow.camera.right = 150;
-    this.sunLight.shadow.camera.top = 150;
-    this.sunLight.shadow.camera.bottom = -150;
+    this.sunLight.shadow.mapSize.width = 2048;
+    this.sunLight.shadow.mapSize.height = 2048;
+    this.sunLight.shadow.camera.near = 2;
+    this.sunLight.shadow.camera.far = 160;
+    this.sunLight.shadow.camera.left = -28;
+    this.sunLight.shadow.camera.right = 28;
+    this.sunLight.shadow.camera.top = 28;
+    this.sunLight.shadow.camera.bottom = -28;
+    this.sunLight.shadow.bias = -0.0003;
+    this.sunLight.shadow.normalBias = 0.025;
     this.scene.add(this.sunLight);
     this.scene.add(this.sunLight.target);
+
+    // Subtle cool rim light for realistic bodywork edge definition
+    const rimLight = new THREE.DirectionalLight(0xcbe0ff, 1.05);
+    rimLight.position.set(-3920, 38, -4790);
+    this.scene.add(rimLight);
 
     // Add car group into scene with 3.0 scale
     this.carGroup.scale.set(this.carScale, this.carScale, this.carScale);
@@ -663,6 +670,31 @@ export class LeMansGame {
       hotspotName: 'bruce_mclaren_driver'
     });
     this.carModel.add(driverGroup);
+
+    // Soft underbody AO contact shadow so the GT40 sits grounded on the asphalt
+    const aoCanvas = document.createElement('canvas');
+    aoCanvas.width = 128;
+    aoCanvas.height = 256;
+    const aoCtx = aoCanvas.getContext('2d');
+    const aoGrad = aoCtx.createRadialGradient(64, 128, 12, 64, 128, 62);
+    aoGrad.addColorStop(0, 'rgba(0, 0, 0, 0.72)');
+    aoGrad.addColorStop(0.55, 'rgba(0, 0, 0, 0.36)');
+    aoGrad.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
+    aoCtx.fillStyle = aoGrad;
+    aoCtx.fillRect(0, 0, 128, 256);
+    const aoPlane = new THREE.Mesh(
+      new THREE.PlaneGeometry(2.05, 4.35),
+      new THREE.MeshBasicMaterial({
+        map: new THREE.CanvasTexture(aoCanvas),
+        transparent: true,
+        depthWrite: false,
+        polygonOffset: true,
+        polygonOffsetFactor: -2
+      })
+    );
+    aoPlane.rotation.x = -Math.PI / 2;
+    aoPlane.position.set(0, -0.355, 0.05);
+    this.carModel.add(aoPlane);
 
     // Twin forward endurance spotlights (in local space of the 3x car group)
     const leftHeadlight = new THREE.SpotLight(0xfffae0, 8.0, 300, Math.PI / 6, 0.4, 1.2);
@@ -1397,6 +1429,13 @@ export class LeMansGame {
 
   updateCamera(delta) {
     const s = this.carState;
+
+    // Keep high-res directional sun shadow frustum centered on the moving GT40
+    if (this.sunLight) {
+      this.sunLight.position.set(s.position.x + 38, s.position.y + 58, s.position.z - 28);
+      this.sunLight.target.position.copy(s.position);
+      this.sunLight.target.updateMatrixWorld();
+    }
 
     if (this.isActive) {
       // Third-Person Chase POV with authentic racing proportions

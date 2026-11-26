@@ -140,6 +140,7 @@ export function prepareLeMansTrackClone(trackScene) {
 
       if (mat.map) {
         mat.map.colorSpace = THREE.SRGBColorSpace;
+        mat.map.anisotropy = 8;
       }
 
       if (
@@ -469,7 +470,8 @@ export class GT40LeMansJourney {
     this.sunLight.shadow.camera.right = sBounds;
     this.sunLight.shadow.camera.top = sBounds;
     this.sunLight.shadow.camera.bottom = -sBounds;
-    this.sunLight.shadow.bias = -0.0004;
+    this.sunLight.shadow.bias = -0.0003;
+    this.sunLight.shadow.normalBias = 0.025;
     this.scene.add(this.sunLight);
     this.scene.add(this.sunLight.target);
 
@@ -1175,6 +1177,31 @@ export class GT40LeMansJourney {
 
     this.buildStructuralBackingDetails(driverDoorOffset, passengerDoorOffset);
     this.calibrateTireGrounding();
+
+    // Soft underbody AO contact shadow for realistic road grounding
+    const aoCanvas = document.createElement('canvas');
+    aoCanvas.width = 128;
+    aoCanvas.height = 256;
+    const aoCtx = aoCanvas.getContext('2d');
+    const aoGrad = aoCtx.createRadialGradient(64, 128, 12, 64, 128, 62);
+    aoGrad.addColorStop(0, 'rgba(0, 0, 0, 0.72)');
+    aoGrad.addColorStop(0.55, 'rgba(0, 0, 0, 0.36)');
+    aoGrad.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
+    aoCtx.fillStyle = aoGrad;
+    aoCtx.fillRect(0, 0, 128, 256);
+    const aoPlane = new THREE.Mesh(
+      new THREE.PlaneGeometry(2.05, 4.35),
+      new THREE.MeshBasicMaterial({
+        map: new THREE.CanvasTexture(aoCanvas),
+        transparent: true,
+        depthWrite: false,
+        polygonOffset: true,
+        polygonOffsetFactor: -2
+      })
+    );
+    aoPlane.rotation.x = -Math.PI / 2;
+    aoPlane.position.set(0, -0.325, 0.05);
+    this.chassisGroup.add(aoPlane);
 
     // Place 1966 driver Bruce McLaren (race_car_driver.glb in Gulf cream suit) in RHD bucket seat
     this.exteriorDriver = buildBruceMcLarenDriver(THREE, { cockpitObserverMode: false });
