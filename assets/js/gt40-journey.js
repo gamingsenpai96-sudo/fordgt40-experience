@@ -213,6 +213,7 @@ export class GT40LeMansJourney {
     this.hotspotsLayer = document.getElementById('journey-hotspots');
     this.calloutPinsLayer = document.getElementById('journey-callout-pins');
     this.openingCueEl = document.getElementById('journey-opening-cue');
+    this.glhCardEl = document.getElementById('journey-glh-card');
     this.hoverPromptEl = document.getElementById('journey-hover-prompt');
     this.hoverPromptCode = document.getElementById('hover-prompt-code');
     this.hoverPromptText = document.getElementById('hover-prompt-text');
@@ -1605,6 +1606,7 @@ export class GT40LeMansJourney {
   }
 
   enterDoorOpenChoice() {
+    this.dismissGlhCard();
     this.mode = 'door_open_choice';
     this.panels.driverDoor.target = this.panels.driverDoor.maxOpen;
     this.showDoorChoiceUI();
@@ -1632,6 +1634,7 @@ export class GT40LeMansJourney {
 
   triggerDoorChoice(choiceKey) {
     if (this.mode !== 'door_open_choice') return;
+    this.dismissGlhCard();
     this.setHoveredZone(null);
     this.hideDoorChoiceUI();
     this.playLatchSound();
@@ -1831,10 +1834,17 @@ export class GT40LeMansJourney {
   // =========================================================================
 
   markFirstDiscovery() {
+    this.dismissGlhCard();
     if (this.hasDiscoveredAny) return;
     this.hasDiscoveredAny = true;
     if (this.openingCueEl) {
       this.openingCueEl.classList.add('faded');
+    }
+  }
+
+  dismissGlhCard() {
+    if (this.glhCardEl) {
+      this.glhCardEl.classList.remove('visible');
     }
   }
 
@@ -2039,6 +2049,7 @@ export class GT40LeMansJourney {
 
     if (this.camCycleBtn) {
       this.camCycleBtn.addEventListener('click', () => {
+        this.dismissGlhCard();
         const labels = ['FRONT 3/4', 'SPLITTER LOW', 'SIDE TRACK'];
         this.cameraPresetIndex = (this.cameraPresetIndex + 1) % labels.length;
         this.userOrbit.yaw = 0;
@@ -2049,7 +2060,10 @@ export class GT40LeMansJourney {
     }
 
     if (this.audioBtn) {
-      this.audioBtn.addEventListener('click', () => this.toggleAudioMute());
+      this.audioBtn.addEventListener('click', () => {
+        this.dismissGlhCard();
+        this.toggleAudioMute();
+      });
     }
 
     if (this.replayStartBtn) {
@@ -2396,6 +2410,9 @@ export class GT40LeMansJourney {
         if (this.openingCueEl) this.openingCueEl.classList.add('faded');
       }, 6400));
     }
+    if (this.glhCardEl) {
+      this.glhCardEl.classList.add('visible');
+    }
     this.updateHotspotPositions();
   }
 
@@ -2423,6 +2440,7 @@ export class GT40LeMansJourney {
     if (this.countdownEl) this.countdownEl.classList.remove('visible');
     if (this.hotspotsLayer) this.hotspotsLayer.classList.remove('visible');
     if (this.openingCueEl) this.openingCueEl.classList.remove('visible', 'faded');
+    this.dismissGlhCard();
     if (this.replayStartBtn) this.replayStartBtn.hidden = true;
     if (this.startHudEl) this.startHudEl.classList.add('visible');
     this.updateStartProgressUI(0);

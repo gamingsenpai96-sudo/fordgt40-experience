@@ -396,6 +396,7 @@
       pip.addEventListener('click', () => {
         const key = pip.dataset.milestone;
         playClickSound();
+        window.gt40Journey?.dismissGlhCard?.();
         if (key === 'cockpit') {
           window.gt40Journey?.triggerComponentInteraction?.('driver_door');
         } else if (key === 'exploded') {
@@ -417,6 +418,7 @@
       const sys = portalBtn.dataset.portalSys || '';
       if (dest) {
         playClickSound();
+        window.gt40Journey?.dismissGlhCard?.();
         enterJourneyDestination(dest, sys ? { system: sys } : {});
       }
     });

@@ -6282,6 +6282,73 @@ body.dest-chronicles #mission-top-bar.visible {
   backdrop-filter: blur(8px);
 }
 
+/* Go Like Hell Bottom-Left Summary Card */
+.journey-glh-card {
+  position: absolute;
+  bottom: 28px;
+  left: 28px;
+  z-index: 24;
+  max-width: 390px;
+  padding: 16px 20px;
+  background: rgba(8, 12, 20, 0.78);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-left: 3px solid #38bdf8;
+  border-radius: 10px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.journey-glh-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.glh-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  color: #38bdf8;
+  margin-bottom: 4px;
+}
+
+.glh-heading {
+  font-family: var(--font-hero);
+  font-size: clamp(1.35rem, 2.1vw, 1.75rem);
+  letter-spacing: 0.16em;
+  color: #f8fafc;
+  margin: 0 0 8px 0;
+  line-height: 1.05;
+}
+
+.glh-summary {
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: rgba(226, 232, 240, 0.9);
+  margin: 0 0 10px 0;
+}
+
+.glh-guide {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1.45;
+  letter-spacing: 0.04em;
+  color: rgba(248, 250, 252, 0.88);
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 0;
+}
+
+.glh-guide strong {
+  color: #fbbf24;
+  font-weight: 700;
+}
+
 /* Anatomical Close-Up Pins (Front Bay & Moving Wheel Inspections) */
 .journey-callout-pins {
   position: absolute;
@@ -6981,6 +7048,27 @@ body.dest-chronicles #mission-top-bar.visible {
   .explore-sub {
     font-size: 0.56rem;
     padding: 4px 10px;
+  }
+
+  .journey-glh-card {
+    left: 12px;
+    right: 12px;
+    bottom: 64px;
+    max-width: none;
+    padding: 12px 14px;
+  }
+
+  .glh-heading {
+    font-size: 1.2rem;
+  }
+
+  .glh-summary {
+    font-size: 0.82rem;
+    margin-bottom: 8px;
+  }
+
+  .glh-guide {
+    font-size: 0.62rem;
   }
 
   .journey-inspect-bar {
