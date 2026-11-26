@@ -6282,25 +6282,22 @@ body.dest-chronicles #mission-top-bar.visible {
   backdrop-filter: blur(8px);
 }
 
-/* Go Like Hell Bottom-Left Summary Card */
+/* Go Like Hell Bottom-Left Editorial Lockup */
 .journey-glh-card {
   position: absolute;
-  bottom: 28px;
-  left: 28px;
+  bottom: 30px;
+  left: 34px;
   z-index: 24;
-  max-width: 410px;
-  padding: 20px 24px;
-  background: linear-gradient(145deg, rgba(10, 14, 24, 0.9), rgba(7, 10, 18, 0.82));
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-left: 3px solid #f0cc52;
+  max-width: 430px;
+  padding: 18px 22px;
+  background: radial-gradient(ellipse at bottom left, rgba(6, 9, 15, 0.78) 0%, rgba(6, 9, 15, 0.45) 70%, rgba(6, 9, 15, 0) 100%);
   border-radius: 12px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   pointer-events: none;
   opacity: 0;
   transform: translateY(16px);
-  transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .journey-glh-card.visible {
@@ -6312,36 +6309,65 @@ body.dest-chronicles #mission-top-bar.visible {
 .glh-header {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  margin-bottom: 10px;
-}
-
-.glh-kicker {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  color: #f0cc52;
-  text-transform: uppercase;
+  margin-bottom: 12px;
 }
 
 .glh-heading {
-  font-family: var(--font-hero);
-  font-size: clamp(1.75rem, 2.4vw, 2.15rem);
-  letter-spacing: 0.14em;
+  font-family: 'Barlow Condensed', var(--font-hero), sans-serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: clamp(2.4rem, 3.6vw, 3.35rem);
+  letter-spacing: 0.015em;
   color: #ffffff;
   margin: 0;
-  line-height: 1;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  line-height: 0.92;
+  text-transform: uppercase;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.75);
+}
+
+.glh-subtitle-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.glh-red-rule {
+  display: inline-block;
+  width: 22px;
+  height: 2px;
+  background: #e11d48;
+  flex-shrink: 0;
+}
+
+.glh-kicker {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  color: rgba(248, 250, 252, 0.92);
+  text-transform: uppercase;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.glh-tagline {
+  font-family: 'Lora', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.95rem;
+  color: rgba(226, 232, 240, 0.85);
+  margin: 7px 0 0 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
 }
 
 .glh-summary {
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 0.98rem;
-  line-height: 1.52;
-  letter-spacing: 0.015em;
-  color: rgba(236, 242, 248, 0.9);
-  margin: 0 0 14px 0;
+  font-family: 'Inter', var(--font-body), sans-serif;
+  font-weight: 400;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: rgba(226, 232, 240, 0.88);
+  margin: 0 0 10px 0;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
 }
 
 .glh-summary em {
@@ -6350,35 +6376,21 @@ body.dest-chronicles #mission-top-bar.visible {
 }
 
 .glh-guide {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: 'Inter', var(--font-body), sans-serif;
+  font-weight: 500;
+  font-size: 0.78rem;
+  line-height: 1.48;
+  color: rgba(203, 213, 225, 0.88);
+  padding-top: 9px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  margin: 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
 }
 
-.glh-guide-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #38bdf8;
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.85);
-  flex-shrink: 0;
-  margin-top: 5px;
-}
-
-.glh-guide-text {
-  font-family: var(--font-body);
+.glh-guide strong {
+  color: #f8fafc;
   font-weight: 600;
-  font-size: 0.88rem;
-  line-height: 1.42;
-  letter-spacing: 0.02em;
-  color: rgba(226, 232, 240, 0.86);
-}
-
-.glh-guide-text strong {
-  color: #f0cc52;
-  font-weight: 700;
+  border-bottom: 1px solid rgba(225, 29, 72, 0.65);
 }
 
 /* Anatomical Close-Up Pins (Front Bay & Moving Wheel Inspections) */
@@ -7091,16 +7103,25 @@ body.dest-chronicles #mission-top-bar.visible {
   }
 
   .glh-heading {
-    font-size: 1.45rem;
+    font-size: 2rem;
+  }
+
+  .glh-kicker {
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+  }
+
+  .glh-tagline {
+    font-size: 0.85rem;
   }
 
   .glh-summary {
-    font-size: 0.86rem;
-    margin-bottom: 10px;
+    font-size: 0.78rem;
+    margin-bottom: 8px;
   }
 
-  .glh-guide-text {
-    font-size: 0.78rem;
+  .glh-guide {
+    font-size: 0.72rem;
   }
 
   .journey-inspect-bar {
