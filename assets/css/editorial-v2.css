@@ -397,3 +397,74 @@ html.is-touch-device .game-hud.active .game-touch-controls {
   border-color: #f3efe6;
   color: #ffffff;
 }
+
+/* ---------- Responsive AR Section Layout (iPad Portrait/Landscape & Mobile) ---------- */
+@media (max-width: 1180px) {
+  .ar-section {
+    padding: 84px 4% 80px !important;
+  }
+  .ar-experience-grid {
+    grid-template-columns: 1fr !important;
+    gap: 22px !important;
+  }
+  .ar-viewer-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+  .ar-stage-container {
+    height: clamp(340px, 50vh, 480px) !important;
+  }
+  .ar-stage-hud {
+    position: static !important;
+    transform: none !important;
+    width: 100% !important;
+    padding: 10px 14px !important;
+    background: #0b0d11 !important;
+    border-top: 1px solid rgba(243, 239, 230, 0.1) !important;
+    justify-content: center !important;
+  }
+  .ar-mobile-launch-btn {
+    bottom: 16px !important;
+    padding: 12px 20px !important;
+    font-size: 0.82rem !important;
+    letter-spacing: 0.12em !important;
+  }
+  .ar-deck-card {
+    padding: 24px !important;
+  }
+  .ar-specs-mini {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .ar-section {
+    padding: 74px 16px 70px !important;
+  }
+  .ar-header-top {
+    flex-wrap: wrap;
+    gap: 8px !important;
+  }
+  .ar-stage-container {
+    height: 320px !important;
+  }
+  .ar-hud-pill,
+  .ar-compat-status {
+    font-size: 0.6rem !important;
+    white-space: normal !important;
+    text-align: center;
+  }
+  .ar-mobile-launch-btn {
+    width: calc(100% - 32px) !important;
+    justify-content: center !important;
+    white-space: normal !important;
+    text-align: center;
+  }
+  .ar-deck-card {
+    padding: 18px !important;
+  }
+  .ar-specs-mini {
+    grid-template-columns: 1fr !important;
+  }
+}
