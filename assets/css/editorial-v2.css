@@ -414,6 +414,15 @@ html.is-touch-device .game-hud.active .game-touch-controls {
   }
   .ar-stage-container {
     height: clamp(340px, 50vh, 480px) !important;
+    flex-direction: column !important;
+  }
+  model-viewer#gt40-ar-viewer {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    width: 100% !important;
+  }
+  .ar-mobile-card {
+    flex-direction: column !important;
   }
   .ar-stage-hud {
     position: static !important;
