@@ -1050,6 +1050,55 @@ export class LeMansGame {
     });
 
     window.addEventListener('resize', () => this.onResize());
+
+    // iPad / Mobile Touch Controls (only active on touch devices without fine mouse/hover)
+    const isTouchDevice =
+      (navigator.maxTouchPoints > 0 || 'ontouchstart' in window) &&
+      (!window.matchMedia || !window.matchMedia('(hover: hover) and (pointer: fine)').matches);
+    if (isTouchDevice) {
+      document.documentElement.classList.add('is-touch-device');
+    }
+
+    const bindHoldKey = (id, keyName) => {
+      const btn = document.getElementById(id);
+      if (!btn) return;
+      const press = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!this.isActive) return;
+        this.keys[keyName] = true;
+        btn.classList.add('is-pressed');
+        try { btn.setPointerCapture(e.pointerId); } catch {}
+      };
+      const release = (e) => {
+        if (e) e.stopPropagation();
+        this.keys[keyName] = false;
+        btn.classList.remove('is-pressed');
+      };
+      btn.addEventListener('pointerdown', press, { passive: false });
+      btn.addEventListener('pointerup', release);
+      btn.addEventListener('pointercancel', release);
+      btn.addEventListener('lostpointercapture', release);
+      btn.addEventListener('contextmenu', (e) => e.preventDefault());
+    };
+
+    bindHoldKey('touch-left-btn', 'left');
+    bindHoldKey('touch-right-btn', 'right');
+    bindHoldKey('touch-gas-btn', 'forward');
+    bindHoldKey('touch-brake-btn', 'backward');
+    bindHoldKey('touch-handbrake-btn', 'handbrake');
+
+    const touchEngineBtn = document.getElementById('touch-engine-btn');
+    if (touchEngineBtn) {
+      touchEngineBtn.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!this.isActive) return;
+        this.initAudio();
+        this.resumeAudio();
+        this.startStartupSequence();
+      }, { passive: false });
+    }
   }
 
   enterDriveMode() {

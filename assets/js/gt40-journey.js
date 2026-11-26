@@ -688,17 +688,14 @@ export class GT40LeMansJourney {
     const bodyRoughTex = loadTex('Body_Roughness.png', false);
     const bodyMetalTex = loadTex('Body_Metallic.png', false);
 
-    // Glossy 1966 Black #2 paint with crisp geometric white Le Mans stripes
-    const mat = new THREE.MeshPhysicalMaterial({
+    // Satin-matte 1966 Black #2 paint matching the realistic game simulation
+    const mat = new THREE.MeshStandardMaterial({
       map: bodyLiveryTex,
       roughnessMap: bodyRoughTex,
       metalnessMap: bodyMetalTex,
-      roughness: 0.22,
+      roughness: 0.68,
       metalness: 0.04,
-      clearcoat: 0.72,
-      clearcoatRoughness: 0.10,
-      reflectivity: 0.75,
-      envMapIntensity: 1.25,
+      envMapIntensity: 0.28,
       side: THREE.DoubleSide
     });
 
@@ -728,12 +725,12 @@ export class GT40LeMansJourney {
           '#include <color_fragment>',
           `#include <color_fragment>
            float ax = abs(vBodyPos.x);
-           bool isExteriorTop = (vBodyPos.y > 0.04 && abs(vBodyNorm.y) > 0.12) && !(vBodyPos.z > 1.85 && abs(vBodyNorm.y) < 0.35);
+           bool isExteriorTop = (vBodyPos.y > -0.05 && abs(vBodyNorm.y) > 0.10) && !(vBodyPos.z > 1.88 && abs(vBodyNorm.y) < 0.30);
            bool isStripe = false;
            if (isExteriorTop) {
-             if (ax >= 0.020 && ax <= 0.136) isStripe = true;
-             if (ax >= 0.150 && ax <= 0.168) isStripe = true;
-             if (length(vec2(vBodyPos.x - 0.26, vBodyPos.z - 1.16)) < 0.16 && vBodyPos.y > 0.18 && abs(vBodyNorm.y) > 0.32) {
+             if (ax >= 0.018 && ax <= 0.128) isStripe = true;
+             if (ax >= 0.142 && ax <= 0.158) isStripe = true;
+             if (length(vec2(vBodyPos.x - 0.26, vBodyPos.z - 1.16)) < 0.16 && vBodyPos.y > 0.16 && abs(vBodyNorm.y) > 0.30) {
                isStripe = true;
              }
            }
@@ -742,9 +739,9 @@ export class GT40LeMansJourney {
              isStripe = true;
            }
            if (isStripe) {
-             diffuseColor.rgb = vec3(0.97, 0.98, 1.0);
+             diffuseColor.rgb = vec3(0.95, 0.95, 0.97);
            } else {
-             diffuseColor.rgb = vec3(0.016, 0.018, 0.024);
+             diffuseColor.rgb = vec3(0.022, 0.024, 0.028);
            }
           `
         )
@@ -755,12 +752,12 @@ export class GT40LeMansJourney {
         .replace(
           '#include <roughnessmap_fragment>',
           `#include <roughnessmap_fragment>
-           roughnessFactor = isStripe ? 0.22 : 0.20;`
+           roughnessFactor = isStripe ? 0.56 : 0.68;`
         )
         .replace(
           '#include <metalnessmap_fragment>',
           `#include <metalnessmap_fragment>
-           metalnessFactor = isStripe ? 0.02 : 0.05;`
+           metalnessFactor = 0.04;`
         );
     };
 

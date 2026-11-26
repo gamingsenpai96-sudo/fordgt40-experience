@@ -1005,6 +1005,25 @@
               <div class="hud-controls-pill">
                 <span>[W] GAS &bull; [S] BRAKE &bull; [A][D] STEER &bull; [SPACE] DRIFT</span>
               </div>
+
+              <!-- iPad / Mobile Touch Controls (Hidden on laptops/desktops) -->
+              <div id="game-touch-controls" class="game-touch-controls" aria-label="Touch Driving Controls">
+                <div class="touch-steer-group">
+                  <button type="button" id="touch-left-btn" class="touch-ctrl-btn touch-arrow-btn" aria-label="Steer Left">&#9664;</button>
+                  <button type="button" id="touch-right-btn" class="touch-ctrl-btn touch-arrow-btn" aria-label="Steer Right">&#9654;</button>
+                </div>
+                <div class="touch-center-group">
+                  <button type="button" id="touch-engine-btn" class="touch-ctrl-btn touch-engine-btn" aria-label="Engine Start">
+                    <span class="te-dot"></span>
+                    <span>ENGINE START</span>
+                  </button>
+                </div>
+                <div class="touch-pedals-group">
+                  <button type="button" id="touch-handbrake-btn" class="touch-ctrl-btn touch-handbrake-btn" aria-label="Handbrake">H-BRAKE</button>
+                  <button type="button" id="touch-brake-btn" class="touch-ctrl-btn touch-brake-btn" aria-label="Brake">BRAKE</button>
+                  <button type="button" id="touch-gas-btn" class="touch-ctrl-btn touch-gas-btn" aria-label="Accelerate">GAS &#9650;</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

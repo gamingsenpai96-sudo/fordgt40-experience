@@ -294,3 +294,106 @@ body {
   background: #08090b !important;
   border-top: 1px solid rgba(243, 239, 230, 0.12) !important;
 }
+
+/* ---------- iPad / Mobile-Only 3D Game Touch Controls ---------- */
+.game-touch-controls {
+  display: none !important;
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  pointer-events: none;
+  z-index: 20;
+}
+
+html.is-touch-device .game-hud.active .game-touch-controls {
+  display: flex !important;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .game-hud.active .game-touch-controls {
+    display: flex !important;
+  }
+  .game-hud.active .hud-controls-pill {
+    display: none !important;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .game-touch-controls {
+    display: none !important;
+  }
+}
+
+.touch-steer-group,
+.touch-pedals-group,
+.touch-center-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.touch-ctrl-btn {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: none;
+  border-radius: 2px;
+  background: rgba(8, 9, 11, 0.88);
+  border: 1px solid rgba(243, 239, 230, 0.28);
+  color: #f3efe6;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 0.1s ease, border-color 0.1s ease;
+}
+
+.touch-arrow-btn {
+  width: 62px;
+  height: 58px;
+  font-size: 1.35rem;
+}
+
+.touch-gas-btn {
+  height: 64px;
+  padding: 0 20px;
+  border-color: #e12d25;
+  background: rgba(225, 45, 37, 0.88);
+  color: #ffffff;
+}
+
+.touch-brake-btn,
+.touch-handbrake-btn {
+  height: 54px;
+  padding: 0 14px;
+}
+
+.touch-engine-btn {
+  height: 44px;
+  padding: 0 14px;
+  border-left: 3px solid #e12d25;
+}
+
+.touch-engine-btn .te-dot {
+  width: 7px;
+  height: 7px;
+  background: #e12d25;
+  border-radius: 1px;
+}
+
+.touch-ctrl-btn.is-pressed,
+.touch-ctrl-btn:active {
+  background: #e12d25;
+  border-color: #f3efe6;
+  color: #ffffff;
+}

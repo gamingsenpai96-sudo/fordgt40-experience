@@ -19,14 +19,14 @@ const PRUNE_NODE_PREFIXES = [
   'Dry_Sump_Oil_System'
 ];
 
-// Target per-material triangle caps for heavy CAD meshes so silhouette & rims remain razor-sharp
+// Target per-material triangle caps for heavy CAD meshes so silhouette & rims remain smooth & undented
 const TRI_TARGETS = {
-  GT40_Body_Livery: 240000,
+  GT40_Body_Livery: 600000,
   GT40_427_V8_Powertrain: 18000,
-  GT40_Cockpit_Interior: 40000,
-  GT40_Halibrand_Rims: 80000,
-  GT40_Solid_Tires: 30000,
-  GT40_Competition_Glass: 10000,
+  GT40_Cockpit_Interior: 45000,
+  GT40_Halibrand_Rims: 85000,
+  GT40_Solid_Tires: 32000,
+  GT40_Competition_Glass: 12000,
   GT40_Headlights: 7500,
   GT40_Tail_Lights: 7500,
   GT40_Headlight_Lenses: 7500
@@ -131,18 +131,14 @@ async function run() {
     if (mName === 'GT40_Body_Livery') {
       mat.setBaseColorFactor([1, 1, 1, 1])
         .setBaseColorTexture(texBody)
-        .setMetallicFactor(0.03)
-        .setRoughnessFactor(0.24)
+        .setMetallicFactor(0.04)
+        .setRoughnessFactor(0.65)
         .setNormalTexture(null)
         .setMetallicRoughnessTexture(null)
         .setAlphaMode('OPAQUE')
         .setDoubleSided(true);
-      // Tame mirror-chrome glare under bright HDR studio/outdoor environments so black paint stays rich piano black
-      mat.setExtension('KHR_materials_clearcoat', clearcoatExt.createClearcoat()
-        .setClearcoatFactor(0.18)
-        .setClearcoatRoughnessFactor(0.22));
-      mat.setExtension('KHR_materials_specular', specularExt.createSpecular()
-        .setSpecularFactor(0.26));
+      mat.setExtension('KHR_materials_clearcoat', null);
+      mat.setExtension('KHR_materials_specular', null);
     } else if (mName === 'GT40_Halibrand_Rims') {
       mat.setBaseColorFactor([1, 1, 1, 1])
         .setBaseColorTexture(texRims)
@@ -209,13 +205,12 @@ async function run() {
     }
   }
 
-  // 4. Clean up unused resources, flatten, weld & merge primitives by material
+  // 4. Clean up unused resources, flatten & merge primitives by material (skip weld so sharp panel creases stay crisp)
   await doc.transform(
     prune(),
     dedup(),
     flatten(),
-    join(),
-    weld({ tolerance: 0.0001 })
+    join()
   );
 
   // 5. Targeted meshoptimizer simplification preserving silhouette & sharp livery UVs
@@ -263,7 +258,7 @@ async function run() {
 
           const targetIdxCount = Math.max(3, Math.floor(targetTris) * 3);
           const errTol = mName === 'GT40_Body_Livery'
-            ? 0.0008
+            ? 0.00004
             : mName === 'GT40_427_V8_Powertrain'
               ? 0.25
               : (mName === 'GT40_Cockpit_Interior' ? 0.025 : mName === 'GT40_Halibrand_Rims' ? 0.012 : 0.015);
@@ -380,7 +375,7 @@ async function run() {
       decodeSpeed: 6,
       quantizationVolume: 'MESH',
       quantizePosition: 14,
-      quantizeNormal: 10,
+      quantizeNormal: 12,
       quantizeTexcoord: 12,
       quantizeGeneric: 10
     });

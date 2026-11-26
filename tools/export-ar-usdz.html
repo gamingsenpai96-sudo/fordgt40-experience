@@ -17,7 +17,7 @@
   <pre id="log">Starting...</pre>
   <script type="module">
     import * as THREE from '../assets/js/three.module.js';
-    import { GLTFLoader } from '../assets/js/GLTFLoader.js';
+    import { createGLTFLoader } from '../assets/js/gltf-shared.js';
     import { USDZExporter } from '../assets/js/USDZExporter.js';
 
     const logEl = document.getElementById('log');
@@ -25,7 +25,7 @@
 
     async function run() {
       try {
-        const loader = new GLTFLoader();
+        const loader = createGLTFLoader();
         const gltf = await new Promise((resolve, reject) => {
           loader.load('./tmp-ar-plain.glb?t=' + Date.now(), resolve, undefined, reject);
         });
