@@ -445,7 +445,7 @@ export class GT40LeMansJourney {
     this.renderer.setSize(w, h);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, this.isMobileViewport ? 1.5 : 1.85));
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.24;
+    this.renderer.toneMappingExposure = 1.32;
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -459,19 +459,19 @@ export class GT40LeMansJourney {
     const hemi = new THREE.HemisphereLight(0xeef4ff, 0x383d4a, 1.55);
     this.scene.add(hemi);
 
-    // Moving sunlight tracking the GT40 so high-res chassis shadows stay crisp across all 13.6km
-    this.sunLight = new THREE.DirectionalLight(0xfff4e2, 3.15);
+    // Moving sunlight tracking the GT40 with ultra-tight 11m frustum (~1cm/texel crisp shadows)
+    this.sunLight = new THREE.DirectionalLight(0xfff2dc, 3.35);
     this.sunLight.castShadow = true;
     this.sunLight.shadow.mapSize.set(2048, 2048);
     this.sunLight.shadow.camera.near = 2;
-    this.sunLight.shadow.camera.far = 140;
-    const sBounds = 18;
+    this.sunLight.shadow.camera.far = 120;
+    const sBounds = 11;
     this.sunLight.shadow.camera.left = -sBounds;
     this.sunLight.shadow.camera.right = sBounds;
     this.sunLight.shadow.camera.top = sBounds;
     this.sunLight.shadow.camera.bottom = -sBounds;
-    this.sunLight.shadow.bias = -0.0003;
-    this.sunLight.shadow.normalBias = 0.025;
+    this.sunLight.shadow.bias = -0.00025;
+    this.sunLight.shadow.normalBias = 0.02;
     this.scene.add(this.sunLight);
     this.scene.add(this.sunLight.target);
 
@@ -2516,7 +2516,12 @@ export class GT40LeMansJourney {
     this._downRay.far = 36.0;
     const hits = this._downRay.intersectObjects(this.groundMeshes, false);
     if (hits.length > 0) {
-      return hits[0].point.y;
+      // Prefer main asphalt/road surface to avoid micro-steps from overlapping line/curb meshes
+      const roadHit = hits.find((h) => {
+        const n = (h.object?.material?.name || h.object?.name || '').toLowerCase();
+        return n.includes('road') || n.includes('asphalt') || n.includes('start');
+      });
+      return (roadHit || hits[0]).point.y;
     }
     return refY;
   }
@@ -2551,26 +2556,26 @@ export class GT40LeMansJourney {
     this.trackCurve.getTangentAt(u, this._tanOnSpline).normalize();
     this.trackCurve.getTangentAt(uAhead, this._tanNext).normalize();
 
-    // Raycast road height smoothly below car + front/rear probes for real pitch along Dunlop/Tertre slopes
+    // Raycast road height smoothly below car + front/rear probes for silky suspension along slopes
     const rayCenterY = this.sampleGroundY(this._posOnSpline.x, this._posOnSpline.y, this._posOnSpline.z);
-    this.lastSmoothedGroundY += (rayCenterY - this.lastSmoothedGroundY) * Math.min(1.0, dt * 14.0);
+    this.lastSmoothedGroundY += (rayCenterY - this.lastSmoothedGroundY) * Math.min(1.0, dt * 5.0);
 
     this._probeFront.copy(this._posOnSpline).addScaledVector(this._tanOnSpline, 3.6);
     this._probeRear.copy(this._posOnSpline).addScaledVector(this._tanOnSpline, -3.6);
     const frontRoadY = this.sampleGroundY(this._probeFront.x, this._posOnSpline.y, this._probeFront.z);
     const rearRoadY = this.sampleGroundY(this._probeRear.x, this._posOnSpline.y, this._probeRear.z);
-    const slopePitch = THREE.MathUtils.clamp(Math.atan2(frontRoadY - rearRoadY, 7.2), -0.14, 0.14);
+    const rawSlopePitch = THREE.MathUtils.clamp(Math.atan2(frontRoadY - rearRoadY, 7.2), -0.14, 0.14);
+    this._smoothedSlopePitch = (this._smoothedSlopePitch ?? rawSlopePitch);
+    this._smoothedSlopePitch += (rawSlopePitch - this._smoothedSlopePitch) * Math.min(1.0, dt * 4.5);
+    const slopePitch = this._smoothedSlopePitch;
 
     // Subtle lateral cornering roll derived from cross-product of tangent change
     const cornerTurn = this._tanOnSpline.x * this._tanNext.z - this._tanOnSpline.z * this._tanNext.x;
     const speedFactor = Math.min(1.0, this.currentSpeed / Math.max(1, this.targetCruiseSpeed));
     const targetRoll = THREE.MathUtils.clamp(cornerTurn * 0.42 * speedFactor, -0.045, 0.045);
 
-    // Subtle tarmac suspension ripple (active only when moving)
     const t = performance.now() * 0.001;
-    const tarmacRipple = speedFactor > 0.02
-      ? (Math.sin(t * 7.5) * 0.005 + Math.cos(t * 13.2) * 0.0025) * speedFactor
-      : 0.0;
+    const tarmacRipple = 0.0;
 
     this.carGroup.position.set(
       this._posOnSpline.x,

@@ -169,19 +169,19 @@ export class LeMansGame {
     const hemiLight = new THREE.HemisphereLight(0xdde8ff, 0x334455, 1.1);
     this.scene.add(hemiLight);
 
-    this.sunLight = new THREE.DirectionalLight(0xfff2dc, 3.0);
+    this.sunLight = new THREE.DirectionalLight(0xfff2dc, 3.25);
     this.sunLight.position.set(-3835, 56, -4865);
     this.sunLight.castShadow = true;
     this.sunLight.shadow.mapSize.width = 2048;
     this.sunLight.shadow.mapSize.height = 2048;
     this.sunLight.shadow.camera.near = 2;
-    this.sunLight.shadow.camera.far = 160;
-    this.sunLight.shadow.camera.left = -28;
-    this.sunLight.shadow.camera.right = 28;
-    this.sunLight.shadow.camera.top = 28;
-    this.sunLight.shadow.camera.bottom = -28;
-    this.sunLight.shadow.bias = -0.0003;
-    this.sunLight.shadow.normalBias = 0.025;
+    this.sunLight.shadow.camera.far = 140;
+    this.sunLight.shadow.camera.left = -14;
+    this.sunLight.shadow.camera.right = 14;
+    this.sunLight.shadow.camera.top = 14;
+    this.sunLight.shadow.camera.bottom = -14;
+    this.sunLight.shadow.bias = -0.00022;
+    this.sunLight.shadow.normalBias = 0.02;
     this.scene.add(this.sunLight);
     this.scene.add(this.sunLight.target);
 
@@ -1353,9 +1353,13 @@ export class LeMansGame {
       const hits = this.downRay.intersectObjects(this.groundMeshes, true);
 
       if (hits.length > 0) {
-        // hits[0].point.y is the top surface of the asphalt, curb, or terrain
-        const targetGroundY = hits[0].point.y + this.wheelOffset;
-        s.position.y += (targetGroundY - s.position.y) * Math.min(1.0, 22.0 * delta);
+        // Prefer main asphalt/road surface so overlapping curb/line triangles don't cause bumps
+        const roadHit = hits.find((h) => {
+          const n = (h.object?.material?.name || h.object?.name || '').toLowerCase();
+          return n.includes('road') || n.includes('asphalt') || n.includes('start');
+        });
+        const targetGroundY = (roadHit || hits[0]).point.y + this.wheelOffset;
+        s.position.y += (targetGroundY - s.position.y) * Math.min(1.0, 6.0 * delta);
       }
     }
 

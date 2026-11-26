@@ -15,7 +15,7 @@
 
 import * as THREE from 'three';
 import { createGLTFLoader } from './gltf-shared.js';
-import { buildBruceMcLarenDriver } from './gt40-driver.js';
+import { buildBruceMcLarenDriver, loadBruceMcLarenDriverGLB } from './gt40-driver.js';
 
 export class GT40CockpitSimulator {
   constructor() {
@@ -47,7 +47,7 @@ export class GT40CockpitSimulator {
     // Stationary driver eye position inside Ford GT40 Mk II (Right-Hand Drive)
     // Positioned slightly forward/inboard of Bruce McLaren's reclined helmet so windshield,
     // Stewart-Warner cluster, Moto-Lita wheel, gated shifter & Telemetry Screen frame naturally.
-    this.eyePosition = new THREE.Vector3(-0.22, 0.54, 0.14);
+    this.eyePosition = new THREE.Vector3(-0.22, 0.53, 0.30);
     this.lookTarget = new THREE.Vector3();
 
     // Look-around rotation angles (radians)
@@ -2191,6 +2191,28 @@ export class GT40CockpitSimulator {
     });
     cockpitGroup.add(this.driver.root);
     this.interactiveObjects.push(...this.driver.interactives);
+
+    loadBruceMcLarenDriverGLB(THREE, createGLTFLoader(), {
+      scale: 0.43,
+      hotspotName: 'bruce_mclaren_driver',
+      onLoaded: (glbGroup, holder, suitMat) => {
+        this.driver.root.visible = false;
+        cockpitGroup.add(glbGroup);
+        holder.traverse((obj) => {
+          if (obj.isMesh) {
+            this.interactiveObjects.push(obj);
+          }
+        });
+        const origHighlight = this.driver.setHighlighted;
+        this.driver.setHighlighted = (active) => {
+          origHighlight(active);
+          if (suitMat && suitMat.emissive) {
+            suitMat.emissive.setHex(active ? 0x1e40af : 0x000000);
+            suitMat.emissiveIntensity = active ? 0.22 : 0.0;
+          }
+        };
+      }
+    });
 
     this.carRoot.add(cockpitGroup);
   }
