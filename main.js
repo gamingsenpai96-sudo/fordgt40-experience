@@ -329,6 +329,8 @@
 
         if (leavingMode === 'cockpit') {
           window.gt40Journey?.resume?.(() => window.gt40Journey?.returnFromCockpit?.());
+        } else if (leavingMode === 'game') {
+          window.gt40Journey?.resume?.(() => window.gt40Journey?.returnFromGame?.());
         } else if (leavingMode === 'exploded') {
           window.gt40Journey?.resume?.(() => window.gt40Journey?.returnFromExploded?.());
         } else if (leavingMode === 'chronicles' && chroniclesReturnTarget === 'journey_door') {
@@ -432,12 +434,8 @@
     enterDriverChroniclesFromDoor: () => enterJourneyDestination('chronicles', { fromDoorChoice: true, anchor: '#act-1' }),
     onExitDriveMode: () => {
       if (portalBusy) return;
-      if (driveReturnTarget === 'cockpit') {
-        driveReturnTarget = 'journey';
-        enterJourneyDestination('cockpit');
-      } else {
-        returnToJourney('game');
-      }
+      driveReturnTarget = 'journey';
+      returnToJourney('game');
     },
     returnToJourney
   };

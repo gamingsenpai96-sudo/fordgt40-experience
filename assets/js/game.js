@@ -18,8 +18,24 @@ export class LeMansGame {
     this.speedEl      = document.getElementById('hud-speed');
     this.rpmBarEl     = document.getElementById('hud-rpm-bar');
     this.gearEl       = document.getElementById('hud-gear');
+    this.lapNumEl     = document.getElementById('hud-lap-num');
+    this.lapTimeEl    = document.getElementById('hud-lap-time');
+    this.bestLapEl    = document.getElementById('hud-best-lap');
+    this.countdownEl  = document.getElementById('game-countdown-banner');
     this.loaderFill   = document.getElementById('game-loader-fill');
     this.loaderText   = document.getElementById('game-loader-text');
+
+    this.countdownActive = false;
+    this.raceStarted     = false;
+    this.countdownTimer  = null;
+    this.currentLap      = 1;
+    this.lapStartTime    = 0;
+    this.lapDistance     = 0;
+    const savedBest      = Number(localStorage.getItem('gt40_best_lap_ms') || 0);
+    this.bestLapMs       = Number.isFinite(savedBest) && savedBest > 0 ? savedBest : null;
+    if (this.bestLapEl && this.bestLapMs) {
+      this.bestLapEl.textContent = this.formatLapTime(this.bestLapMs);
+    }
 
     if (!this.container || !this.canvas) return;
 
@@ -1141,12 +1157,72 @@ export class LeMansGame {
     }
   }
 
+  formatLapTime(ms) {
+    if (!Number.isFinite(ms) || ms <= 0) return '00:00.000';
+    const totalMs = Math.floor(ms);
+    const mins = Math.floor(totalMs / 60000);
+    const secs = Math.floor((totalMs % 60000) / 1000);
+    const remMs = totalMs % 1000;
+    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}.${String(remMs).padStart(3, '0')}`;
+  }
+
+  startRaceCountdown() {
+    if (this.countdownTimer) {
+      clearTimeout(this.countdownTimer);
+      this.countdownTimer = null;
+    }
+    this.countdownActive = true;
+    this.raceStarted = false;
+    this.currentLap = 1;
+    this.lapDistance = 0;
+    this.lapStartTime = 0;
+    if (this.lapNumEl) this.lapNumEl.textContent = '1';
+    if (this.lapTimeEl) this.lapTimeEl.textContent = '00:00.000';
+    if (this.bestLapEl) {
+      this.bestLapEl.textContent = this.bestLapMs ? this.formatLapTime(this.bestLapMs) : '--:--.---';
+    }
+
+    const steps = ['3', '2', '1', 'GO!'];
+    let idx = 0;
+    const runStep = () => {
+      if (!this.isActive) return;
+      const label = steps[idx];
+      if (this.countdownEl) {
+        this.countdownEl.textContent = label;
+        this.countdownEl.classList.add('visible');
+        this.countdownEl.classList.toggle('go', label === 'GO!');
+      }
+      if (label === 'GO!') {
+        this.countdownActive = false;
+        this.raceStarted = true;
+        this.lapStartTime = performance.now();
+        this.countdownTimer = setTimeout(() => {
+          if (this.countdownEl) {
+            this.countdownEl.classList.remove('visible', 'go');
+          }
+          this.countdownTimer = null;
+        }, 800);
+        return;
+      }
+      idx++;
+      this.countdownTimer = setTimeout(runStep, 850);
+    };
+    runStep();
+  }
+
   enterDriveMode() {
     this.isActive = true;
     this.hasStarted = true;
     window.lenisInstance?.stop?.();
     this.onResize();
+
+    // Always spawn squarely on the Le Mans starting line for the race countdown
+    this.carState.position.set(-3873.0, -2.434, -4839.7);
+    this.carState.rotation = 0;
+    this.carState.speed = 0;
+    this.carState.steerAngle = 0;
     this.snapCarToGround();
+
     this.initAudio();
     this.resumeAudio();
 
@@ -1162,11 +1238,21 @@ export class LeMansGame {
       this.hud.classList.add('active');
     }
 
+    this.startRaceCountdown();
     this.container.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
   exitDriveMode(notifyOrchestrator = true) {
     this.isActive = false;
+    this.countdownActive = false;
+    this.raceStarted = false;
+    if (this.countdownTimer) {
+      clearTimeout(this.countdownTimer);
+      this.countdownTimer = null;
+    }
+    if (this.countdownEl) {
+      this.countdownEl.classList.remove('visible', 'go');
+    }
     window.lenisInstance?.start?.();
     this.keys.forward = false;
     this.keys.backward = false;
@@ -1270,6 +1356,7 @@ export class LeMansGame {
     s.steerAngle += (targetSteer - s.steerAngle) * s.steerSpeed * delta;
 
     // 2. Throttle & Acceleration calibrated to match the uploaded audio
+    const prevX = s.position.x;
     let throttle = 0;
     let isBraking = false;
     const currentKmh = Math.abs(Math.round(s.speed * 3.6));
@@ -1288,7 +1375,7 @@ export class LeMansGame {
       currentAccel = 5.89;
     }
 
-    if (this.keys.forward) {
+    if (this.keys.forward && !this.countdownActive) {
       throttle = 1.0;
       if (s.speed < s.maxSpeed) {
         s.speed += currentAccel * delta;
@@ -1439,6 +1526,34 @@ export class LeMansGame {
 
     // Update synchronized engine sound & downshift audio
     this.updateEngineAudio(currentKmh, throttle, isBraking);
+
+    // 7. Live Stopwatch & Circuit Lap Detection
+    if (this.raceStarted && this.lapStartTime > 0) {
+      const now = performance.now();
+      const elapsed = now - this.lapStartTime;
+      if (this.lapTimeEl) {
+        this.lapTimeEl.textContent = this.formatLapTime(elapsed);
+      }
+      this.lapDistance += Math.abs(s.speed) * delta;
+
+      // Crossed Start/Finish Line (X = -3873.0, Z ~ -4839.7) after completing circuit
+      if (prevX < -3873.0 && s.position.x >= -3873.0 && Math.abs(s.position.z - (-4839.7)) < 45 && this.lapDistance > 1500) {
+        if (!this.bestLapMs || elapsed < this.bestLapMs) {
+          this.bestLapMs = elapsed;
+          try { localStorage.setItem('gt40_best_lap_ms', String(Math.round(elapsed))); } catch {}
+          if (this.bestLapEl) this.bestLapEl.textContent = this.formatLapTime(this.bestLapMs);
+        }
+        this.currentLap += 1;
+        if (this.lapNumEl) this.lapNumEl.textContent = String(this.currentLap);
+        this.lapStartTime = now;
+        this.lapDistance = 0;
+        if (this.countdownEl) {
+          this.countdownEl.textContent = `LAP ${this.currentLap - 1}: ${this.formatLapTime(elapsed)}`;
+          this.countdownEl.classList.add('visible', 'go');
+          setTimeout(() => this.countdownEl?.classList.remove('visible', 'go'), 2200);
+        }
+      }
+    }
   }
 
   // =================================================================

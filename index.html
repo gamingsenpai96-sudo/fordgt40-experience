@@ -946,6 +946,20 @@
                   <span class="hud-dot"></span>
                   <span>FORD GT40 MK II &bull; LE MANS 1966</span>
                 </div>
+                <div class="hud-lap-timing" id="hud-lap-timing">
+                  <div class="hud-lap-cell">
+                    <span class="hud-lap-label">LAP</span>
+                    <span class="hud-lap-val" id="hud-lap-num">1</span>
+                  </div>
+                  <div class="hud-lap-cell">
+                    <span class="hud-lap-label">TIME</span>
+                    <span class="hud-lap-val" id="hud-lap-time">00:00.000</span>
+                  </div>
+                  <div class="hud-lap-cell">
+                    <span class="hud-lap-label">BEST</span>
+                    <span class="hud-lap-val hud-best-val" id="hud-best-lap">--:--.---</span>
+                  </div>
+                </div>
                 <button id="game-exit-btn" class="game-exit-btn" type="button">
                   <span>EXIT DRIVE [ESC]</span>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -954,6 +968,7 @@
                   </svg>
                 </button>
               </div>
+              <div id="game-countdown-banner" class="game-countdown-banner" aria-live="polite"></div>
 
               <!-- Telemetry Cluster -->
               <div class="hud-cluster">

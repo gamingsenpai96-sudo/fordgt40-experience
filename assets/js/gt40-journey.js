@@ -1686,6 +1686,23 @@ export class GT40LeMansJourney {
     this.enterDoorOpenChoice();
   }
 
+  returnFromGame() {
+    this.hideInspectUI();
+    this.panels.driverDoor.current = 0;
+    this.panels.driverDoor.target = 0;
+    this.panels.rearCover.current = 0;
+    this.panels.rearCover.target = 0;
+    this.panels.frontBonnet.current = 0;
+    this.panels.frontBonnet.target = 0;
+    this.userOrbit.yaw = 0;
+    this.userOrbit.pitch = 0;
+    const cruise = this.getCruiseCameraLocal();
+    this.camLocalPos.copy(cruise.pos);
+    this.camLocalLook.copy(cruise.look);
+    this.mode = 'cruise';
+    if (this.hotspotsLayer) this.hotspotsLayer.classList.add('visible');
+  }
+
   returnFromCockpit() {
     this.mode = 'exiting_cockpit';
     this.hideInspectUI();

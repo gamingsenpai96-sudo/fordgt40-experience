@@ -5701,6 +5701,67 @@ body.dest-chronicles #story-container {
   padding-top: 62px !important;
 }
 
+body.dest-chronicles #cockpit-sim-section,
+body.dest-chronicles #game-section,
+body.dest-chronicles #exploded-section {
+  display: none !important;
+}
+
+.hud-lap-timing {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 14px;
+  background: rgba(8, 11, 18, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  backdrop-filter: blur(8px);
+}
+.hud-lap-cell {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.hud-lap-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  color: #94a3b8;
+}
+.hud-lap-val {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+.hud-best-val {
+  color: #facc15;
+}
+.game-countdown-banner {
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.92);
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #f8fafc;
+  text-shadow: 0 8px 32px rgba(0, 0, 0, 0.85), 0 0 28px rgba(239, 68, 68, 0.55);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 12;
+}
+.game-countdown-banner.visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.game-countdown-banner.go {
+  color: #22c55e;
+  text-shadow: 0 8px 32px rgba(0, 0, 0, 0.85), 0 0 28px rgba(34, 197, 94, 0.65);
+}
+
 body.dest-cockpit #act-3 .act-chapter-header,
 body.dest-cockpit #act-3 .act-chronicle-slot,
 body.dest-cockpit #act-3 .chronicles-timeline-wrap,

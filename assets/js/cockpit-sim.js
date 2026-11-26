@@ -16,6 +16,7 @@
 import * as THREE from 'three';
 import { createGLTFLoader } from './gltf-shared.js';
 import { buildBruceMcLarenDriver, loadBruceMcLarenDriverGLB } from './gt40-driver.js';
+import { prepareLeMansTrackClone } from './gt40-journey.js';
 
 export class GT40CockpitSimulator {
   constructor() {
@@ -936,6 +937,33 @@ export class GT40CockpitSimulator {
     }
 
     this.scene.add(trackGroup);
+
+    // Mount real 3D Circuit de la Sarthe (lemans.glb) aligned to the Mulsanne Straight
+    // so the car sits directly on the authentic 1966 Mulsanne tarmac & countryside
+    const mountRealMulsanneTrack = (gltf) => {
+      if (!gltf?.scene || !this.scene) return;
+      const trackClone = prepareLeMansTrackClone(gltf.scene);
+      const p0x = 2268.33, p0y = -20.545, p0z = -2005.54;
+      const p1x = 2368.91, p1z = -1698.39;
+      const yaw = Math.atan2(p1x - p0x, p1z - p0z);
+
+      const mulsanneAnchor = new THREE.Group();
+      mulsanneAnchor.name = 'MulsanneStraightRealTrack';
+      mulsanneAnchor.rotation.y = -yaw;
+      trackClone.position.set(-p0x, -p0y - 0.378, -p0z);
+      mulsanneAnchor.add(trackClone);
+      this.scene.add(mulsanneAnchor);
+    };
+
+    if (window.__LEMANS_GLTF_PROMISE__) {
+      window.__LEMANS_GLTF_PROMISE__.then(mountRealMulsanneTrack).catch(() => {});
+    } else {
+      const trackLoader = createGLTFLoader();
+      window.__LEMANS_GLTF_PROMISE__ = new Promise((resolve, reject) => {
+        trackLoader.load('assets/models/track/lemans.glb', resolve, undefined, reject);
+      });
+      window.__LEMANS_GLTF_PROMISE__.then(mountRealMulsanneTrack).catch(() => {});
+    }
   }
 
   loadModel() {
@@ -2361,6 +2389,59 @@ export class GT40CockpitSimulator {
     });
 
     this.carRoot.add(cockpitGroup);
+
+    // Ultra-realistic interior accessories: Rear-View Mirror, Jewel Indicator Lamps, Halon Fire Extinguisher & Instrument Backlight
+    const centerMirrorGroup = new THREE.Group();
+    centerMirrorGroup.position.set(0.0, 0.61, 0.56);
+    const centerMirrorStalk = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.055, 8), chromeMat);
+    centerMirrorStalk.position.set(0, 0.025, 0.008);
+    centerMirrorGroup.add(centerMirrorStalk);
+    const centerMirrorHousing = new THREE.Mesh(new THREE.BoxGeometry(0.145, 0.044, 0.016), matteBlackMat);
+    centerMirrorGroup.add(centerMirrorHousing);
+    const centerMirrorGlass = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.135, 0.036),
+      new THREE.MeshStandardMaterial({ color: 0xcbd5e1, metalness: 0.96, roughness: 0.05 })
+    );
+    centerMirrorGlass.position.z = -0.0085;
+    centerMirrorGlass.rotation.y = Math.PI;
+    centerMirrorGroup.add(centerMirrorGlass);
+    cockpitGroup.add(centerMirrorGroup);
+
+    // Glowing jewel warning lamps above toggle row (Red Oil, Amber Fuel, Green Ignition)
+    [
+      { x: -0.34, color: 0xef4444 },
+      { x: -0.28, color: 0xf59e0b },
+      { x: -0.22, color: 0x22c55e }
+    ].forEach(({ x, color }) => {
+      const bezel = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.006, 12), chromeMat);
+      bezel.rotation.x = Math.PI / 2;
+      bezel.position.set(x, 0.315, 0.585);
+      cockpitGroup.add(bezel);
+      const jewel = new THREE.Mesh(
+        new THREE.SphereGeometry(0.0042, 12, 12),
+        new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 1.4, roughness: 0.15 })
+      );
+      jewel.position.set(x, 0.315, 0.581);
+      cockpitGroup.add(jewel);
+    });
+
+    // Red Halon competition fire extinguisher on passenger sill
+    const extGroup = new THREE.Group();
+    extGroup.position.set(0.28, -0.14, 0.24);
+    extGroup.rotation.x = Math.PI / 2;
+    const extBody = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.045, 0.045, 0.26, 20),
+      new THREE.MeshStandardMaterial({ color: 0xb91c1c, roughness: 0.28, metalness: 0.35 })
+    );
+    const extValve = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.018, 0.04, 12), chromeMat);
+    extValve.position.y = 0.145;
+    extGroup.add(extBody, extValve);
+    cockpitGroup.add(extGroup);
+
+    // Subtle warm incandescent instrument cluster backlight
+    const dashGlow = new THREE.PointLight(0xffd28a, 0.55, 0.95);
+    dashGlow.position.set(-0.24, 0.42, 0.52);
+    cockpitGroup.add(dashGlow);
   }
 
   // =================================================================
@@ -2916,7 +2997,21 @@ export class GT40CockpitSimulator {
       if (name.includes('cockpit_drive_screen')) {
         this.activateDriveScreenTakeover();
       } else if (name.includes('bruce_mclaren_driver') || intersects[0].object?.userData?.isDriverInteractive) {
-        this.meetDriver();
+        const hitPt = intersects[0].point;
+        if (hitPt && (hitPt.z > 0.18 || hitPt.y < 0.16)) {
+          // Clicking driver's legs / pedal footwell fires up & accelerates the GT40!
+          if (!this.engineRunning) {
+            this.startEngine();
+          }
+          if (this._legAccelTimer) clearTimeout(this._legAccelTimer);
+          this.accelerate(true);
+          this._legAccelTimer = setTimeout(() => {
+            this.accelerate(false);
+            this._legAccelTimer = null;
+          }, 1600);
+        } else {
+          this.meetDriver();
+        }
       } else if (name.includes('starter')) {
         this.startEngine();
       } else if (name.includes('emergency')) {
