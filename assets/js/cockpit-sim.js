@@ -16,7 +16,6 @@
 import * as THREE from 'three';
 import { createGLTFLoader } from './gltf-shared.js';
 import { buildBruceMcLarenDriver, loadBruceMcLarenDriverGLB } from './gt40-driver.js';
-import { prepareLeMansTrackClone } from './gt40-journey.js';
 
 export class GT40CockpitSimulator {
   constructor() {
@@ -937,37 +936,6 @@ export class GT40CockpitSimulator {
     }
 
     this.scene.add(trackGroup);
-
-    // Mount real 3D Circuit de la Sarthe (source/lemans.glb) scaled 1:1 with the cockpit car
-    // and aligned directly to the Mulsanne Straight tarmac
-    const mountRealMulsanneTrack = (gltf) => {
-      if (!gltf?.scene || !this.scene) return;
-      const trackClone = prepareLeMansTrackClone(gltf.scene);
-      const p0x = 2268.33, p0y = -20.545, p0z = -2005.54;
-      const p1x = 2368.91, p1z = -1698.39;
-      const yaw = Math.atan2(p1x - p0x, p1z - p0z);
-
-      const mulsanneAnchor = new THREE.Group();
-      mulsanneAnchor.name = 'MulsanneStraightRealTrack';
-      mulsanneAnchor.scale.setScalar(1 / 3);
-      mulsanneAnchor.rotation.y = -yaw;
-      trackClone.position.set(-p0x, -p0y - 0.378 * 3, -p0z);
-      mulsanneAnchor.add(trackClone);
-      this.scene.add(mulsanneAnchor);
-      // Hide procedural fallback road once real Mulsanne track is mounted
-      road.visible = false;
-      groove.visible = false;
-    };
-
-    if (window.__LEMANS_GLTF_PROMISE__) {
-      window.__LEMANS_GLTF_PROMISE__.then(mountRealMulsanneTrack).catch(() => {});
-    } else {
-      const trackLoader = createGLTFLoader();
-      window.__LEMANS_GLTF_PROMISE__ = new Promise((resolve, reject) => {
-        trackLoader.load('assets/models/track/source/lemans.glb?v=smooth2', resolve, undefined, reject);
-      });
-      window.__LEMANS_GLTF_PROMISE__.then(mountRealMulsanneTrack).catch(() => {});
-    }
   }
 
   loadModel() {
