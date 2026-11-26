@@ -5,6 +5,7 @@
 
 import * as THREE from './three.module.js';
 import { createGLTFLoader } from './gltf-shared.js';
+import { loadBruceMcLarenDriverGLB } from './gt40-driver.js';
 
 export class LeMansGame {
   constructor() {
@@ -655,6 +656,13 @@ export class LeMansGame {
     // Car origin sits centered at bottom of wheels (Y = 0 in local space)
     this.carModel.position.set(0, 0, 0);
     this.carGroup.add(this.carModel);
+
+    // Mount Bruce McLaren (race_car_driver.glb in Gulf cream suit) in RHD seat (1x local carModel space)
+    const { group: driverGroup } = loadBruceMcLarenDriverGLB(THREE, createGLTFLoader(), {
+      scale: 0.46,
+      hotspotName: 'bruce_mclaren_driver'
+    });
+    this.carModel.add(driverGroup);
 
     // Twin forward endurance spotlights (in local space of the 3x car group)
     const leftHeadlight = new THREE.SpotLight(0xfffae0, 8.0, 300, Math.PI / 6, 0.4, 1.2);

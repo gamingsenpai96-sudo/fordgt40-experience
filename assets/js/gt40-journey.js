@@ -22,7 +22,7 @@
 import * as THREE from './three.module.js';
 import { createGLTFLoader } from './gltf-shared.js';
 import { LEMANS_WAYPOINTS } from './lemans-circuit-spline.js';
-import { buildBruceMcLarenDriver } from './gt40-driver.js';
+import { buildBruceMcLarenDriver, loadBruceMcLarenDriverGLB } from './gt40-driver.js';
 
 const FRONT_BAY_CALLOUTS = [
   {
@@ -454,12 +454,12 @@ export class GT40LeMansJourney {
   }
 
   setupLightingAndEnv() {
-    // Rich Circuit de la Sarthe late-afternoon golden dusk lighting
-    const hemi = new THREE.HemisphereLight(0xe4eeff, 0x262932, 1.25);
+    // Rich Circuit de la Sarthe late-afternoon lighting — bright enough to reveal matte bodywork contours
+    const hemi = new THREE.HemisphereLight(0xeef4ff, 0x383d4a, 1.55);
     this.scene.add(hemi);
 
     // Moving sunlight tracking the GT40 so high-res chassis shadows stay crisp across all 13.6km
-    this.sunLight = new THREE.DirectionalLight(0xfff1db, 2.65);
+    this.sunLight = new THREE.DirectionalLight(0xfff4e2, 3.15);
     this.sunLight.castShadow = true;
     this.sunLight.shadow.mapSize.set(2048, 2048);
     this.sunLight.shadow.camera.near = 2;
@@ -474,11 +474,11 @@ export class GT40LeMansJourney {
     this.scene.add(this.sunLight.target);
 
     // Cool sky fill opposite sun + crisp rear rim light for fender & louver highlights
-    const fillLight = new THREE.DirectionalLight(0xa8ccf8, 1.05);
+    const fillLight = new THREE.DirectionalLight(0xc2dcff, 1.35);
     fillLight.position.set(-45, 35, 50);
     this.scene.add(fillLight);
 
-    const rimLight = new THREE.DirectionalLight(0xdbeafe, 0.95);
+    const rimLight = new THREE.DirectionalLight(0xeff6ff, 1.15);
     rimLight.position.set(38, 22, -45);
     this.scene.add(rimLight);
 
@@ -688,14 +688,14 @@ export class GT40LeMansJourney {
     const bodyRoughTex = loadTex('Body_Roughness.png', false);
     const bodyMetalTex = loadTex('Body_Metallic.png', false);
 
-    // Satin-matte 1966 Black #2 paint matching the realistic game simulation
+    // Satin-matte 1966 Black #2 paint matching the realistic game simulation with balanced lighting
     const mat = new THREE.MeshStandardMaterial({
       map: bodyLiveryTex,
       roughnessMap: bodyRoughTex,
       metalnessMap: bodyMetalTex,
-      roughness: 0.68,
+      roughness: 0.65,
       metalness: 0.04,
-      envMapIntensity: 0.28,
+      envMapIntensity: 0.42,
       side: THREE.DoubleSide
     });
 
@@ -741,7 +741,7 @@ export class GT40LeMansJourney {
            if (isStripe) {
              diffuseColor.rgb = vec3(0.95, 0.95, 0.97);
            } else {
-             diffuseColor.rgb = vec3(0.022, 0.024, 0.028);
+             diffuseColor.rgb = vec3(0.036, 0.040, 0.046);
            }
           `
         )
@@ -1176,11 +1176,25 @@ export class GT40LeMansJourney {
     this.buildStructuralBackingDetails(driverDoorOffset, passengerDoorOffset);
     this.calibrateTireGrounding();
 
-    // Place 1966 driver Bruce McLaren visibly in RHD bucket seat & dual rear tailpipe exhaust pool
+    // Place 1966 driver Bruce McLaren (race_car_driver.glb in Gulf cream suit) in RHD bucket seat
     this.exteriorDriver = buildBruceMcLarenDriver(THREE, { cockpitObserverMode: false });
     this.exteriorDriver.root.position.y = -0.02;
     this.exteriorDriver.root.position.z = 0.02;
     this.chassisGroup.add(this.exteriorDriver.root);
+    loadBruceMcLarenDriverGLB(THREE, createGLTFLoader(), {
+      scale: 0.46,
+      hotspotName: 'bruce_mclaren_driver',
+      onLoaded: (glbGroup, model) => {
+        // Replace procedural torso/head meshes with detailed 3D race_car_driver.glb while keeping pivot
+        this.exteriorDriver.root.visible = false;
+        this.chassisGroup.add(glbGroup);
+        model.traverse((obj) => {
+          if (obj.isMesh) {
+            this.zoneMeshes.set(obj, 'bruce_mclaren_driver');
+          }
+        });
+      }
+    });
     this.exteriorDriver.interactives.forEach((part) => {
       this.zoneMeshes.set(part, 'bruce_mclaren_driver');
     });

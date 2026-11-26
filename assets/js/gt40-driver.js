@@ -361,3 +361,153 @@ export function buildBruceMcLarenDriver(THREE, options = {}) {
     update
   };
 }
+
+/**
+ * Loads assets/models/driver/race_car_driver.glb and applies Bruce McLaren's
+ * iconic 1960s Cream / Gulf Navy & Orange racing suit shader, centered & scaled
+ * for 1x Ford GT40 Mk II RHD cockpit space.
+ */
+export function loadBruceMcLarenDriverGLB(THREE, loader, options = {}) {
+  const {
+    url = 'assets/models/driver/race_car_driver.glb',
+    scale = 0.46,
+    hotspotName = 'bruce_mclaren_driver',
+    onLoaded = null
+  } = options;
+
+  const group = new THREE.Group();
+  group.name = 'BruceMcLarenGLBDriver';
+  group.position.set(-0.28, 0.14, 0.06);
+
+  const suitMat = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    roughness: 0.78,
+    metalness: 0.05,
+    emissive: new THREE.Color(0x000000),
+    emissiveIntensity: 0.0
+  });
+
+  suitMat.onBeforeCompile = (shader) => {
+    shader.vertexShader = shader.vertexShader
+      .replace(
+        '#include <common>',
+        `#include <common>
+         varying vec3 vDrvPos;
+         varying vec3 vDrvNorm;`
+      )
+      .replace(
+        '#include <begin_vertex>',
+        `#include <begin_vertex>
+         vDrvPos = position;
+         vDrvNorm = normal;`
+      );
+
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        '#include <common>',
+        `#include <common>
+         varying vec3 vDrvPos;
+         varying vec3 vDrvNorm;`
+      )
+      .replace(
+        '#include <color_fragment>',
+        `#include <color_fragment>
+         // Centered approximate local coords (raw center ~ [0.62, 1.15, 0.03])
+         float lx = vDrvPos.x - 0.62;
+         float ly = vDrvPos.y - 1.15;
+         float lz = vDrvPos.z - 0.03;
+         float ax = abs(lx);
+
+         // Default: Bruce McLaren Cream / Off-White Nomex Racing Suit
+         vec3 col = vec3(0.84, 0.79, 0.67);
+         float rFactor = 0.82;
+
+         // Helmet (top head region)
+         if (ly > 0.36) {
+           col = vec3(0.90, 0.88, 0.82); // Ivory white helmet shell
+           rFactor = 0.28;
+           // Helmet visor / face opening
+           if (lz > 0.06 && ly > 0.38 && ly < 0.56 && ax < 0.15) {
+             col = (ly > 0.45 && ly < 0.53) ? vec3(0.08, 0.10, 0.13) : vec3(0.72, 0.48, 0.36);
+             rFactor = (ly > 0.45 && ly < 0.53) ? 0.15 : 0.65;
+           } else if (ly > 0.36 && ly < 0.41) {
+             col = vec3(0.08, 0.18, 0.36); // Classic navy trim band
+           }
+         } else {
+           // Gulf Navy-Blue & Burnt-Orange dual shoulder & sleeve stripes
+           if (ly > -0.05 && ax > 0.18) {
+             if (ax > 0.22 && ax < 0.27) {
+               col = vec3(0.07, 0.16, 0.38); // Gulf Navy
+             } else if (ax >= 0.27 && ax < 0.32) {
+               col = vec3(0.82, 0.26, 0.07); // Gulf Orange
+             }
+           }
+
+           // Gulf circular patch (right chest: lx < 0)
+           float dGulf = length(vec2(lx + 0.10, ly - 0.18));
+           if (lz > 0.04 && dGulf < 0.065) {
+             col = (ly > 0.18) ? vec3(0.85, 0.32, 0.10) : vec3(0.08, 0.20, 0.44);
+           }
+
+           // Reynolds / Goodyear chest patches (left chest: lx > 0)
+           if (lz > 0.04 && lx > 0.04 && lx < 0.18 && ly > 0.12 && ly < 0.26) {
+             col = vec3(0.09, 0.16, 0.32);
+             if (abs(ly - 0.19) < 0.014) col = vec3(0.90, 0.88, 0.84);
+           }
+
+           // Racing harness straps & silver waist buckle
+           if (lz > 0.03 && ax > 0.05 && ax < 0.11 && ly > -0.15 && ly < 0.34) {
+             col = vec3(0.10, 0.11, 0.14);
+           }
+           if (lz > 0.06 && ax < 0.07 && ly > -0.18 && ly < -0.06) {
+             col = vec3(0.75, 0.77, 0.80); // Silver buckle
+             rFactor = 0.25;
+           }
+
+           // Tan leather driving gloves on forward hands
+           if (lz > 0.32 && ly > 0.02 && ly < 0.30 && ax > 0.14) {
+             col = vec3(0.38, 0.20, 0.10);
+             rFactor = 0.58;
+           }
+
+           // Dark leather racing boots at feet
+           if (lz > 0.65 && ly < -0.25) {
+             col = vec3(0.07, 0.07, 0.09);
+             rFactor = 0.50;
+           }
+         }
+
+         diffuseColor.rgb = col;
+        `
+      );
+  };
+
+  loader.load(url, (gltf) => {
+    const model = gltf.scene;
+    const box = new THREE.Box3().setFromObject(model);
+    const center = box.getCenter(new THREE.Vector3());
+    model.position.sub(center);
+
+    const holder = new THREE.Group();
+    holder.scale.setScalar(scale);
+    holder.add(model);
+
+    model.traverse((obj) => {
+      if (obj.isMesh) {
+        obj.name = hotspotName;
+        obj.userData.driverHotspot = true;
+        obj.userData.isDriverInteractive = true;
+        obj.material = suitMat;
+        obj.castShadow = true;
+        obj.receiveShadow = true;
+      }
+    });
+
+    group.add(holder);
+    if (typeof onLoaded === 'function') {
+      onLoaded(group, model, suitMat);
+    }
+  });
+
+  return { group, suitMat };
+}
