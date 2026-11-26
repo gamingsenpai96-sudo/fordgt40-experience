@@ -25,7 +25,7 @@
     <!-- Google Model Viewer for Native AR (WebXR / iOS Quick Look / Android Scene Viewer) -->
     <script type="module" src="assets/js/model-viewer.min.js"></script>
     <!-- High-Performance Dynamic QR Code Generator -->
-    <script src="assets/js/qrcode.min.js"></script>
+    <script src="assets/js/qrcode.min.js" defer></script>
   </head>
   <body class="mode-journey">
     <!-- Preloader -->
@@ -321,7 +321,7 @@
           <section id="story" class="chronicle-node content-section" data-year="1963">
           <div class="chronicle-card" data-tilt data-tilt-max="6" data-tilt-glare data-tilt-max-glare="0.15">
             <div class="chronicle-card-media">
-              <img src="assets/images/history/ford-henry.jpg" alt="Henry Ford II" class="chronicle-img" loading="lazy" />
+              <img decoding="async" src="assets/images/history/ford-henry.jpg" alt="Henry Ford II" class="chronicle-img" loading="lazy" />
               <div class="chronicle-media-overlay"></div>
               <span class="chronicle-year-pill">1963 &bull; THE CATALYST</span>
             </div>
@@ -450,7 +450,7 @@
           <section id="ford-vs-ferrari" class="chronicle-node content-section" data-year="1964">
           <div class="chronicle-card reverse" data-tilt data-tilt-max="6" data-tilt-glare data-tilt-max-glare="0.15">
             <div class="chronicle-card-media">
-              <img src="assets/images/history/ford-shelby.jpg" alt="Carroll Shelby" class="chronicle-img" loading="lazy" />
+              <img decoding="async" src="assets/images/history/ford-shelby.jpg" alt="Carroll Shelby" class="chronicle-img" loading="lazy" />
               <div class="chronicle-media-overlay"></div>
               <span class="chronicle-year-pill">1964 &bull; SHELBY AMERICAN</span>
             </div>
@@ -475,7 +475,7 @@
           <section id="cars" class="chronicle-node content-section" data-year="1965">
           <div class="chronicle-card" data-tilt data-tilt-max="6" data-tilt-glare data-tilt-max-glare="0.15">
             <div class="chronicle-card-media">
-              <img src="assets/images/history/ford-gt40-profile-1966.jpg" alt="Ford GT40 Mk II Profile" class="chronicle-img" loading="lazy" />
+              <img decoding="async" src="assets/images/history/ford-gt40-profile-1966.jpg" alt="Ford GT40 Mk II Profile" class="chronicle-img" loading="lazy" />
               <div class="chronicle-media-overlay"></div>
               <span class="chronicle-year-pill">1965 &bull; 7.0L NASCAR V8</span>
             </div>
@@ -897,7 +897,7 @@
           <section id="circuit" class="chronicle-node content-section" data-year="1966">
           <div class="chronicle-card reverse" data-tilt data-tilt-max="6" data-tilt-glare data-tilt-max-glare="0.15">
             <div class="chronicle-card-media">
-              <img src="assets/images/history/ferrari-330p3-lemans-action.jpg" alt="Ferrari 330 P3 Action" class="chronicle-img" loading="lazy" />
+              <img decoding="async" src="assets/images/history/ferrari-330p3-lemans-action.jpg" alt="Ferrari 330 P3 Action" class="chronicle-img" loading="lazy" />
               <div class="chronicle-media-overlay"></div>
               <span class="chronicle-year-pill">1966 &bull; LA SARTHE</span>
             </div>
@@ -1144,7 +1144,7 @@
                 </div>
 
                 <div class="dossier-media-wrap">
-                  <img src="assets/images/history/ford-lemans-car5.jpg" alt="Mulsanne Straight Action" class="dossier-img" id="track-sector-image" />
+                  <img loading="lazy" decoding="async" src="assets/images/history/ford-lemans-car5.jpg" alt="Mulsanne Straight Action" class="dossier-img" id="track-sector-image" />
                 </div>
 
                 <p class="dossier-desc" id="track-sector-desc">
@@ -1222,7 +1222,7 @@
               <div class="race-stage-grid">
                 <!-- Left: Archival Photo & Atmosphere -->
                 <div class="race-card-media">
-                  <img src="assets/images/history/ford-team.jpg" alt="Race Moment" class="race-card-img" id="clock-phase-image" />
+                  <img loading="lazy" decoding="async" src="assets/images/history/ford-team.jpg" alt="Race Moment" class="race-card-img" id="clock-phase-image" />
                   <div class="race-media-badge-wrap">
                     <span class="race-weather-tag" id="clock-weather-val">Clear • 24°C • Dry Track</span>
                   </div>
@@ -1281,7 +1281,7 @@
           <section id="24hours" class="chronicle-node content-section" data-year="1966">
           <div class="chronicle-card" data-tilt data-tilt-max="6" data-tilt-glare data-tilt-max-glare="0.15">
             <div class="chronicle-card-media">
-              <img src="assets/images/history/ford-lemans-formation.jpg" alt="1966 Formation Finish" class="chronicle-img" loading="lazy" />
+              <img decoding="async" src="assets/images/history/ford-lemans-formation.jpg" alt="1966 Formation Finish" class="chronicle-img" loading="lazy" />
               <div class="chronicle-media-overlay"></div>
               <span class="chronicle-year-pill">JUNE 19, 1966 &bull; 16:00</span>
             </div>
@@ -1318,7 +1318,7 @@
           <section id="people" class="chronicle-node content-section" data-year="LEGACY">
           <div class="chronicle-card reverse" data-tilt data-tilt-max="6" data-tilt-glare data-tilt-max-glare="0.15">
             <div class="chronicle-card-media">
-              <img src="assets/images/history/ford-miles.jpg" alt="Ken Miles in Cockpit" class="chronicle-img" loading="lazy" />
+              <img decoding="async" src="assets/images/history/ford-miles.jpg" alt="Ken Miles in Cockpit" class="chronicle-img" loading="lazy" />
               <div class="chronicle-media-overlay"></div>
               <span class="chronicle-year-pill">IMMORTALS &bull; LEGACY</span>
             </div>
@@ -1341,7 +1341,7 @@
         <section id="bruce-mclaren-dossier" class="chronicle-node content-section" data-year="P/1046">
           <div class="chronicle-card driver-spotlight-card" data-tilt data-tilt-max="5" data-tilt-glare data-tilt-max-glare="0.12">
             <div class="chronicle-card-media">
-              <img src="assets/images/history/ford-lemans-car2.jpg" alt="1966 Ford GT40 Mk II #2 driven by Bruce McLaren and Chris Amon at Le Mans" class="chronicle-img" loading="lazy" />
+              <img decoding="async" src="assets/images/history/ford-lemans-car2.jpg" alt="1966 Ford GT40 Mk II #2 driven by Bruce McLaren and Chris Amon at Le Mans" class="chronicle-img" loading="lazy" />
               <div class="chronicle-media-overlay"></div>
               <span class="chronicle-year-pill">CAR #2 &bull; CHASSIS P/1046</span>
             </div>
@@ -1613,7 +1613,7 @@
           <div class="exp-media-collage collage-layout-hero-stack">
             <div class="collage-hero-card">
               <div class="collage-img-wrap">
-                <img src="assets/images/history/ford-overview.jpg" alt="1966 Ford GT40 Mk II Le Mans #1" class="collage-img" />
+                <img loading="lazy" decoding="async" src="assets/images/history/ford-overview.jpg" alt="1966 Ford GT40 Mk II Le Mans #1" class="collage-img" />
                 <div class="collage-caption">
                   <span>1966 FORD GT40 MK II &bull; CHASSIS #GT40/106</span>
                   <span class="collage-caption-tag">SHELBY AMERICAN</span>
@@ -1623,7 +1623,7 @@
             <div class="collage-stack-col">
               <div class="collage-sub-card">
                 <div class="collage-img-wrap">
-                  <img src="assets/images/history/ford-lemans-car2.jpg" alt="Car #2 Bruce McLaren Le Mans 1966" class="collage-img" />
+                  <img loading="lazy" decoding="async" src="assets/images/history/ford-lemans-car2.jpg" alt="Car #2 Bruce McLaren Le Mans 1966" class="collage-img" />
                   <div class="collage-caption">
                     <span>OVERALL WINNER &bull; CAR #2</span>
                     <span class="collage-caption-tag">MCLAREN / AMON</span>
@@ -1632,7 +1632,7 @@
               </div>
               <div class="collage-sub-card">
                 <div class="collage-img-wrap">
-                  <img src="assets/images/history/ford-lemans-car5.jpg" alt="Car #5 Holman & Moody Le Mans 1966" class="collage-img" />
+                  <img loading="lazy" decoding="async" src="assets/images/history/ford-lemans-car5.jpg" alt="Car #5 Holman & Moody Le Mans 1966" class="collage-img" />
                   <div class="collage-caption">
                     <span>1-2-3 PODIUM SWEEP &bull; CAR #5</span>
                     <span class="collage-caption-tag">HOLMAN &amp; MOODY</span>
@@ -1690,7 +1690,7 @@
 
           <div class="exp-profile-layout">
             <div class="exp-profile-card">
-              <img src="assets/images/history/ford-henry.jpg" alt="Henry Ford II" class="exp-profile-img" />
+              <img loading="lazy" decoding="async" src="assets/images/history/ford-henry.jpg" alt="Henry Ford II" class="exp-profile-img" />
               <div class="exp-profile-meta">HENRY FORD II &bull; CEO & PRESIDENT</div>
             </div>
 
@@ -1718,7 +1718,7 @@
 
           <div class="exp-profile-layout">
             <div class="exp-profile-card">
-              <img src="assets/images/history/ford-shelby.jpg" alt="Carroll Shelby" class="exp-profile-img" />
+              <img loading="lazy" decoding="async" src="assets/images/history/ford-shelby.jpg" alt="Carroll Shelby" class="exp-profile-img" />
               <div class="exp-profile-meta">CARROLL SHELBY &bull; SHELBY AMERICAN</div>
             </div>
 
@@ -1746,7 +1746,7 @@
 
           <div class="exp-profile-layout">
             <div class="exp-profile-card">
-              <img src="assets/images/history/ford-miles.jpg" alt="Ken Miles" class="exp-profile-img" />
+              <img loading="lazy" decoding="async" src="assets/images/history/ford-miles.jpg" alt="Ken Miles" class="exp-profile-img" />
               <div class="exp-profile-meta">KEN MILES &bull; CHIEF DEVELOPMENT DRIVER</div>
             </div>
 
@@ -1776,7 +1776,7 @@
           <div class="exp-media-collage collage-layout-dual">
             <div class="collage-sub-card">
               <div class="collage-img-wrap">
-                <img src="assets/images/history/ford-gt40-profile-1966.jpg" alt="Ford GT40 Mk II Aerodynamic Profile" class="collage-img" />
+                <img loading="lazy" decoding="async" src="assets/images/history/ford-gt40-profile-1966.jpg" alt="Ford GT40 Mk II Aerodynamic Profile" class="collage-img" />
                 <div class="collage-caption">
                   <span>40-INCH COMPETITION SILHOUETTE &bull; AERODYNAMICS</span>
                   <span class="collage-caption-tag">CHASSIS SPEC</span>
@@ -1785,7 +1785,7 @@
             </div>
             <div class="collage-sub-card">
               <div class="collage-img-wrap">
-                <img src="assets/images/history/ford-gt40-spec.jpg" alt="Ford GT40 Technical Details" class="collage-img" />
+                <img loading="lazy" decoding="async" src="assets/images/history/ford-gt40-spec.jpg" alt="Ford GT40 Technical Details" class="collage-img" />
                 <div class="collage-caption">
                   <span>7.0L FE 427 V8 &bull; PHIL REMINGTON BRAKES</span>
                   <span class="collage-caption-tag">POWERTRAIN</span>
@@ -1843,7 +1843,7 @@
           <div class="exp-media-collage collage-layout-roster">
             <div class="collage-roster-item">
               <div class="collage-img-wrap">
-                <img src="assets/images/history/ford-lemans-car2.jpg" alt="Bruce McLaren Car #2" class="collage-img" />
+                <img loading="lazy" decoding="async" src="assets/images/history/ford-lemans-car2.jpg" alt="Bruce McLaren Car #2" class="collage-img" />
                 <div class="collage-caption">
                   <span>BRUCE MCLAREN &bull; CHRIS AMON</span>
                   <span class="collage-caption-tag">#2 WINNER</span>
@@ -1852,7 +1852,7 @@
             </div>
             <div class="collage-roster-item">
               <div class="collage-img-wrap">
-                <img src="assets/images/history/ford-miles.jpg" alt="Ken Miles Testing" class="collage-img" />
+                <img loading="lazy" decoding="async" src="assets/images/history/ford-miles.jpg" alt="Ken Miles Testing" class="collage-img" />
                 <div class="collage-caption">
                   <span>KEN MILES &bull; DENNY HULME</span>
                   <span class="collage-caption-tag">#1 PACE</span>
@@ -1861,7 +1861,7 @@
             </div>
             <div class="collage-roster-item">
               <div class="collage-img-wrap">
-                <img src="assets/images/history/ford-lemans-car5.jpg" alt="Ronnie Bucknum Car #5" class="collage-img" />
+                <img loading="lazy" decoding="async" src="assets/images/history/ford-lemans-car5.jpg" alt="Ronnie Bucknum Car #5" class="collage-img" />
                 <div class="collage-caption">
                   <span>BUCKNUM &bull; HUTCHERSON</span>
                   <span class="collage-caption-tag">#5 PODIUM</span>
@@ -1870,7 +1870,7 @@
             </div>
             <div class="collage-roster-item">
               <div class="collage-img-wrap">
-                <img src="assets/images/history/ford-lemans-formation.jpg" alt="1-2-3 Formation Finish" class="collage-img" />
+                <img loading="lazy" decoding="async" src="assets/images/history/ford-lemans-formation.jpg" alt="1-2-3 Formation Finish" class="collage-img" />
                 <div class="collage-caption">
                   <span>HISTORIC 1-2-3 SWEEP</span>
                   <span class="collage-caption-tag">DEARBORN</span>
@@ -1973,7 +1973,7 @@
           <div class="exp-media-collage collage-layout-hero-stack ferrari-collage">
             <div class="collage-hero-card">
               <div class="collage-img-wrap">
-                <img src="assets/images/history/ferrari-p3-profile.jpg" alt="Ferrari 330 P3 Tipo 0844" class="collage-img" />
+                <img loading="lazy" decoding="async" src="assets/images/history/ferrari-p3-profile.jpg" alt="Ferrari 330 P3 Tipo 0844" class="collage-img" />
                 <div class="collage-caption">
                   <span>FERRARI 330 P3 &bull; TIPO 0844 SCUDERIA MARANELLO</span>
                   <span class="collage-caption-tag">MARANELLO FACTORY</span>
@@ -1983,7 +1983,7 @@
             <div class="collage-stack-col">
               <div class="collage-sub-card">
                 <div class="collage-img-wrap">
-                  <img src="assets/images/history/ferrari-330p3-lemans-21.jpg" alt="Ferrari 330 P3 #21 Le Mans 1966" class="collage-img" />
+                  <img loading="lazy" decoding="async" src="assets/images/history/ferrari-330p3-lemans-21.jpg" alt="Ferrari 330 P3 #21 Le Mans 1966" class="collage-img" />
                   <div class="collage-caption">
                     <span>CAR #21 BERLINETTA &bull; DE LA SARTHE</span>
                     <span class="collage-caption-tag">PARKES / SCARFIOTTI</span>
@@ -1992,7 +1992,7 @@
               </div>
               <div class="collage-sub-card">
                 <div class="collage-img-wrap">
-                  <img src="assets/images/history/ferrari-330p3-lemans-action.jpg" alt="Ferrari 330 P3 Night Battle" class="collage-img" />
+                  <img loading="lazy" decoding="async" src="assets/images/history/ferrari-330p3-lemans-action.jpg" alt="Ferrari 330 P3 Night Battle" class="collage-img" />
                   <div class="collage-caption">
                     <span>NIGHT COMBAT &bull; CIRCUIT DE LA SARTHE</span>
                     <span class="collage-caption-tag">ENDURANCE</span>
@@ -2050,7 +2050,7 @@
 
           <div class="exp-profile-layout">
             <div class="exp-profile-card">
-              <img src="assets/images/history/ferrari-enzo.jpg" alt="Enzo Ferrari" class="exp-profile-img" />
+              <img loading="lazy" decoding="async" src="assets/images/history/ferrari-enzo.jpg" alt="Enzo Ferrari" class="exp-profile-img" />
               <div class="exp-profile-meta">ENZO FERRARI &bull; IL COMMENDATORE</div>
             </div>
 
@@ -2078,7 +2078,7 @@
 
           <div class="exp-profile-layout">
             <div class="exp-profile-card">
-              <img src="assets/images/history/ferrari-forghieri.jpg" alt="Mauro Forghieri" class="exp-profile-img" />
+              <img loading="lazy" decoding="async" src="assets/images/history/ferrari-forghieri.jpg" alt="Mauro Forghieri" class="exp-profile-img" />
               <div class="exp-profile-meta">MAURO FORGHIERI &bull; TECHNICAL DIRECTOR</div>
             </div>
 
@@ -2106,7 +2106,7 @@
 
           <div class="exp-profile-layout">
             <div class="exp-profile-card">
-              <img src="assets/images/history/ferrari-bandini.jpg" alt="Lorenzo Bandini" class="exp-profile-img" />
+              <img loading="lazy" decoding="async" src="assets/images/history/ferrari-bandini.jpg" alt="Lorenzo Bandini" class="exp-profile-img" />
               <div class="exp-profile-meta">LORENZO BANDINI &bull; #20 FERRARI 330 P3</div>
             </div>
 
@@ -2136,7 +2136,7 @@
           <div class="exp-media-collage collage-layout-dual ferrari-collage">
             <div class="collage-sub-card">
               <div class="collage-img-wrap">
-                <img src="assets/images/history/ferrari-p3-profile.jpg" alt="Ferrari 330 P3 Aerodynamic Stance" class="collage-img" />
+                <img loading="lazy" decoding="async" src="assets/images/history/ferrari-p3-profile.jpg" alt="Ferrari 330 P3 Aerodynamic Stance" class="collage-img" />
                 <div class="collage-caption">
                   <span>TIPO 0844 LOW-DRAG AERODYNAMICS</span>
                   <span class="collage-caption-tag">DURALUMIN CHASSIS</span>
@@ -2145,7 +2145,7 @@
             </div>
             <div class="collage-sub-card">
               <div class="collage-img-wrap">
-                <img src="assets/images/history/ferrari-p3-spec.jpg" alt="Ferrari Tipo 237 Quad-Cam V12" class="collage-img" />
+                <img loading="lazy" decoding="async" src="assets/images/history/ferrari-p3-spec.jpg" alt="Ferrari Tipo 237 Quad-Cam V12" class="collage-img" />
                 <div class="collage-caption">
                   <span>TIPO 237 QUAD-CAM 4.0L V12 &bull; 8,200 RPM</span>
                   <span class="collage-caption-tag">POWERTRAIN</span>
@@ -2203,7 +2203,7 @@
           <div class="exp-media-collage collage-layout-roster ferrari-collage">
             <div class="collage-roster-item">
               <div class="collage-img-wrap">
-                <img src="assets/images/history/ferrari-guichet.jpg" alt="Jean Guichet Ferrari Driver" class="collage-img" />
+                <img loading="lazy" decoding="async" src="assets/images/history/ferrari-guichet.jpg" alt="Jean Guichet Ferrari Driver" class="collage-img" />
                 <div class="collage-caption">
                   <span>BANDINI &bull; GUICHET</span>
                   <span class="collage-caption-tag">#20 SPYDER</span>
@@ -2212,7 +2212,7 @@
             </div>
             <div class="collage-roster-item">
               <div class="collage-img-wrap">
-                <img src="assets/images/history/ferrari-parkes.jpg" alt="Mike Parkes Factory Driver" class="collage-img" />
+                <img loading="lazy" decoding="async" src="assets/images/history/ferrari-parkes.jpg" alt="Mike Parkes Factory Driver" class="collage-img" />
                 <div class="collage-caption">
                   <span>MIKE PARKES</span>
                   <span class="collage-caption-tag">#21 FACTORY</span>
@@ -2221,7 +2221,7 @@
             </div>
             <div class="collage-roster-item">
               <div class="collage-img-wrap">
-                <img src="assets/images/history/ferrari-scarfiotti.jpg" alt="Ludovico Scarfiotti" class="collage-img" />
+                <img loading="lazy" decoding="async" src="assets/images/history/ferrari-scarfiotti.jpg" alt="Ludovico Scarfiotti" class="collage-img" />
                 <div class="collage-caption">
                   <span>LUDOVICO SCARFIOTTI</span>
                   <span class="collage-caption-tag">ITALIAN GP CHAMP</span>
@@ -2230,7 +2230,7 @@
             </div>
             <div class="collage-roster-item">
               <div class="collage-img-wrap">
-                <img src="assets/images/history/ferrari-330p3-lemans-21.jpg" alt="Ferrari 330 P3 #21 on Track" class="collage-img" />
+                <img loading="lazy" decoding="async" src="assets/images/history/ferrari-330p3-lemans-21.jpg" alt="Ferrari 330 P3 #21 on Track" class="collage-img" />
                 <div class="collage-caption">
                   <span>#21 BERLINETTA ON TRACK</span>
                   <span class="collage-caption-tag">DE LA SARTHE</span>
@@ -2297,44 +2297,55 @@
     <script src="assets/js/vendor/ScrollTrigger.min.js"></script>
     <!-- Creative Frontend Vendor Engines -->
     <script src="assets/js/vendor/lenis.min.js"></script>
-    <script src="assets/js/vendor/vanilla-tilt.min.js"></script>
-    <script src="assets/js/vendor/confetti.browser.min.js"></script>
-    <script src="assets/js/vendor/tsparticles.slim.bundle.min.js"></script>
+    <script src="assets/js/vendor/vanilla-tilt.min.js" defer></script>
+    <script src="assets/js/vendor/confetti.browser.min.js" defer></script>
+    <script src="assets/js/vendor/tsparticles.slim.bundle.min.js" defer></script>
 
     <!-- Project Application Scripts -->
     <script src="main.js?v=5.0"></script>
     <script type="module">
-      // On ?ar=true or #ar-section, skip heavy 3D modules (80MB lemans.glb + 3D viewers) until user navigates away
+      // On ?ar=true or #ar-section, skip heavy 3D modules (lemans.glb + 3D viewers) until user navigates away
       const isARDirect = new URLSearchParams(location.search).has('ar') || location.hash === '#ar-section';
 
       window._heavyModulesReady = false;
       window.ensureExperiencesInitialized = async function() {
         if (window._heavyModulesReady) return;
         window._heavyModulesReady = true;
-        const [
-          { GT40LeMansJourney },
-          { GT40CockpitSimulator },
-          { LeMansTrackExperience },
-          { LeMansRaceClock }
-        ] = await Promise.all([
-          import('./assets/js/gt40-journey.js?v=1.0'),
-          import('./assets/js/cockpit-sim.js?v=5.0'),
-          import('./assets/js/lemans-track.js?v=5.0'),
-          import('./assets/js/race-clock.js?v=5.0'),
-          import('./assets/js/game.js?v=5.0'),
-          import('./assets/js/exploded-view.js?v=5.0')
-        ]);
+        const { GT40LeMansJourney } = await import('./assets/js/gt40-journey.js?v=1.0');
         window.gt40Journey = new GT40LeMansJourney();
-        window.gt40Cockpit = new GT40CockpitSimulator();
-        window.gt40Track = new LeMansTrackExperience();
-        window.gt40RaceClock = new LeMansRaceClock();
+
+        // Load secondary destination modules right after primary Journey begins booting
+        const initSecondary = async () => {
+          const [
+            { GT40CockpitSimulator },
+            { LeMansTrackExperience },
+            { LeMansRaceClock }
+          ] = await Promise.all([
+            import('./assets/js/cockpit-sim.js?v=5.0'),
+            import('./assets/js/lemans-track.js?v=5.0'),
+            import('./assets/js/race-clock.js?v=5.0'),
+            import('./assets/js/game.js?v=5.0'),
+            import('./assets/js/exploded-view.js?v=5.0')
+          ]);
+          window.gt40Cockpit = new GT40CockpitSimulator();
+          window.gt40Track = new LeMansTrackExperience();
+          window.gt40RaceClock = new LeMansRaceClock();
+        };
+
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(() => initSecondary(), { timeout: 600 });
+        } else {
+          setTimeout(initSecondary, 120);
+        }
       };
 
-      window.addEventListener('DOMContentLoaded', () => {
-        if (!isARDirect) {
+      if (!isARDirect) {
+        if (document.readyState === 'loading') {
+          window.addEventListener('DOMContentLoaded', () => window.ensureExperiencesInitialized());
+        } else {
           window.ensureExperiencesInitialized();
         }
-      });
+      }
     </script>
   </body>
 </html>

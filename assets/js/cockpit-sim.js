@@ -14,7 +14,7 @@
    ================================================================= */
 
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/GLTFLoader.js';
+import { createGLTFLoader } from './gltf-shared.js';
 import { buildBruceMcLarenDriver } from './gt40-driver.js';
 
 export class GT40CockpitSimulator {
@@ -814,7 +814,7 @@ export class GT40CockpitSimulator {
   }
 
   loadModel() {
-    const loader = new GLTFLoader();
+    const loader = createGLTFLoader();
 
     if (!window.__GT40_GLTF_PROMISE__) {
       window.__GT40_GLTF_PROMISE__ = new Promise((resolve, reject) => {

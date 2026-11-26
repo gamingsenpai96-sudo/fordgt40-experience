@@ -20,7 +20,7 @@
  */
 
 import * as THREE from './three.module.js';
-import { GLTFLoader } from './GLTFLoader.js';
+import { createGLTFLoader } from './gltf-shared.js';
 import { LEMANS_WAYPOINTS } from './lemans-circuit-spline.js';
 import { buildBruceMcLarenDriver } from './gt40-driver.js';
 
@@ -543,7 +543,7 @@ export class GT40LeMansJourney {
   }
 
   loadExteriorAssets() {
-    const loader = new GLTFLoader();
+    const loader = createGLTFLoader();
     const prog = { car: 0, track: 0 };
 
     const updateProgress = () => {

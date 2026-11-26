@@ -6,7 +6,7 @@
  */
 
 import * as THREE from './three.module.js';
-import { GLTFLoader } from './GLTFLoader.js';
+import { createGLTFLoader } from './gltf-shared.js';
 import { OrbitControls } from './OrbitControls.js';
 
 // Technical telemetry data for each GT40 subsystem
@@ -1203,7 +1203,7 @@ export class GT40ExplodedViewer {
   }
 
   async loadModel() {
-    const loader = new GLTFLoader();
+    const loader = createGLTFLoader();
 
     if (!window.__GT40_GLTF_PROMISE__) {
       window.__GT40_GLTF_PROMISE__ = new Promise((resolve, reject) => {

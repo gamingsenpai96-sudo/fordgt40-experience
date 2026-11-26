@@ -4,7 +4,7 @@
    ============================================================ */
 
 import * as THREE from './three.module.js';
-import { GLTFLoader } from './GLTFLoader.js';
+import { createGLTFLoader } from './gltf-shared.js';
 
 export class LeMansGame {
   constructor() {
@@ -210,7 +210,7 @@ export class LeMansGame {
   // =================================================================
 
   load3DModels() {
-    const loader = new GLTFLoader();
+    const loader = createGLTFLoader();
 
     const updateUIProgress = () => {
       const overall = Math.round((this.loadProgress.track * 0.5) + (this.loadProgress.car * 0.5));
