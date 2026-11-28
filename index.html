@@ -7,11 +7,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,800;1,900&family=Bebas+Neue&family=Inter:wght@400;500;600&family=Lora:ital,wght@1,400;1,500&family=Rajdhani:wght@400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;1,700;1,800;1,900&family=Bebas+Neue&family=Oswald:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=5.0" />
-    <link rel="stylesheet" href="assets/css/editorial-v2.css?v=2.0" />
+    <link rel="stylesheet" href="styles.css?v=6.0" />
+    <link rel="stylesheet" href="assets/css/editorial-v2.css?v=6.0" />
     <script type="importmap">
     {
       "imports": {
@@ -192,14 +192,19 @@
 
       <!-- Interactive Engine Ignition Control (Stationary Start Sequence) -->
       <div id="journey-start-hud" class="journey-start-hud" role="region" aria-label="Engine Ignition Sequence">
-        <div class="jsh-meta">427 FE V8 &bull; CHASSIS P/1046 &bull; LE MANS GRID</div>
+        <div class="jsh-meta"><span class="ed-rule" aria-hidden="true"></span><span>427 FE V8 &bull; CHASSIS P/1046 &bull; LE MANS GRID</span></div>
         <button type="button" id="journey-start-btn" class="journey-start-btn" aria-label="Click and hold to start engine">
           <span class="jsh-ring-wrap" aria-hidden="true">
             <svg viewBox="0 0 100 100" class="jsh-ring-svg">
               <circle cx="50" cy="50" r="46" class="jsh-ring-track" />
               <circle cx="50" cy="50" r="46" id="start-ring-progress" class="jsh-ring-fill" />
             </svg>
-            <span class="jsh-bolt">&#9889;</span>
+            <span class="jsh-bolt">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                <path d="M12 2v7"/>
+                <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/>
+              </svg>
+            </span>
           </span>
           <span class="jsh-cta-copy">
             <strong class="jsh-label">CLICK AND HOLD TO START ENGINE</strong>
@@ -252,15 +257,15 @@
       <!-- Go Like Hell Interactive Editorial Lockup (Bottom-Left during Cruise) -->
       <aside id="journey-glh-card" class="journey-glh-card" aria-label="Go Like Hell Experience Guide">
         <div class="glh-header">
-          <h2 class="glh-heading">GO LIKE HELL</h2>
           <div class="glh-subtitle-row">
             <span class="glh-red-rule" aria-hidden="true"></span>
             <span class="glh-kicker">FORD VS FERRARI &mdash; LE MANS 1966</span>
           </div>
-          <p class="glh-tagline">An interactive digital experience.</p>
+          <h2 class="glh-heading">GO LIKE HELL</h2>
+          <p class="glh-tagline">An immersive digital publication.</p>
         </div>
         <p class="glh-summary">
-          Inspired by A.J. Baime&rsquo;s <em>Go Like Hell</em>, step inside Ford&rsquo;s audacious quest to dethrone Ferrari at Le Mans &mdash; exploring Chassis P/1046 in real-time 3D on the Circuit de la Sarthe.
+          Based on <strong>Go Like Hell</strong> by A.J. Baime, step inside Ford&rsquo;s audacious quest to dethrone Ferrari at Le Mans &mdash; exploring Chassis P/1046 in real-time 3D on the Circuit de la Sarthe.
         </p>
         <p class="glh-guide">
           Click the <strong>Driver&rsquo;s Door</strong> or <strong>Engine Bay</strong> to open and explore, or select any option above.
@@ -337,7 +342,7 @@
         </div>
         <div class="act-chronicle-slot">
           <section id="story" class="chronicle-node content-section" data-year="1963">
-          <div class="chronicle-card" data-tilt data-tilt-max="6" data-tilt-glare data-tilt-max-glare="0.15">
+          <div class="chronicle-card spread-cover">
             <div class="chronicle-card-media">
               <img decoding="async" src="assets/images/history/ford-henry.jpg" alt="Henry Ford II" class="chronicle-img" loading="lazy" />
               <div class="chronicle-media-overlay"></div>
@@ -429,7 +434,7 @@
           <div class="showroom-vs-hud" id="showroom-vs-hud">
             <button class="vs-rev-pill ford" id="btn-vs-ford-rev" type="button" data-cursor="ROAR V8">
               <span class="vs-stat">7.0L V8 &bull; 485 BHP</span>
-              <span class="vs-action">🔊 REV GT40</span>
+              <span class="vs-action">REV GT40</span>
             </button>
             <div class="vs-center-badge" title="Click either machine to explore its full dossier">
               <span class="vs-badge-sub">1966 DUEL</span>
@@ -437,7 +442,7 @@
             </div>
             <button class="vs-rev-pill ferrari" id="btn-vs-ferrari-rev" type="button" data-cursor="SCREAM V12">
               <span class="vs-stat">4.0L V12 &bull; 420 BHP</span>
-              <span class="vs-action">🔊 REV 330 P3</span>
+              <span class="vs-action">REV 330 P3</span>
             </button>
           </div>
         </div>
@@ -460,7 +465,7 @@
             <div class="timeline-glow-bead" id="timeline-glow-bead"></div>
           </div>
           <section id="ford-vs-ferrari" class="chronicle-node content-section" data-year="1964">
-          <div class="chronicle-card reverse" data-tilt data-tilt-max="6" data-tilt-glare data-tilt-max-glare="0.15">
+          <div class="chronicle-card reverse spread-feature-right">
             <div class="chronicle-card-media">
               <img decoding="async" src="assets/images/history/ford-shelby.jpg" alt="Carroll Shelby" class="chronicle-img" loading="lazy" />
               <div class="chronicle-media-overlay"></div>
@@ -476,7 +481,7 @@
           </div>
         </section>
           <section id="cars" class="chronicle-node content-section" data-year="1965">
-          <div class="chronicle-card" data-tilt data-tilt-max="6" data-tilt-glare data-tilt-max-glare="0.15">
+          <div class="chronicle-card spread-widescreen">
             <div class="chronicle-card-media">
               <img decoding="async" src="assets/images/history/ford-gt40-profile-1966.jpg" alt="Ford GT40 Mk II Profile" class="chronicle-img" loading="lazy" />
               <div class="chronicle-media-overlay"></div>
@@ -524,56 +529,54 @@
           <div class="exploded-nav-bar">
             <!-- 3D Environment Switcher -->
             <div class="exploded-env-switcher" role="group" aria-label="3D Background Scene">
-              <span class="env-switcher-label">3D SCENE:</span>
+              <span class="env-switcher-label">3D SCENE</span>
               <button class="exploded-env-btn active" data-env="pitstop" data-cursor="PIT BAY">
-                <span class="env-icon">🔧</span>
                 <span>1966 SHELBY PIT BAY</span>
               </button>
               <button class="exploded-env-btn" data-env="podium" data-cursor="PODIUM">
-                <span class="env-icon">🏆</span>
                 <span>VICTORY PODIUM</span>
               </button>
             </div>
 
             <button class="exploded-system-btn active" data-system="all" data-cursor="EXPLODE ALL">
-              <span class="btn-icon">⬡</span>
+              <span class="btn-code">00</span>
               <span class="btn-name">FULL EXPLODED</span>
             </button>
             <button class="exploded-system-btn" data-system="engine" data-cursor="427 V8">
-              <span class="btn-icon">⚡</span>
+              <span class="btn-code">01</span>
               <span class="btn-name">427 FE V8</span>
             </button>
             <button class="exploded-system-btn" data-system="exhaust" data-cursor="BUNDLE OF SNAKES">
-              <span class="btn-icon">🔥</span>
+              <span class="btn-code">02</span>
               <span class="btn-name">BUNDLE OF SNAKES</span>
             </button>
             <button class="exploded-system-btn" data-system="transmission" data-cursor="T-44 TRANSAXLE">
-              <span class="btn-icon">⚙️</span>
+              <span class="btn-code">03</span>
               <span class="btn-name">T-44 TRANSAXLE</span>
             </button>
             <button class="exploded-system-btn" data-system="cooling" data-cursor="RADIATOR">
-              <span class="btn-icon">❄️</span>
-              <span class="btn-name">COOLING & DUCTING</span>
+              <span class="btn-code">04</span>
+              <span class="btn-name">COOLING &amp; DUCTING</span>
             </button>
             <button class="exploded-system-btn" data-system="brakes" data-cursor="LE MANS BRAKES">
-              <span class="btn-icon">🛑</span>
+              <span class="btn-code">05</span>
               <span class="btn-name">QUICK-CHANGE BRAKES</span>
             </button>
             <button class="exploded-system-btn" data-system="suspension" data-cursor="KONI RUNNING GEAR">
-              <span class="btn-icon">🛞</span>
+              <span class="btn-code">06</span>
               <span class="btn-name">KONI SUSPENSION</span>
             </button>
             <button class="exploded-system-btn" data-system="fuel" data-cursor="ENDURANCE CELLS">
-              <span class="btn-icon">⛽</span>
+              <span class="btn-code">07</span>
               <span class="btn-name">FUEL BLADDERS</span>
             </button>
             <button class="exploded-system-btn" data-system="cockpit" data-cursor="COCKPIT">
-              <span class="btn-icon">💺</span>
+              <span class="btn-code">08</span>
               <span class="btn-name">RACE COCKPIT</span>
             </button>
             <button class="exploded-system-btn" data-system="chassis" data-cursor="MONOCOQUE & AERO">
-              <span class="btn-icon">🏎️</span>
-              <span class="btn-name">MONOCOQUE & AERO</span>
+              <span class="btn-code">09</span>
+              <span class="btn-name">MONOCOQUE &amp; AERO</span>
             </button>
           </div>
 
@@ -681,7 +684,6 @@
                 <!-- Interactive Rev Engine & Equalizer Row -->
                 <div class="telemetry-audio-row">
                   <button class="rev-engine-btn" id="btn-rev-engine" data-cursor="ROAR V8">
-                    <span class="rev-icon">🔊</span>
                     <span class="rev-label">REV 7.0L V8</span>
                   </button>
                   <div class="rev-viz" id="rev-viz">
@@ -712,15 +714,12 @@
 
               <div class="hud-actions-group">
                 <button class="hud-tool-btn" id="xray-toggle" title="Toggle Body Translucency" data-cursor="X-RAY">
-                  <span class="icon">👁️</span>
                   <span class="btn-text">X-RAY BODY: <strong id="xray-state">OFF</strong></span>
                 </button>
                 <button class="hud-tool-btn active" id="autorotate-toggle" title="Toggle Auto-Orbit" data-cursor="ORBIT">
-                  <span class="icon">🔄</span>
                   <span class="btn-text">ORBIT: <strong id="rotate-state">ON</strong></span>
                 </button>
                 <button class="hud-tool-btn" id="reset-cam-btn" title="Reset Camera View" data-cursor="RESET">
-                  <span class="icon">🎯</span>
                   <span class="btn-text">RESET VIEW</span>
                 </button>
               </div>
@@ -825,23 +824,19 @@
               <!-- Physical Action Bar -->
               <div class="cockpit-actions-bar">
                 <button class="cockpit-action-btn btn-engine-start" id="cockpit-start-btn" data-cursor="START">
-                  <span class="action-icon">⚡</span>
+                  <span class="action-dot"></span>
                   <span class="action-text">START ENGINE</span>
                 </button>
                 <button class="cockpit-action-btn btn-throttle" id="cockpit-accel-btn" data-cursor="HOLD TO REV">
-                  <span class="action-icon">🔥</span>
                   <span class="action-text">ACCELERATE</span>
                 </button>
                 <button class="cockpit-action-btn btn-shift" id="cockpit-shift-btn" data-cursor="SHIFT">
-                  <span class="action-icon">⚙️</span>
                   <span class="action-text">SHIFT GEAR</span>
                 </button>
                 <button class="cockpit-action-btn btn-lights" id="cockpit-lights-btn" data-cursor="HEADLIGHTS">
-                  <span class="action-icon">💡</span>
                   <span class="action-text">HEADLIGHTS</span>
                 </button>
                 <button class="cockpit-action-btn btn-wipers" id="cockpit-wipers-btn" data-cursor="WIPERS">
-                  <span class="action-icon">🌧️</span>
                   <span class="action-text">WIPERS</span>
                 </button>
               </div>
@@ -853,7 +848,7 @@
                 <button class="cockpit-preset-btn accent-telemetry" data-preset="TELEMETRY SCREEN">TELEMETRY SCREEN</button>
                 <button class="cockpit-preset-btn accent-driver" data-preset="BRUCE MCLAREN">BRUCE MCLAREN</button>
                 <button class="cockpit-preset-btn" data-yaw="0" data-pitch="-0.42" data-preset="STEWART-WARNER GAUGES">GAUGES CLUSTER</button>
-                <button class="cockpit-preset-btn" data-yaw="-0.92" data-pitch="-0.85" data-preset="GATED SHIFTER & SILL">SILL SHIFTER & HATCH</button>
+                <button class="cockpit-preset-btn" data-yaw="-0.92" data-pitch="-0.85" data-preset="GATED SHIFTER & SILL">SILL SHIFTER &amp; HATCH</button>
                 <button class="cockpit-preset-btn" data-yaw="0.00" data-pitch="-0.75" data-preset="ALUMINUM PEDALS">PEDAL BOX</button>
                 <button class="cockpit-preset-btn" data-yaw="1.15" data-pitch="-0.85" data-preset="CENTER AIR TUNNEL">CENTER AIR TUNNEL</button>
                 <button class="cockpit-preset-btn" data-yaw="1.45" data-pitch="-0.45" data-preset="PASSENGER & BREAKERS">CIRCUIT BREAKERS</button>
@@ -862,7 +857,6 @@
 
               <div class="cockpit-actions-group">
                 <button class="hud-tool-btn" id="cockpit-reset-btn" title="Reset View Forward" data-cursor="RESET">
-                  <span class="icon">🎯</span>
                   <span class="btn-text">RESET VIEW</span>
                 </button>
               </div>
@@ -892,7 +886,7 @@
         </div>
         <div class="act-chronicle-slot">
           <section id="circuit" class="chronicle-node content-section" data-year="1966">
-          <div class="chronicle-card reverse" data-tilt data-tilt-max="6" data-tilt-glare data-tilt-max-glare="0.15">
+          <div class="chronicle-card reverse spread-track">
             <div class="chronicle-card-media">
               <img decoding="async" src="assets/images/history/ferrari-330p3-lemans-action.jpg" alt="Ferrari 330 P3 Action" class="chronicle-img" loading="lazy" />
               <div class="chronicle-media-overlay"></div>
@@ -911,11 +905,11 @@
         <section id="game-section" class="game-section content-section">
         <div class="game-wrapper">
           <div class="game-header">
-            <span class="section-tag">03</span>
+            <span class="section-tag">03 // 3D DRIVING SIMULATION</span>
             <h2 class="section-title">Circuit de la Sarthe</h2>
             <p class="section-body">
               Take the wheel of the legendary 7.0L V8 Ford GT40 Mk II on the iconic Le Mans circuit.
-              Scroll to this section, click to enter the cockpit, and pilot the 485 bhp monster in full 3D third-person POV.
+              Launch down the starting straight and pilot the 485 bhp monster in full 3D third-person POV.
             </p>
           </div>
 
@@ -1085,7 +1079,7 @@
                 <path id="circuit-track-line" class="circuit-track-racing-line" d="M 180 390 L 130 380 Q 90 340 100 270 L 130 180 Q 150 140 190 120 L 250 100 Q 290 90 330 110 L 370 140 Q 400 150 430 140 L 710 140 Q 750 140 760 170 L 760 210 Q 750 240 710 240 L 450 260 Q 420 270 400 300 L 370 360 Q 350 400 300 410 L 220 400 Z" filter="url(#track-glow)" />
 
                 <!-- Directional Arrow Overlays -->
-                <path class="track-flow-arrow" d="M 520 135 L 560 140 L 520 145 Z" fill="#d4af37" />
+                <path class="track-flow-arrow" d="M 520 135 L 560 140 L 520 145 Z" fill="#d92626" />
 
                 <!-- Hotspot Beacons -->
                 <!-- 01: Start / Finish -->
@@ -1219,7 +1213,6 @@
             <!-- Top Timeline Controls Bar -->
             <div class="race-timeline-bar">
               <div class="timeline-clock-display">
-                <span class="clock-icon">⏱️</span>
                 <span class="clock-time-val" id="clock-dial-time">16:00 SATURDAY</span>
               </div>
 
@@ -1304,7 +1297,7 @@
       </section>
         <div class="act-chronicle-slot">
           <section id="24hours" class="chronicle-node content-section" data-year="1966">
-          <div class="chronicle-card" data-tilt data-tilt-max="6" data-tilt-glare data-tilt-max-glare="0.15">
+          <div class="chronicle-card spread-panoramic">
             <div class="chronicle-card-media">
               <img decoding="async" src="assets/images/history/ford-lemans-formation.jpg" alt="1966 Formation Finish" class="chronicle-img" loading="lazy" />
               <div class="chronicle-media-overlay"></div>
@@ -1335,7 +1328,7 @@
         </div>
         <div class="act-chronicle-slot">
           <section id="people" class="chronicle-node content-section" data-year="LEGACY">
-          <div class="chronicle-card reverse" data-tilt data-tilt-max="6" data-tilt-glare data-tilt-max-glare="0.15">
+          <div class="chronicle-card reverse spread-gallery">
             <div class="chronicle-card-media">
               <img decoding="async" src="assets/images/history/ford-miles.jpg" alt="Ken Miles in Cockpit" class="chronicle-img" loading="lazy" />
               <div class="chronicle-media-overlay"></div>
@@ -1352,7 +1345,7 @@
         </section>
 
         <section id="bruce-mclaren-dossier" class="chronicle-node content-section" data-year="P/1046">
-          <div class="chronicle-card driver-spotlight-card" data-tilt data-tilt-max="5" data-tilt-glare data-tilt-max-glare="0.12">
+          <div class="chronicle-card driver-spotlight-card spread-dossier">
             <div class="chronicle-card-media">
               <img decoding="async" src="assets/images/history/ford-lemans-car2.jpg" alt="1966 Ford GT40 Mk II #2 driven by Bruce McLaren and Chris Amon at Le Mans" class="chronicle-img" loading="lazy" />
               <div class="chronicle-media-overlay"></div>
@@ -1409,9 +1402,9 @@
                   <span class="cad-mono">CHASSIS P/1046 // 1:1 SCALE AR DIGITAL TWIN</span>
                 </div>
                 <div class="ar-lighting-deck" role="group" aria-label="AR Finish Lighting">
-                  <button class="ar-light-btn active" data-ar-mood="night" type="button">🌙 PADDOCK</button>
-                  <button class="ar-light-btn" data-ar-mood="sunset" type="button">🌅 1966 SUNSET</button>
-                  <button class="ar-light-btn" data-ar-mood="studio" type="button">☀️ SHOWROOM</button>
+                  <button class="ar-light-btn active" data-ar-mood="night" type="button">PADDOCK</button>
+                  <button class="ar-light-btn" data-ar-mood="sunset" type="button">1966 SUNSET</button>
+                  <button class="ar-light-btn" data-ar-mood="studio" type="button">SHOWROOM</button>
                 </div>
                 <div class="ar-viewer-specs">
                   <span>SCALE: 1:1</span> &bull; <span>40.0" ROOF</span> &bull; <span>7.0L 427 V8</span>
@@ -1455,7 +1448,6 @@
                   <!-- Native Mobile AR Launch Button (prominent on mobile) -->
                   <button slot="ar-button" class="ar-mobile-launch-btn" id="ar-launch-button" data-cursor="VIEW IN AR">
                     <span class="ar-btn-pulse"></span>
-                    <span class="ar-btn-icon">⚡</span>
                     <span class="ar-btn-text">VIEW GT40 IN YOUR SPACE (1:1 SCALE AR)</span>
                   </button>
                 </model-viewer>
@@ -1502,7 +1494,6 @@
                 </div>
 
                 <div class="ar-qr-url-pill">
-                  <span class="qr-url-icon">🔗</span>
                   <span class="qr-url-text" id="ar-url-text">Loading live link...</span>
                 </div>
 
@@ -2287,7 +2278,7 @@
       </div>
       <div class="pill-divider"></div>
       <button class="pill-segment pill-primary-action" id="pill-primary-btn" type="button">
-        <span id="pill-primary-label">🔊 REV 7.0L V8</span>
+        <span id="pill-primary-label">REV GT40 V8</span>
       </button>
       <button class="pill-segment pill-next-btn" id="pill-next-btn" type="button">
         <span id="pill-next-label">ACT II</span>
@@ -2305,7 +2296,7 @@
     <script src="assets/js/vendor/tsparticles.slim.bundle.min.js" defer></script>
 
     <!-- Project Application Scripts -->
-    <script src="main.js?v=5.0"></script>
+    <script src="main.js?v=6.0"></script>
     <script type="module">
       // On ?ar=true or #ar-section, skip heavy 3D modules (lemans.glb + 3D viewers) until user navigates away
       const isARDirect = new URLSearchParams(location.search).has('ar') || location.hash === '#ar-section';
@@ -2314,7 +2305,7 @@
       window.ensureExperiencesInitialized = async function() {
         if (window._heavyModulesReady) return;
         window._heavyModulesReady = true;
-        const { GT40LeMansJourney } = await import('./assets/js/gt40-journey.js?v=1.0');
+        const { GT40LeMansJourney } = await import('./assets/js/gt40-journey.js?v=6.0');
         window.gt40Journey = new GT40LeMansJourney();
 
         // Load secondary destination modules right after primary Journey begins booting

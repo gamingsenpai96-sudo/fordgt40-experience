@@ -1,301 +1,3393 @@
 /* ============================================================================
-   FORD GT40 — GO LIKE HELL | ARCHITECTURAL MOTORSPORT UI OVERHAUL (V2)
-   1966 Le Mans Pit-Wall & Swiss Editorial Grid
+   GO LIKE HELL — COMPLETE EDITORIAL PUBLICATION DESIGN SYSTEM (V6)
+   Visual Direction:
+   - Big, Bold, Condensed, Italic Display Typography (Barlow Condensed 900 Italic)
+   - Tracked Uppercase Section Identifiers with Thin Racing Red Rules
+   - Light Editorial Paper Surfaces (#ffffff / #f6f5f2) for Publication Content
+   - Precision Architectural Black/Charcoal/White/Red Overlays over 3D Viewports
    ============================================================================ */
 
 :root {
-  --bg-deep: #08090b;
-  --bg-charcoal: #111317;
-  --bg-card: #0e1014;
-  --bg-surface: #14171d;
-  --bg-surface-hover: #1c2028;
-  --border-subtle: rgba(243, 239, 230, 0.10);
-  --border-medium: rgba(243, 239, 230, 0.20);
-  --border-accent: #e12d25;
-  --text-main: #f3efe6;
-  --text-secondary: #d2cec4;
-  --text-muted: #8a919e;
-  --accent-red: #e12d25;
-  --accent-blue: #2563eb;
+  /* Fonts */
+  --font-ed-display: 'Barlow Condensed', 'Oswald', sans-serif;
+  --font-ed-sans: 'Plus Jakarta Sans', 'Rajdhani', sans-serif;
+  --font-ed-mono: 'Space Mono', monospace;
+
+  /* Editorial Paper Tokens */
+  --paper-white: #ffffff;
+  --paper-off: #f6f5f2;
+  --paper-tint: #eceae4;
+  --ink-black: #0b0c0e;
+  --ink-charcoal: #252830;
+  --ink-muted: #646873;
+  --ink-subtle: #8b909a;
+
+  /* Restraint Palette */
+  --ed-red: #d92626;
+  --ed-red-dark: #b41c1c;
+  --ed-hairline: rgba(11, 12, 14, 0.13);
+  --ed-hairline-strong: rgba(11, 12, 14, 0.85);
+
+  /* 3D Viewport HUD Tokens */
+  --hud-dark: rgba(10, 11, 14, 0.82);
+  --hud-deep: rgba(7, 8, 10, 0.94);
+  --hud-ink: #f6f5f2;
+  --hud-muted: rgba(246, 245, 242, 0.68);
+  --hud-line: rgba(246, 245, 242, 0.18);
 }
+
+/* ============================================================================
+   01. GLOBAL TYPOGRAPHY & SURFACE BASE
+   ============================================================================ */
 
 body {
-  background: #08090b !important;
-  color: #f3efe6 !important;
+  font-family: var(--font-ed-sans);
+  background: #08090b;
+  color: var(--ink-black);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ---------- Top Journey Telemetry Strip ---------- */
-.journey-top-hud {
-  background: rgba(8, 9, 11, 0.88) !important;
-  border-bottom: 1px solid rgba(243, 239, 230, 0.12) !important;
-  backdrop-filter: blur(10px) !important;
-  padding: 10px 22px !important;
+body.mode-destination {
+  background: var(--paper-white) !important;
+  color: var(--ink-black) !important;
 }
 
-.journey-brand-pill,
-.journey-hud-pill,
-.journey-progress-rail,
-.journey-action-btn {
-  border-radius: 2px !important;
-  background: #111317 !important;
-  border: 1px solid rgba(243, 239, 230, 0.16) !important;
-  box-shadow: none !important;
-  font-family: 'Space Mono', monospace !important;
-  color: #f3efe6 !important;
+/* Remove legacy floating sound banner that peeked behind destination header */
+#sound-btn {
+  display: none !important;
 }
 
-.journey-brand-pill {
-  border-left: 2px solid #e12d25 !important;
+/* Anchor scroll clearance under dual fixed publication headers */
+.act-chapter,
+.act-chapter-header,
+.chronicle-node,
+.exploded-section,
+.game-section,
+.circuit-section,
+.race-clock-section,
+.ar-section,
+#bruce-mclaren-dossier {
+  scroll-margin-top: 148px !important;
 }
 
-.journey-action-btn:hover {
-  border-color: #e12d25 !important;
-  background: #1a1d24 !important;
+/* Reset legacy gradient-clip titles cleanly across the publication */
+.section-title,
+.act-chapter-title,
+.chronicle-card-body .section-title {
+  background: none !important;
+  -webkit-background-clip: border-box !important;
+  -webkit-text-fill-color: currentColor !important;
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: -0.005em !important;
+  line-height: 0.90 !important;
+  color: var(--ink-black) !important;
 }
 
-.journey-action-btn.is-ar {
-  background: #e12d25 !important;
-  border-color: #e12d25 !important;
+.section-tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  font-family: var(--font-ed-sans) !important;
+  font-size: 0.7rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.24em !important;
+  color: var(--ink-charcoal) !important;
+  text-transform: uppercase !important;
+  margin-bottom: 14px !important;
+}
+
+.section-tag::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 2px;
+  background: var(--ed-red);
+  flex-shrink: 0;
+}
+
+.section-body {
+  font-family: var(--font-ed-sans) !important;
+  font-weight: 400 !important;
+  font-size: clamp(0.95rem, 1.15vw, 1.06rem) !important;
+  line-height: 1.66 !important;
+  color: var(--ink-charcoal) !important;
+  letter-spacing: 0.005em !important;
+}
+
+/* Sharp architectural edges system-wide */
+#journey-section button,
+#portal-return-bar button,
+#story-container button,
+#ford-modal button,
+#ferrari-modal button {
+  font-family: inherit;
+}
+
+/* ============================================================================
+   02. MAIN DRIVING EXPERIENCE UI (#journey-section)
+   ============================================================================ */
+
+.journey-section {
+  background: #0a0c10;
+}
+
+/* Seamless feathered corner vignette behind bottom-left editorial lockup (no card box) */
+.journey-section::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 56vw;
+  max-width: 680px;
+  height: 52vh;
+  max-height: 440px;
+  background: radial-gradient(ellipse at 0% 100%, rgba(7, 8, 11, 0.78) 0%, rgba(7, 8, 11, 0.42) 48%, rgba(7, 8, 11, 0) 80%);
+  pointer-events: none;
+  z-index: 12;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.journey-section:has(.journey-glh-card.visible)::after {
+  opacity: 1;
+}
+
+/* ---------- 2A. Editorial Masthead Top Navigation Strip ---------- */
+.journey-topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 32;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 0;
+  padding: 0 16px;
+  min-height: 52px;
+  background: linear-gradient(180deg, rgba(7, 8, 11, 0.92) 0%, rgba(7, 8, 11, 0.76) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.journey-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-right: 14px;
+  border-right: 1px solid var(--hud-line);
+}
+
+.brand-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.64rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.14em !important;
   color: #ffffff !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
 }
 
-.journey-action-btn.is-ar:hover {
-  background: #c4231c !important;
+.brand-badge::before {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 2px;
+  background: var(--ed-red);
+}
+
+.brand-sep {
+  color: rgba(255, 255, 255, 0.25);
+  font-family: var(--font-ed-mono);
+  font-size: 0.7rem;
+}
+
+.brand-title {
+  font-family: var(--font-ed-sans) !important;
+  font-size: 0.64rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.18em !important;
+  color: rgba(246, 245, 242, 0.78) !important;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Milestone Segmented Index (Replaces bubble rail) */
+.journey-progress-rail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.jp-count {
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.6rem !important;
+  letter-spacing: 0.12em !important;
+  color: var(--ed-red) !important;
+  padding-right: 10px !important;
+  border-right: 1px solid var(--hud-line) !important;
+}
+
+.jp-pips {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  height: 100%;
 }
 
 .jp-pip {
-  border-radius: 1px !important;
-  width: 8px !important;
-  height: 8px !important;
-  background: rgba(243, 239, 230, 0.2) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0 7px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.56rem !important;
+  letter-spacing: 0.1em !important;
+  color: rgba(246, 245, 242, 0.58) !important;
+  transition: color 0.2s ease, border-color 0.2s ease !important;
+}
+
+.jp-pip .pip-dot {
+  width: 5px !important;
+  height: 5px !important;
+  border-radius: 0 !important;
+  background: rgba(255, 255, 255, 0.28) !important;
+  flex-shrink: 0;
+}
+
+.jp-pip:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.04) !important;
 }
 
 .jp-pip.done {
-  background: #e12d25 !important;
+  color: #ffffff !important;
+  border-bottom-color: var(--ed-red) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.jp-pip.done .pip-dot {
+  background: var(--ed-red) !important;
   box-shadow: none !important;
 }
 
-/* ---------- Mechanical Ignition Switch Plate (Start Engine) ---------- */
+/* Topbar Telemetry & Publication Navigation Actions */
+.journey-topbar-actions {
+  display: flex;
+  align-items: stretch;
+  gap: 0 !important;
+  flex-wrap: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+.journey-telem-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 0 12px !important;
+  margin-right: 2px;
+  border-left: 1px solid var(--hud-line) !important;
+  border-right: 1px solid var(--hud-line) !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.58rem !important;
+  letter-spacing: 0.09em !important;
+  color: #ffffff !important;
+  max-width: none !important;
+  overflow: visible !important;
+}
+
+.journey-telem-pill .live-pulse {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 0 !important;
+  background: var(--ed-red) !important;
+  box-shadow: none !important;
+}
+
+.journey-top-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  padding: 0 10px !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.58rem !important;
+  letter-spacing: 0.12em !important;
+  color: rgba(246, 245, 242, 0.72) !important;
+  backdrop-filter: none !important;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease !important;
+}
+
+.journey-top-pill:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.journey-top-pill.replay-pill {
+  color: #ffffff !important;
+  border-left: 1px solid var(--hud-line) !important;
+}
+
+.journey-top-pill[data-portal-dest="chronicles"] {
+  border-left: 1px solid var(--hud-line) !important;
+  color: #ffffff !important;
+}
+
+.journey-top-pill.ar-trigger {
+  background: var(--ed-red) !important;
+  color: #ffffff !important;
+  padding: 0 14px !important;
+  border: none !important;
+  margin-left: 4px;
+}
+
+.journey-top-pill.ar-trigger:hover {
+  background: var(--ed-red-dark) !important;
+  color: #ffffff !important;
+  border-bottom-color: transparent !important;
+}
+
+/* ---------- 2B. Editorial Bottom-Left Title Lockup (#journey-glh-card) ---------- */
+.journey-glh-card {
+  position: absolute !important;
+  bottom: 34px !important;
+  left: 36px !important;
+  z-index: 24 !important;
+  max-width: 440px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.journey-glh-card.visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  pointer-events: auto;
+}
+
+.glh-header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
+}
+
+.glh-subtitle-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 0 !important;
+  margin-bottom: 8px;
+}
+
+.glh-red-rule {
+  width: 24px !important;
+  height: 2px !important;
+  background: var(--ed-red) !important;
+  flex-shrink: 0;
+}
+
+.glh-kicker {
+  font-family: var(--font-ed-sans) !important;
+  font-weight: 600 !important;
+  font-size: 0.64rem !important;
+  letter-spacing: 0.28em !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  text-transform: uppercase;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
+}
+
+.glh-heading {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+  font-size: clamp(3rem, 4.8vw, 4.35rem) !important;
+  letter-spacing: -0.01em !important;
+  line-height: 0.86 !important;
+  color: #ffffff !important;
+  margin: 0 !important;
+  text-transform: uppercase;
+  text-shadow: 0 6px 28px rgba(0, 0, 0, 0.65);
+}
+
+.glh-tagline {
+  font-family: var(--font-ed-sans) !important;
+  font-style: italic !important;
+  font-weight: 300 !important;
+  font-size: 1.02rem !important;
+  color: rgba(246, 245, 242, 0.9) !important;
+  margin: 9px 0 0 0 !important;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
+}
+
+.glh-summary {
+  font-family: var(--font-ed-sans) !important;
+  font-weight: 400 !important;
+  font-size: 0.88rem !important;
+  line-height: 1.58 !important;
+  color: rgba(246, 245, 242, 0.88) !important;
+  margin: 0 0 12px 0 !important;
+  max-width: 44ch;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95);
+}
+
+.glh-summary strong,
+.glh-summary em {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.glh-guide {
+  font-family: var(--font-ed-mono) !important;
+  font-weight: 400 !important;
+  font-size: 0.66rem !important;
+  line-height: 1.55 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase;
+  color: rgba(246, 245, 242, 0.84) !important;
+  padding-top: 10px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95);
+}
+
+.glh-guide strong {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  border-bottom: 1.5px solid var(--ed-red) !important;
+}
+
+/* ---------- 2C. Opening Engine-Start Interaction (#journey-start-hud) ---------- */
 .journey-start-hud {
   bottom: 34px !important;
+  gap: 10px !important;
+}
+
+.jsh-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.62rem !important;
+  letter-spacing: 0.22em !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  background: rgba(7, 8, 11, 0.72);
+  padding: 5px 12px;
+  text-shadow: none !important;
+}
+
+.jsh-meta .ed-rule {
+  width: 18px;
+  height: 2px;
+  background: var(--ed-red);
+  flex-shrink: 0;
 }
 
 .journey-start-btn {
-  border-radius: 2px !important;
-  background: #111317 !important;
-  border: 1px solid rgba(243, 239, 230, 0.28) !important;
-  border-left: 4px solid #e12d25 !important;
-  padding: 14px 26px !important;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.75) !important;
-  transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease !important;
+  border-radius: 0 !important;
+  padding: 12px 26px 12px 14px !important;
+  background: rgba(9, 10, 13, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-left: 3px solid var(--ed-red) !important;
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.75) !important;
+  gap: 16px !important;
 }
 
-.journey-start-btn:hover,
+.journey-start-btn:hover {
+  background: #12141a !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  border-left-color: var(--ed-red) !important;
+  transform: translateY(-2px) !important;
+}
+
 .journey-start-btn.is-cranking {
-  background: #181b22 !important;
-  border-color: #e12d25 !important;
-  transform: translateY(-1px) !important;
+  background: #1a0c0e !important;
+  border-color: var(--ed-red) !important;
+  box-shadow: 0 18px 46px rgba(217, 38, 38, 0.35) !important;
 }
 
-.start-ring-wrap {
-  border-radius: 2px !important;
-  background: #e12d25 !important;
+.jsh-ring-wrap {
+  width: 46px !important;
+  height: 46px !important;
 }
 
-.start-title {
-  font-family: 'Oswald', sans-serif !important;
-  letter-spacing: 0.22em !important;
-  color: #f3efe6 !important;
+.jsh-ring-track {
+  fill: rgba(255, 255, 255, 0.04) !important;
+  stroke: rgba(255, 255, 255, 0.16) !important;
+  stroke-width: 4 !important;
 }
 
-.start-sub {
-  font-family: 'Space Mono', monospace !important;
-  color: #8a919e !important;
+.jsh-ring-fill {
+  stroke: var(--ed-red) !important;
+  stroke-width: 5 !important;
 }
 
-/* ---------- Architectural Car Hotspots ---------- */
-.journey-hotspot .jh-ring {
-  border-radius: 2px !important;
-  transform: rotate(45deg) !important;
-  border: 1px solid rgba(243, 239, 230, 0.65) !important;
+.journey-start-btn.is-cranking .jsh-ring-fill {
+  stroke: #ffffff !important;
 }
 
-.journey-hotspot .jh-dot {
-  border-radius: 1px !important;
-  background: #e12d25 !important;
-  box-shadow: none !important;
+.jsh-bolt {
+  color: #ffffff !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.journey-hotspot .jh-pill {
-  border-radius: 2px !important;
-  background: rgba(8, 9, 11, 0.92) !important;
-  border: 1px solid rgba(243, 239, 230, 0.22) !important;
-  border-left: 2px solid #e12d25 !important;
-  font-family: 'Space Mono', monospace !important;
+.jsh-label {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 800 !important;
+  font-size: 1.38rem !important;
+  letter-spacing: 0.04em !important;
+  line-height: 1 !important;
+  color: #ffffff !important;
+}
+
+.jsh-sub {
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.56rem !important;
   letter-spacing: 0.14em !important;
-  color: #f3efe6 !important;
+  color: rgba(246, 245, 242, 0.62) !important;
+}
+
+/* ---------- 2D. Countdown, Opening Cue & Interactive Hotspots ---------- */
+.jc-num {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+  text-shadow: 0 10px 44px rgba(0, 0, 0, 0.9) !important;
+}
+
+.jc-label {
+  border-radius: 0 !important;
+  background: rgba(7, 8, 11, 0.88) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-left: 3px solid var(--ed-red) !important;
+  font-family: var(--font-ed-mono) !important;
+  letter-spacing: 0.24em !important;
+  color: #ffffff !important;
+}
+
+/* Subtle bottom-center cue — hidden automatically when Go Like Hell lockup is active */
+.journey-opening-cue {
+  bottom: 24px !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
   box-shadow: none !important;
 }
 
-.journey-hover-prompt,
-.journey-inspect-bar,
-.journey-opening-cue {
-  border-radius: 2px !important;
-  background: rgba(8, 9, 11, 0.92) !important;
-  border: 1px solid rgba(243, 239, 230, 0.16) !important;
-  box-shadow: none !important;
-}
-
-.journey-opening-cue {
-  padding: 10px 22px !important;
-  border-bottom: 2px solid #e12d25 !important;
-}
-
-.journey-opening-cue.faded {
+.journey-opening-cue.faded,
+.journey-section:has(.journey-glh-card.visible) .journey-opening-cue {
   opacity: 0 !important;
+  visibility: hidden !important;
   pointer-events: none !important;
 }
 
-/* ---------- Two-Stage Door Choice Architectural Plates ---------- */
+.explore-main {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 800 !important;
+  font-size: 1.25rem !important;
+  letter-spacing: 0.12em !important;
+  color: #ffffff !important;
+}
+
+.explore-sub {
+  border-radius: 0 !important;
+  background: rgba(7, 8, 11, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-left: 2px solid var(--ed-red) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.56rem !important;
+  letter-spacing: 0.16em !important;
+  padding: 4px 12px !important;
+}
+
+/* Architectural White-Paper / Red-Core Vehicle Hotspots */
+.journey-hotspot {
+  width: 24px !important;
+  height: 24px !important;
+  margin: -12px 0 0 -12px !important;
+}
+
+.journey-hotspot .jh-ring {
+  left: 0 !important;
+  top: 0 !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  transform: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.72) !important;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+.journey-hotspot .jh-dot {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 50% !important;
+  background: var(--ed-red) !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9) !important;
+}
+
+.journey-hotspot .jh-pill {
+  left: 34px !important;
+  border-radius: 0 !important;
+  background: #ffffff !important;
+  color: var(--ink-black) !important;
+  border: none !important;
+  border-left: 3px solid var(--ed-red) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.58rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.14em !important;
+  padding: 5px 11px !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.48) !important;
+  backdrop-filter: none !important;
+}
+
+.journey-hotspot .jh-pill::before {
+  content: '';
+  position: absolute;
+  left: -13px;
+  top: 50%;
+  width: 10px;
+  height: 1px;
+  background: #ffffff;
+}
+
+.journey-hotspot:hover .jh-dot,
+.journey-hotspot.hovered .jh-dot {
+  transform: scale(1.25) !important;
+  background: var(--ed-red) !important;
+  box-shadow: 0 0 0 2px #ffffff, 0 0 12px rgba(217, 38, 38, 0.85) !important;
+}
+
+/* Restrained Hover Component Prompt (Anchored Bottom-Right, clear of left title lockup) */
+.journey-hover-prompt {
+  bottom: 34px !important;
+  left: auto !important;
+  right: 36px !important;
+  transform: translateY(10px) !important;
+  border-radius: 0 !important;
+  padding: 9px 18px !important;
+  background: #0b0c0e !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-left: 3px solid var(--ed-red) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.65) !important;
+}
+
+.journey-hover-prompt.visible {
+  transform: translateY(0) !important;
+}
+
+.hp-code {
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.6rem !important;
+  color: var(--ed-red) !important;
+}
+
+.hp-text {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 800 !important;
+  font-size: 1.05rem !important;
+  letter-spacing: 0.08em !important;
+  color: #ffffff !important;
+}
+
+/* Two-Stage Door Choice Overlay */
 .door-choice-target {
-  border-radius: 2px !important;
-  background: rgba(8, 9, 11, 0.94) !important;
-  border: 1px solid rgba(243, 239, 230, 0.26) !important;
-  border-left: 3px solid #e12d25 !important;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7) !important;
+  border-radius: 0 !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  border: none !important;
+  border-left: 3px solid var(--ed-red) !important;
+  color: var(--ink-black) !important;
+  padding: 10px 16px !important;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.52) !important;
+  backdrop-filter: none !important;
 }
 
 .door-choice-target:hover,
 .door-choice-target.hovered {
-  background: #181b22 !important;
-  border-color: #f3efe6 !important;
+  background: #0b0c0e !important;
+  color: #ffffff !important;
+}
+
+.door-choice-target:hover .dc-label,
+.door-choice-target.hovered .dc-label {
+  color: #ffffff !important;
 }
 
 .dc-dot {
-  border-radius: 1px !important;
-  background: #e12d25 !important;
+  border-radius: 50% !important;
+  background: var(--ed-red) !important;
+}
+
+.dc-kicker {
+  font-family: var(--font-ed-mono) !important;
+  color: var(--ink-muted) !important;
+}
+
+.dc-label {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 800 !important;
+  font-size: 1.08rem !important;
+  letter-spacing: 0.06em !important;
+  color: var(--ink-black) !important;
 }
 
 .door-choice-close {
-  border-radius: 2px !important;
-  background: rgba(8, 9, 11, 0.94) !important;
-  border: 1px solid rgba(243, 239, 230, 0.26) !important;
+  border-radius: 0 !important;
+  background: #0b0c0e !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-left: 3px solid var(--ed-red) !important;
+  font-family: var(--font-ed-mono) !important;
+  color: #ffffff !important;
 }
 
-/* ---------- Destination Top Navigation Bar ---------- */
+.door-choice-close:hover {
+  background: var(--ed-red) !important;
+  border-color: var(--ed-red) !important;
+}
+
+/* In-Motion Front Bonnet / Wheel Inspection Bar */
+.journey-callout-pin {
+  border-radius: 0 !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  color: var(--ink-black) !important;
+  border: 1px solid rgba(11, 12, 14, 0.22) !important;
+  border-left: 2px solid var(--ed-red) !important;
+  font-family: var(--font-ed-mono) !important;
+  backdrop-filter: none !important;
+}
+
+.journey-callout-pin.active,
+.journey-callout-pin:hover {
+  background: #0b0c0e !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+.journey-callout-pin .cp-dot {
+  background: var(--ed-red) !important;
+  box-shadow: none !important;
+}
+
+.journey-inspect-bar {
+  border-radius: 0 !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  border: none !important;
+  border-top: 3px solid var(--ed-red) !important;
+  color: var(--ink-black) !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55) !important;
+  backdrop-filter: none !important;
+}
+
+.inspect-tag {
+  font-family: var(--font-ed-mono) !important;
+  color: var(--ed-red) !important;
+  font-weight: 700;
+}
+
+.inspect-title {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+  font-size: 1.65rem !important;
+  letter-spacing: 0.02em !important;
+  color: var(--ink-black) !important;
+}
+
+.inspect-desc {
+  font-family: var(--font-ed-sans) !important;
+  color: var(--ink-charcoal) !important;
+}
+
+.inspect-btn-primary {
+  border-radius: 0 !important;
+  background: var(--ed-red) !important;
+  border: 1px solid var(--ed-red) !important;
+  color: #ffffff !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.14em !important;
+}
+
+.inspect-btn-primary:hover {
+  background: var(--ink-black) !important;
+  border-color: var(--ink-black) !important;
+}
+
+.inspect-btn-secondary {
+  border-radius: 0 !important;
+  background: var(--paper-off) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
+  color: var(--ink-black) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.66rem !important;
+}
+
+.inspect-btn-secondary:hover {
+  background: var(--ink-black) !important;
+  color: #ffffff !important;
+}
+
+/* Progressive Loader & Fallback */
+.journey-loader {
+  background: var(--paper-white) !important;
+  color: var(--ink-black) !important;
+}
+
+.loader-kicker {
+  font-family: var(--font-ed-mono) !important;
+  color: var(--ed-red) !important;
+}
+
+.loader-heading {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+  font-size: clamp(3rem, 6vw, 4.4rem) !important;
+  letter-spacing: -0.01em !important;
+  color: var(--ink-black) !important;
+}
+
+.loader-status {
+  color: var(--ink-muted) !important;
+}
+
+.loader-track {
+  background: rgba(11, 12, 14, 0.12) !important;
+  border-radius: 0 !important;
+  height: 2px !important;
+}
+
+.loader-fill {
+  background: var(--ed-red) !important;
+}
+
+.fallback-card {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  color: var(--ink-black) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
+}
+
+/* ============================================================================
+   03. DESTINATION MASTHEAD BAR, CHRONICLES ACT RAIL & WAYFINDER
+   ============================================================================ */
+
 .portal-return-bar {
-  background: rgba(8, 9, 11, 0.96) !important;
-  border-bottom: 1px solid rgba(243, 239, 230, 0.14) !important;
-  padding: 10px 24px !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-bottom: 1px solid var(--ed-hairline) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  padding: 0 28px !important;
 }
 
-.portal-back-btn,
+.portal-back-btn {
+  border-radius: 0 !important;
+  background: var(--ink-black) !important;
+  border: none !important;
+  border-left: 3px solid var(--ed-red) !important;
+  color: #ffffff !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.64rem !important;
+  letter-spacing: 0.14em !important;
+  padding: 9px 16px !important;
+  box-shadow: none !important;
+}
+
+.portal-back-btn:hover {
+  background: var(--ed-red) !important;
+  color: #ffffff !important;
+  transform: none !important;
+}
+
+.portal-route-pills {
+  gap: 4px !important;
+}
+
 .portal-pill {
-  border-radius: 2px !important;
-  font-family: 'Space Mono', monospace !important;
-  font-size: 0.7rem !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  color: var(--ink-muted) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.64rem !important;
+  letter-spacing: 0.14em !important;
+  padding: 18px 14px !important;
+}
+
+.portal-pill:hover {
+  color: var(--ink-black) !important;
+  border-bottom-color: rgba(11, 12, 14, 0.3) !important;
+  background: transparent !important;
+}
+
+.portal-pill.active {
+  background: transparent !important;
+  color: var(--ink-black) !important;
+  font-weight: 700 !important;
+  border-bottom: 2px solid var(--ed-red) !important;
+  box-shadow: none !important;
+}
+
+/* Chronicles Secondary 5-Act Bar */
+.mission-top-bar {
+  top: 62px !important;
+  left: 0 !important;
+  right: 0 !important;
+  max-width: none !important;
+  width: 100%;
+  transform: translateY(-100%) !important;
+  border-radius: 0 !important;
+  background: rgba(246, 245, 242, 0.96) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--ed-hairline) !important;
+  box-shadow: none !important;
+  padding: 8px 28px !important;
+  justify-content: space-between !important;
+}
+
+.mission-top-bar.visible {
+  transform: translateY(0) !important;
+}
+
+body.dest-chronicles #mission-top-bar.visible {
+  top: 62px !important;
+}
+
+.mission-top-left,
+.mission-top-right {
+  border-color: var(--ed-hairline) !important;
+}
+
+.mission-pulse-dot {
+  border-radius: 0 !important;
+  background: var(--ed-red) !important;
+  box-shadow: none !important;
+}
+
+.mission-act-code,
+.mission-score-pill {
+  color: var(--ink-black) !important;
+}
+
+.mission-act-pill {
+  border-radius: 0 !important;
+  color: var(--ink-muted) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.62rem !important;
+  padding: 5px 11px !important;
+}
+
+.mission-act-pill .act-num {
+  color: var(--ed-red) !important;
+}
+
+.mission-act-pill .act-check {
+  color: var(--ink-black) !important;
+}
+
+.mission-act-pill:hover {
+  color: var(--ink-black) !important;
+  background: rgba(11, 12, 14, 0.05) !important;
+}
+
+.mission-act-pill.active {
+  background: var(--ink-black) !important;
+  color: #ffffff !important;
+  border-color: var(--ink-black) !important;
+  box-shadow: none !important;
+}
+
+.mission-act-pill.active .act-num {
+  color: #ffffff !important;
+}
+
+/* Minimal Editorial Side Index Wayfinder */
+.telemetry-wayfinder {
+  right: 14px !important;
+}
+
+.wayfinder-rail {
+  border-radius: 0 !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid var(--ed-hairline) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+  padding: 12px 9px !important;
+}
+
+.wayfinder-needle {
+  background: var(--ed-red) !important;
+  box-shadow: none !important;
+}
+
+.node-pip {
+  border-radius: 0 !important;
+  border-color: rgba(11, 12, 14, 0.3) !important;
+  background: #ffffff !important;
+}
+
+.node-pip::after {
+  border-radius: 0 !important;
+  background: var(--ed-red) !important;
+}
+
+.wayfinder-node.active .node-pip {
+  border-color: var(--ed-red) !important;
+  box-shadow: none !important;
+}
+
+.node-label {
+  border-radius: 0 !important;
+  background: var(--ink-black) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-left: 2px solid var(--ed-red) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.6rem !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18) !important;
+}
+
+/* Bottom Contextual Action Strip in Chronicles (Anchored Bottom-Right, clear of content) */
+.mission-action-pill {
+  left: auto !important;
+  right: 24px !important;
+  bottom: 18px !important;
+  transform: translateY(24px) !important;
+  border-radius: 0 !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
+  border-left: 3px solid var(--ed-red) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14) !important;
+  padding: 6px 10px 6px 14px !important;
+}
+
+.mission-action-pill.visible {
+  transform: translateY(0) !important;
+}
+
+.mission-action-pill.avoid-stage-hud {
+  transform: translateY(24px) !important;
+}
+
+.pill-kicker {
+  color: var(--ed-red) !important;
+}
+
+.pill-status {
+  color: var(--ink-black) !important;
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-size: 1.05rem !important;
+  letter-spacing: 0.04em !important;
+}
+
+.pill-divider {
+  background: var(--ed-hairline) !important;
+}
+
+.pill-primary-action {
+  border-radius: 0 !important;
+  background: var(--ed-red) !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.64rem !important;
+  letter-spacing: 0.12em !important;
+  padding: 9px 16px !important;
+}
+
+.pill-primary-action:hover {
+  background: var(--ink-black) !important;
+  box-shadow: none !important;
+}
+
+.pill-next-btn {
+  border-radius: 0 !important;
+  background: var(--paper-off) !important;
+  border: 1px solid var(--ed-hairline) !important;
+  color: var(--ink-black) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.64rem !important;
+  padding: 9px 14px !important;
+}
+
+.pill-next-btn:hover {
+  background: var(--ink-black) !important;
+  color: #ffffff !important;
+}
+
+/* Chapter Bridge Rules (Replaces cyan streamline ribbons) */
+.velocity-bridge {
+  height: 76px !important;
+  background: var(--paper-white);
+}
+
+.streamline {
+  background: var(--ed-hairline) !important;
+}
+
+.streamline::after {
+  display: none !important;
+}
+
+.bridge-telemetry-badge {
+  border-radius: 0 !important;
+  background: var(--paper-off) !important;
+  border: 1px solid var(--ed-hairline) !important;
+  border-left: 2px solid var(--ed-red) !important;
+  color: var(--ink-charcoal) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.62rem !important;
   letter-spacing: 0.16em !important;
   box-shadow: none !important;
 }
 
-.portal-back-btn {
-  background: #111317 !important;
-  border: 1px solid rgba(243, 239, 230, 0.24) !important;
-  border-left: 3px solid #e12d25 !important;
-  color: #f3efe6 !important;
-}
-
-.portal-back-btn:hover {
-  background: #e12d25 !important;
-  border-color: #e12d25 !important;
-  color: #ffffff !important;
-}
-
-.portal-pill {
-  background: transparent !important;
-  border: 1px solid transparent !important;
-  border-bottom: 2px solid transparent !important;
-  color: #8a919e !important;
-}
-
-.portal-pill:hover {
-  color: #f3efe6 !important;
-  border-bottom-color: rgba(243, 239, 230, 0.35) !important;
-}
-
-.portal-pill.active {
-  background: #14171d !important;
-  border: 1px solid rgba(243, 239, 230, 0.14) !important;
-  border-bottom: 2px solid #e12d25 !important;
-  color: #f3efe6 !important;
-}
-
-/* ---------- Unified Sharp Architectural Cards & Controls ---------- */
-.chronicle-card,
-.ar-deck-card,
-.ar-stage-container,
-.ar-stage-header,
-.cockpit-hud-card,
-.exploded-telemetry-card,
-.exploded-quick-hud,
-.game-container,
-.hud-cluster,
-.inspect-btn-primary,
-.inspect-btn-secondary,
-.exploded-system-btn,
-.ar-light-btn,
-.cockpit-ctrl-btn,
-.game-start-btn,
-.ar-mobile-launch-btn,
-.ar-direct-trigger-btn {
-  border-radius: 2px !important;
+.badge-dot {
+  border-radius: 0 !important;
+  background: var(--ed-red) !important;
   box-shadow: none !important;
 }
 
-.chronicle-card,
-.ar-deck-card,
-.cockpit-hud-card,
-.exploded-telemetry-card,
-.exploded-quick-hud {
-  background: #111317 !important;
-  border: 1px solid rgba(243, 239, 230, 0.12) !important;
+/* ============================================================================
+   04. CHRONICLES LIGHT-PAPER EDITORIAL SPREADS
+   ============================================================================ */
+
+#story-container {
+  background: var(--paper-white) !important;
+  color: var(--ink-black) !important;
 }
 
-.game-start-btn,
-.ar-mobile-launch-btn,
-.ar-direct-trigger-btn,
-.inspect-btn-primary {
-  background: #e12d25 !important;
-  border: 1px solid #e12d25 !important;
+#story-container::before {
+  display: none !important;
+}
+
+body.dest-chronicles #story-container {
+  padding-top: 108px !important;
+}
+
+.act-chapter {
+  background: var(--paper-white);
+  padding-top: 12px !important;
+}
+
+.act-chapter:nth-of-type(even) {
+  background: var(--paper-off);
+}
+
+/* Presentation Reference Act Openers: Short Red Rule + Tracked Label + Big Italic Condensed Black Headline */
+.act-chapter-header {
+  max-width: 1240px !important;
+  margin: 0 auto !important;
+  padding: 56px 28px 34px !important;
+  text-align: left !important;
+  border-bottom: 1px solid var(--ed-hairline);
+}
+
+.act-chapter-meta {
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  margin-bottom: 14px !important;
+}
+
+.act-chapter-badge {
+  border-radius: 0 !important;
+  background: var(--ink-black) !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.64rem !important;
+  letter-spacing: 0.18em !important;
+  padding: 4px 10px !important;
+}
+
+.act-chapter-line {
+  width: 26px !important;
+  height: 2px !important;
+  background: var(--ed-red) !important;
+}
+
+.act-chapter-tag {
+  font-family: var(--font-ed-sans) !important;
+  font-size: 0.68rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.24em !important;
+  color: var(--ink-muted) !important;
+}
+
+.act-chapter-title {
+  font-size: clamp(3.1rem, 6.4vw, 5.6rem) !important;
+  line-height: 0.88 !important;
+  margin-bottom: 16px !important;
+  max-width: 14ch;
+}
+
+.act-chapter-desc {
+  margin: 0 !important;
+  max-width: 60ch !important;
+  font-family: var(--font-ed-sans) !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+  font-size: clamp(1rem, 1.35vw, 1.16rem) !important;
+  line-height: 1.58 !important;
+  color: var(--ink-charcoal) !important;
+}
+
+/* Remove vertical timeline spine clutter in paper spreads */
+.chronicles-timeline-wrap {
+  max-width: 1240px !important;
+  padding: 36px 28px 64px !important;
+}
+
+.chronicles-timeline-wrap.act-chronicle-pair {
+  padding: 32px 28px 40px !important;
+}
+
+.timeline-spine {
+  display: none !important;
+}
+
+.act-chronicle-slot {
+  max-width: 1240px !important;
+  padding: 0 28px !important;
+}
+
+.chronicle-node {
+  padding: 40px 0 !important;
+  min-height: auto !important;
+}
+
+/* Core Chronicle Reset — Pure Editorial Paper (NO Dark Blurred Boxes) */
+.chronicle-card {
+  max-width: 1240px !important;
+  width: 100%;
+  padding: 28px 0 42px !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  border-bottom: 1px solid var(--ed-hairline) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  gap: 52px !important;
+}
+
+.chronicle-card:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  border-color: var(--ed-hairline) !important;
+}
+
+.chronicle-card-media {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  border: 1px solid var(--ed-hairline) !important;
+  width: fit-content !important;
+  max-width: 100% !important;
+  justify-self: center !important;
+  align-self: center !important;
+  min-height: auto !important;
+  max-height: none !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  overflow: visible !important;
+}
+
+.chronicle-img {
+  width: auto !important;
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: 500px;
+  object-fit: contain !important;
+  display: block;
+}
+
+.chronicle-card:hover .chronicle-img {
+  transform: none !important;
+}
+
+.chronicle-media-overlay {
+  display: none !important;
+}
+
+.chronicle-year-pill {
+  position: static !important;
+  display: block;
+  width: 100%;
+  padding: 10px 14px !important;
+  background: var(--paper-white) !important;
+  border: none !important;
+  border-top: 1px solid var(--ed-hairline) !important;
+  border-radius: 0 !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.64rem !important;
+  letter-spacing: 0.18em !important;
+  color: var(--ink-muted) !important;
+  backdrop-filter: none !important;
+}
+
+.chronicle-card-body .section-tag {
+  margin-bottom: 10px !important;
+}
+
+.chronicle-card-body .section-title {
+  font-size: clamp(2.4rem, 4.2vw, 3.85rem) !important;
+  margin-bottom: 18px !important;
+}
+
+.chronicle-card-body .section-body {
+  font-size: clamp(0.98rem, 1.15vw, 1.06rem) !important;
+  line-height: 1.72 !important;
+  color: var(--ink-charcoal) !important;
+  margin-bottom: 0 !important;
+}
+
+/* ----- Varied Editorial Spreads Across Chapters ----- */
+/* Spread 1: Asymmetric Lead Cover (Wide left photo + editorial column) */
+.chronicle-card.spread-cover {
+  grid-template-columns: 1.25fr 0.95fr !important;
+}
+
+/* Spread 2: Feature Right Split */
+.chronicle-card.spread-feature-right {
+  grid-template-columns: 0.95fr 1.15fr !important;
+}
+
+/* Spread 3: Full-Width Widescreen Blueprint Above Two-Column Headline/Copy */
+.chronicle-card.spread-widescreen {
+  grid-template-columns: 1fr !important;
+  gap: 28px !important;
+}
+
+.chronicle-card.spread-widescreen .chronicle-img {
+  max-height: 540px;
+}
+
+.chronicle-card.spread-widescreen .chronicle-card-body {
+  display: grid !important;
+  grid-template-columns: 1fr 1.1fr;
+  column-gap: 48px;
+  align-items: start;
+}
+
+.chronicle-card.spread-widescreen .chronicle-card-body .section-tag,
+.chronicle-card.spread-widescreen .chronicle-card-body .section-title {
+  grid-column: 1;
+}
+
+.chronicle-card.spread-widescreen .chronicle-card-body .section-body {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  padding-top: 26px;
+  border-top: 2px solid var(--ink-black);
+}
+
+/* Spread 4: Track Feature (Image Right) */
+.chronicle-card.spread-track {
+  grid-template-columns: 1fr 1.2fr !important;
+}
+
+/* Spread 5: Panoramic Victory Feature (Full-Width Above Centered Statement) */
+.chronicle-card.spread-panoramic {
+  grid-template-columns: 1fr !important;
+  gap: 32px !important;
+}
+
+.chronicle-card.spread-panoramic .chronicle-card-body {
+  max-width: 820px;
+  margin: 0 auto;
+  text-align: center;
+  align-items: center;
+}
+
+.chronicle-card.spread-panoramic .chronicle-card-body .section-tag {
+  justify-content: center;
+}
+
+/* Spread 6: Portraits & Legacy Gallery Split */
+.chronicle-card.spread-gallery {
+  grid-template-columns: 1fr 1.15fr !important;
+}
+
+/* Spread 7: Bruce McLaren Structured Driver Dossier */
+#bruce-mclaren-dossier {
+  margin-top: 0 !important;
+}
+
+.chronicle-card.spread-dossier {
+  grid-template-columns: 1.05fr 1.15fr !important;
+  border-bottom: none !important;
+}
+
+.driver-stat-strip {
+  margin: 22px 0 0 !important;
+  gap: 0 !important;
+  border-top: 2px solid var(--ink-black);
+  border-bottom: 1px solid var(--ed-hairline);
+}
+
+.ds-cell {
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-right: 1px solid var(--ed-hairline) !important;
+  padding: 12px 14px !important;
+}
+
+.ds-cell:last-child {
+  border-right: none !important;
+}
+
+.ds-k {
+  color: var(--ed-red) !important;
+  font-size: 0.56rem !important;
+}
+
+.ds-cell strong {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 800 !important;
+  font-size: 1.12rem !important;
+  color: var(--ink-black) !important;
+}
+
+/* Showroom VS Duel Section (#slide-2-showroom) */
+.showroom-vs-hud {
+  border-radius: 0 !important;
+  background: rgba(10, 11, 14, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.72) !important;
+  padding: 8px 12px !important;
+}
+
+.vs-rev-pill {
+  border-radius: 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  padding: 8px 16px !important;
+}
+
+.vs-rev-pill.ford:hover,
+.vs-rev-pill.ferrari:hover {
+  background: var(--ed-red) !important;
+  border-color: var(--ed-red) !important;
+  box-shadow: none !important;
+}
+
+.vs-action {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 800 !important;
+  font-size: 1.05rem !important;
+  letter-spacing: 0.06em !important;
+}
+
+.vs-badge-sub {
+  color: var(--ed-red) !important;
+}
+
+.vs-badge-main {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+  font-size: 1.6rem !important;
+}
+
+/* Minimal Editorial Colophon Footer */
+.site-footer {
+  background: var(--paper-white) !important;
+  border-top: 1px solid var(--ed-hairline-strong) !important;
+  padding: 36px 24px !important;
+}
+
+.site-footer p {
+  color: var(--ink-black) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.32em !important;
+}
+
+/* ============================================================================
+   05. DEEP-DIVE PUBLICATION MODALS (#ford-modal & #ferrari-modal)
+   ============================================================================ */
+
+.exp-modal {
+  background: var(--paper-off) !important;
+  color: var(--ink-black) !important;
+  backdrop-filter: none !important;
+}
+
+.modal-header {
+  background: var(--paper-white) !important;
+  border-bottom: 1px solid var(--ed-hairline) !important;
+  backdrop-filter: none !important;
+}
+
+.modal-back-btn {
+  border-radius: 0 !important;
+  background: var(--ink-black) !important;
+  border: none !important;
+  border-left: 3px solid var(--ed-red) !important;
+  color: #ffffff !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.66rem !important;
+  letter-spacing: 0.14em !important;
+}
+
+.modal-back-btn:hover,
+.ferrari-modal-back:hover {
+  background: var(--ed-red) !important;
+  border-color: var(--ed-red) !important;
   color: #ffffff !important;
 }
 
-.game-start-btn:hover,
-.ar-mobile-launch-btn:hover,
-.ar-direct-trigger-btn:hover,
-.inspect-btn-primary:hover {
-  background: #c4231c !important;
+.modal-title-meta {
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.64rem !important;
+  color: var(--ink-muted) !important;
+}
+
+.badge-ford,
+.badge-ferrari {
+  color: var(--ed-red) !important;
+}
+
+.modal-rev-btn {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
+  color: var(--ink-black) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.64rem !important;
+}
+
+.modal-rev-btn:hover,
+.ferrari-rev-btn:hover {
+  background: var(--ed-red) !important;
+  border-color: var(--ed-red) !important;
+  color: #ffffff !important;
+}
+
+.modal-close-btn {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  border: 1px solid var(--ed-hairline) !important;
+  color: var(--ink-black) !important;
+}
+
+.modal-close-btn:hover {
+  background: var(--ed-red) !important;
+  border-color: var(--ed-red) !important;
+  color: #ffffff !important;
+}
+
+.modal-subnav-bar {
+  background: var(--paper-white) !important;
+  border-bottom: 1px solid var(--ed-hairline) !important;
+  padding: 0 24px !important;
+}
+
+.subnav-pill {
+  border-radius: 0 !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.64rem !important;
+  letter-spacing: 0.16em !important;
+  color: var(--ink-muted) !important;
+  padding: 14px 16px !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+}
+
+.subnav-pill:hover {
+  color: var(--ink-black) !important;
+  background: transparent !important;
+}
+
+.subnav-pill.active,
+.active-ford,
+.active-ferrari {
+  background: transparent !important;
+  color: var(--ink-black) !important;
+  font-weight: 700 !important;
+  border-bottom: 2px solid var(--ed-red) !important;
+}
+
+.exp-eyebrow {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-ed-sans) !important;
+  font-weight: 600 !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.24em !important;
+  color: var(--ink-charcoal) !important;
+}
+
+.exp-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 22px;
+  height: 2px;
+  background: var(--ed-red);
+}
+
+.exp-main-title {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+  font-size: clamp(2.8rem, 6vw, 4.8rem) !important;
+  line-height: 0.90 !important;
+  color: var(--ink-black) !important;
+}
+
+.exp-desc {
+  font-family: var(--font-ed-sans) !important;
+  color: var(--ink-charcoal) !important;
+  font-weight: 400 !important;
+}
+
+.exp-card {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  border: 1px solid var(--ed-hairline) !important;
+  border-top: 3px solid var(--ink-black) !important;
+}
+
+.exp-card:hover {
+  background: var(--paper-white) !important;
+  border-color: var(--ink-black) !important;
+  border-top-color: var(--ed-red) !important;
+}
+
+.exp-card-tag {
+  font-family: var(--font-ed-mono) !important;
+  color: var(--ed-red) !important;
+}
+
+.exp-card-title {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 800 !important;
+  font-size: 1.85rem !important;
+  color: var(--ink-black) !important;
+}
+
+.exp-card-desc {
+  font-family: var(--font-ed-sans) !important;
+  color: var(--ink-charcoal) !important;
+}
+
+.exp-card-footer,
+.exp-card-footer-ferrari {
+  font-family: var(--font-ed-mono) !important;
+  color: var(--ed-red) !important;
+}
+
+.exp-specs-table {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
+}
+
+.exp-specs-table tr {
+  border-bottom: 1px solid var(--ed-hairline) !important;
+}
+
+.exp-specs-table th {
+  background: var(--paper-off) !important;
+  color: var(--ink-charcoal) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.66rem !important;
+}
+
+.exp-specs-table td {
+  color: var(--ink-black) !important;
+  font-family: var(--font-ed-sans) !important;
+  font-weight: 500 !important;
+}
+
+.exp-quote-box,
+.exp-quote-box.ferrari-quote {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  border: 1px solid var(--ed-hairline) !important;
+  border-left: 3px solid var(--ed-red) !important;
+}
+
+.exp-quote-text {
+  color: var(--ink-black) !important;
+  font-family: var(--font-ed-sans) !important;
+}
+
+.exp-quote-author {
+  color: var(--ink-muted) !important;
+  font-family: var(--font-ed-mono) !important;
+}
+
+.exp-profile-card,
+.collage-hero-card,
+.collage-sub-card,
+.collage-roster-item {
+  border-radius: 0 !important;
+  border: 1px solid var(--ed-hairline) !important;
+  background: var(--paper-white) !important;
+  box-shadow: none !important;
+}
+
+.exp-profile-meta {
+  background: var(--paper-white) !important;
+  color: var(--ink-black) !important;
+  border-top: 1px solid var(--ed-hairline) !important;
+  font-family: var(--font-ed-mono) !important;
+}
+
+.collage-caption {
+  background: rgba(11, 12, 14, 0.88) !important;
+  font-family: var(--font-ed-mono) !important;
+}
+
+.collage-caption-tag,
+.ferrari-collage .collage-caption-tag {
+  color: var(--ed-red) !important;
+}
+
+/* ============================================================================
+   06. COCKPIT 3D INTERFACE (#cockpit-sim-section)
+   ============================================================================ */
+
+.cockpit-sim-section {
+  background: var(--paper-off) !important;
+}
+
+body.dest-cockpit .cockpit-header {
+  text-align: left !important;
+  margin-bottom: 18px !important;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ed-hairline);
+}
+
+body.dest-cockpit .cockpit-header-top {
+  justify-content: space-between !important;
+  margin-bottom: 8px !important;
+}
+
+body.dest-cockpit .cockpit-header .section-title {
+  font-size: clamp(2.4rem, 4.4vw, 3.8rem) !important;
+}
+
+body.dest-cockpit .cockpit-header .section-body {
+  margin-left: 0 !important;
+  font-style: italic;
+}
+
+.cockpit-badge {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  border: 1px solid var(--ed-hairline) !important;
+  color: var(--ink-black) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.62rem !important;
+  box-shadow: none !important;
+}
+
+.cockpit-badge .live-dot {
+  border-radius: 0 !important;
+  background: var(--ed-red) !important;
+  box-shadow: none !important;
+}
+
+.cockpit-stage {
+  border-radius: 0 !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
+  box-shadow: 0 24px 64px rgba(11, 12, 14, 0.18) !important;
+}
+
+/* Minimal HUD Inside Cockpit Stage (Zero Dashboard Obstruction) */
+.cockpit-viewport-badge .cad-indicator {
+  border-radius: 0 !important;
+  background: var(--hud-dark) !important;
+  border: 1px solid var(--hud-line) !important;
+  border-left: 2px solid var(--ed-red) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.6rem !important;
+  color: #ffffff !important;
+}
+
+.cockpit-viewport-badge .cad-coords {
+  border-radius: 0 !important;
+  background: rgba(10, 11, 14, 0.68) !important;
+  border-left: 2px solid rgba(255, 255, 255, 0.4) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.62rem !important;
+}
+
+.cockpit-driver-badge {
+  border-radius: 0 !important;
+  background: #ffffff !important;
+  border: none !important;
+  border-left: 3px solid var(--ed-red) !important;
+  color: var(--ink-black) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-weight: 700 !important;
+}
+
+.cockpit-driver-badge:hover,
+.cockpit-driver-badge.highlighted {
+  background: var(--ed-red) !important;
+  color: #ffffff !important;
+}
+
+.cdb-dot {
+  border-radius: 50% !important;
+  background: var(--ed-red) !important;
+  box-shadow: none !important;
+}
+
+.cockpit-driver-badge:hover .cdb-dot,
+.cockpit-driver-badge.highlighted .cdb-dot {
+  background: #ffffff !important;
+}
+
+.telem-box {
+  border-radius: 0 !important;
+  background: rgba(10, 11, 14, 0.72) !important;
+  border: 1px solid var(--hud-line) !important;
+  box-shadow: none !important;
+}
+
+.telem-lbl {
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.52rem !important;
+  color: var(--hud-muted) !important;
+}
+
+.telem-val {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 800 !important;
+  font-size: 1.45rem !important;
+  line-height: 1 !important;
+}
+
+.telem-val.highlight-gold {
+  color: var(--ed-red) !important;
+  text-shadow: none !important;
+}
+
+.status-val {
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.64rem !important;
+  color: var(--ed-red) !important;
+}
+
+.status-val.running {
+  color: #22c55e !important;
+  text-shadow: none !important;
+}
+
+.cockpit-drag-hint {
+  top: auto !important;
+  bottom: 136px !important;
+  transform: translateX(-50%) !important;
+  border-radius: 0 !important;
+  background: rgba(10, 11, 14, 0.82) !important;
+  border: 1px solid var(--hud-line) !important;
+  border-left: 2px solid var(--ed-red) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.6rem !important;
+  letter-spacing: 0.16em !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+
+.cockpit-actions-bar,
+.cockpit-presets-group {
+  border-radius: 0 !important;
+  background: rgba(10, 11, 14, 0.86) !important;
+  border: 1px solid var(--hud-line) !important;
+  box-shadow: none !important;
+}
+
+.cockpit-action-btn,
+.cockpit-preset-btn,
+.cockpit-quick-hud .hud-tool-btn {
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  color: var(--hud-ink) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.58rem !important;
+  letter-spacing: 0.1em !important;
+  white-space: nowrap !important;
+  box-shadow: none !important;
+}
+
+.btn-engine-start {
+  background: var(--ed-red) !important;
+  border-color: var(--ed-red) !important;
+  color: #ffffff !important;
+}
+
+.btn-engine-start.running {
+  background: #14532d !important;
+  border-color: #22c55e !important;
+}
+
+.btn-throttle:hover,
+.btn-throttle:active,
+.btn-throttle.active,
+.btn-lights.active,
+.btn-wipers.active {
+  background: #ffffff !important;
+  border-color: #ffffff !important;
+  color: var(--ink-black) !important;
+  box-shadow: none !important;
+}
+
+.cockpit-preset-btn.active {
+  background: #ffffff !important;
+  border-color: #ffffff !important;
+  color: var(--ink-black) !important;
+  box-shadow: none !important;
+}
+
+.cockpit-preset-btn.accent-telemetry,
+.cockpit-preset-btn.accent-driver {
+  border-left: 2px solid var(--ed-red) !important;
+  color: #ffffff !important;
+}
+
+.cockpit-takeover-banner {
+  background: rgba(11, 12, 14, 0.78) !important;
+}
+
+.ctb-title {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+  text-shadow: none !important;
+}
+
+/* ============================================================================
+   07. EXPLODED-VIEW ENGINEERING INTERFACE (#exploded-section)
+   ============================================================================ */
+
+body.dest-exploded .act2-beat-hud {
+  display: none !important;
+}
+
+body.dest-exploded #exploded-section,
+.exploded-section {
+  background: var(--paper-off) !important;
+  padding: 12px 28px 20px !important;
+  align-items: flex-start !important;
+}
+
+.exploded-section-cinematic-bg {
+  display: none !important;
+}
+
+.exploded-header {
+  text-align: left !important;
+  max-width: 1380px !important;
+  margin: 0 auto 10px !important;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--ed-hairline);
+}
+
+.exploded-header .section-tag {
+  margin-bottom: 4px !important;
+}
+
+.exploded-header-top {
+  justify-content: space-between !important;
+  margin-bottom: 10px !important;
+}
+
+.exploded-badge {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  border: 1px solid var(--ed-hairline) !important;
+  color: var(--ink-black) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.62rem !important;
+}
+
+.exploded-badge .live-dot {
+  border-radius: 0 !important;
+  background: var(--ed-red) !important;
+  box-shadow: none !important;
+}
+
+.exploded-header .section-title {
+  font-size: clamp(2rem, 3.3vw, 2.85rem) !important;
+  margin-bottom: 4px !important;
+}
+
+.exploded-header .section-body {
+  max-width: 96ch;
+  font-size: 0.85rem !important;
+  line-height: 1.44 !important;
+}
+
+/* Clean Architectural Subsystem Index Bar */
+.exploded-nav-bar {
+  justify-content: flex-start !important;
+  gap: 4px !important;
+  margin-bottom: 10px !important;
+}
+
+.exploded-env-switcher {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
+  padding: 4px 8px !important;
+}
+
+.env-switcher-label {
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.58rem !important;
+  color: var(--ed-red) !important;
+}
+
+.exploded-env-btn {
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  color: var(--ink-charcoal) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.62rem !important;
+  padding: 5px 10px !important;
+}
+
+.exploded-env-btn.active {
+  background: var(--ink-black) !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.exploded-system-btn {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  border: 1px solid var(--ed-hairline) !important;
+  color: var(--ink-charcoal) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.56rem !important;
+  letter-spacing: 0.08em !important;
+  padding: 5px 10px !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.exploded-system-btn .btn-code {
+  color: var(--ed-red);
+  font-weight: 700;
+}
+
+.exploded-system-btn:hover {
+  transform: none !important;
+  border-color: var(--ink-black) !important;
+  background: var(--paper-white) !important;
+  color: var(--ink-black) !important;
+  box-shadow: none !important;
+}
+
+.exploded-system-btn.active {
+  background: var(--ink-black) !important;
+  border-color: var(--ink-black) !important;
+  border-left: 3px solid var(--ed-red) !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.exploded-system-btn.active .btn-code {
+  color: #ffffff;
+}
+
+/* 3D Exploded Stage Overlays — Fits cleanly within 900px desktop fold */
+.exploded-stage-container {
+  height: clamp(460px, calc(100dvh - 285px), 575px) !important;
+  border-radius: 0 !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
+  box-shadow: 0 24px 64px rgba(11, 12, 14, 0.18) !important;
+}
+
+.exploded-viewport-badge .cad-indicator {
+  border-radius: 0 !important;
+  background: var(--hud-deep) !important;
+  border: 1px solid var(--hud-line) !important;
+  border-left: 2px solid var(--ed-red) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.6rem !important;
+  color: #ffffff !important;
+}
+
+.exploded-viewport-badge .cad-coords {
+  border-radius: 0 !important;
+  font-family: var(--font-ed-mono) !important;
+  border-left: 2px solid rgba(255, 255, 255, 0.45) !important;
+}
+
+/* Unified White/Black/Red Hotspot Markers (Overrides Rainbow Accent Variables) */
+.hotspot-pin {
+  --accent: #d92626 !important;
+}
+
+.pin-ring {
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+}
+
+.pin-dot {
+  width: 9px !important;
+  height: 9px !important;
+  margin: 11px !important;
+  background: var(--ed-red) !important;
+  box-shadow: 0 0 0 2px #ffffff !important;
+}
+
+.pin-label {
+  border-radius: 0 !important;
+  background: #ffffff !important;
+  border: none !important;
+  border-left: 2px solid var(--ed-red) !important;
+  color: var(--ink-black) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.54rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.1em !important;
+  padding: 2px 7px !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: none !important;
+}
+
+.pin-label span {
+  color: var(--ed-red) !important;
+}
+
+.hotspot-pin:hover .pin-label,
+.hotspot-pin.active .pin-label {
+  background: #0b0c0e !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Technical Spec Sheet on Right of 3D Stage */
+.exploded-telemetry-card {
+  top: 12px !important;
+  right: 12px !important;
+  width: 312px !important;
+  max-height: calc(100% - 24px) !important;
+  border-radius: 0 !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  border: none !important;
+  border-top: 3px solid var(--ed-red) !important;
+  color: var(--ink-black) !important;
+  box-shadow: 0 24px 52px rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter: none !important;
+}
+
+.exploded-telemetry-card .telemetry-card-inner {
+  padding: 13px 15px !important;
+}
+
+.telemetry-card-header {
+  border-bottom-color: var(--ed-hairline) !important;
+  padding-bottom: 8px !important;
+  margin-bottom: 8px !important;
+}
+
+.telemetry-subsystem-tag {
+  font-family: var(--font-ed-mono) !important;
+  color: var(--ed-red) !important;
+}
+
+.telemetry-status-tag {
+  font-family: var(--font-ed-mono) !important;
+  color: var(--ink-charcoal) !important;
+}
+
+.telemetry-status-tag::before {
+  background: var(--ed-red) !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.telemetry-title {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+  font-size: 1.52rem !important;
+  line-height: 0.95 !important;
+  color: var(--ink-black) !important;
+}
+
+.telemetry-desc {
+  font-family: var(--font-ed-sans) !important;
+  font-size: 0.78rem !important;
+  line-height: 1.42 !important;
+  color: var(--ink-charcoal) !important;
+}
+
+.telemetry-specs-grid {
+  gap: 6px !important;
+  margin-bottom: 10px !important;
+}
+
+.telemetry-spec-item {
+  border-radius: 0 !important;
+  background: var(--paper-off) !important;
+  border: 1px solid var(--ed-hairline) !important;
+  padding: 5px 8px !important;
+}
+
+.spec-label {
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.52rem !important;
+  color: var(--ink-muted) !important;
+}
+
+.spec-value {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 700 !important;
+  font-size: 0.96rem !important;
+  color: var(--ink-black) !important;
+}
+
+.telemetry-audio-row {
+  border-top-color: var(--ed-hairline) !important;
+}
+
+.rev-engine-btn {
+  border-radius: 0 !important;
+  background: var(--ed-red) !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.66rem !important;
+  box-shadow: none !important;
+}
+
+.rev-engine-btn:hover {
+  background: var(--ink-black) !important;
+  box-shadow: none !important;
+}
+
+.rev-bar,
+.rev-viz.active .rev-bar {
+  background: var(--ed-red) !important;
+}
+
+.exploded-quick-hud {
+  border-radius: 0 !important;
+  background: rgba(10, 11, 14, 0.92) !important;
+  border: 1px solid var(--hud-line) !important;
+  border-left: 3px solid var(--ed-red) !important;
+  box-shadow: none !important;
+}
+
+.hud-slider-label,
+.hud-slider-val,
+.slider-btn,
+.hud-tool-btn {
+  font-family: var(--font-ed-mono) !important;
+  border-radius: 0 !important;
+}
+
+.slider-fill-track {
+  background: var(--ed-red) !important;
+}
+
+.hud-tool-btn.active {
+  background: var(--ed-red) !important;
+  border-color: var(--ed-red) !important;
+  color: #ffffff !important;
+}
+
+.act2-beat-hud {
+  border-radius: 0 !important;
+  background: rgba(10, 11, 14, 0.92) !important;
+  border: 1px solid var(--hud-line) !important;
+  border-left: 3px solid var(--ed-red) !important;
+}
+
+.act2-beat-headline {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+}
+
+.act2-beat-headline .headline-outline {
+  -webkit-text-stroke: 1px var(--ed-red) !important;
+}
+
+.beat-chip {
+  border-radius: 0 !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.6rem !important;
+}
+
+.beat-chip.active {
+  background: var(--ed-red) !important;
+  border-color: var(--ed-red) !important;
+  color: #ffffff !important;
+}
+
+.exploded-loader-overlay {
+  background: var(--paper-white) !important;
+  color: var(--ink-black) !important;
+}
+
+.exploded-loader-title {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-size: 1.8rem !important;
+  color: var(--ink-black) !important;
+}
+
+.exploded-loader-sub {
+  color: var(--ink-muted) !important;
+}
+
+.exploded-loader-fill {
+  background: var(--ed-red) !important;
+}
+
+/* ============================================================================
+   08. LE MANS 3D DRIVING SIMULATION (#game-section)
+   ============================================================================ */
+
+.game-section {
+  background: var(--paper-white) !important;
+  padding: 52px 28px 80px !important;
+}
+
+.game-header {
+  text-align: left !important;
+  max-width: 1380px !important;
+  margin: 0 auto 24px !important;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--ed-hairline);
+}
+
+.game-header .section-title {
+  font-size: clamp(2.6rem, 5vw, 4.4rem) !important;
+}
+
+.game-header .section-body {
+  max-width: 72ch;
+}
+
+.game-container {
+  border-radius: 0 !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
+  box-shadow: 0 24px 64px rgba(11, 12, 14, 0.18) !important;
+}
+
+.game-overlay {
+  background: rgba(8, 9, 12, 0.88) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.game-badge {
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.66rem !important;
+  letter-spacing: 0.22em !important;
+  color: #ffffff !important;
+  padding: 0 !important;
+}
+
+.game-prompt-title {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+  font-size: clamp(3rem, 6vw, 4.8rem) !important;
+  line-height: 0.9 !important;
+}
+
+.game-prompt-sub {
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.22em !important;
+}
+
+.game-start-btn {
+  border-radius: 0 !important;
+  background: var(--ed-red) !important;
+  border: none !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.2em !important;
+  padding: 16px 34px !important;
+  box-shadow: none !important;
+}
+
+.game-start-btn:hover {
+  background: #ffffff !important;
+  color: var(--ink-black) !important;
+  transform: translateY(-2px) !important;
+}
+
+.key-item {
+  border-radius: 0 !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+}
+
+.key-item kbd {
+  border-radius: 0 !important;
+  font-family: var(--font-ed-mono) !important;
+}
+
+.key-item span {
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.58rem !important;
+}
+
+.game-loader-fill {
+  background: var(--ed-red) !important;
+}
+
+/* Active Driving Telemetry HUD */
+.hud-tag,
+.hud-lap-timing,
+.game-exit-btn,
+.hud-cluster,
+.hud-controls-pill {
+  border-radius: 0 !important;
+  background: rgba(8, 9, 12, 0.84) !important;
+  border: 1px solid var(--hud-line) !important;
+  box-shadow: none !important;
+  font-family: var(--font-ed-mono) !important;
+}
+
+.hud-dot {
+  border-radius: 0 !important;
+  background: var(--ed-red) !important;
+  box-shadow: none !important;
+}
+
+.hud-best-val {
+  color: var(--ed-red) !important;
+}
+
+.game-exit-btn:hover {
+  background: var(--ed-red) !important;
+  border-color: var(--ed-red) !important;
+}
+
+.game-countdown-banner {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+}
+
+.hud-speed-val,
+.hud-gear-val {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+}
+
+.hud-gear-val {
+  color: var(--ed-red) !important;
+}
+
+.hud-rpm-bar-wrap {
+  border-radius: 0 !important;
+}
+
+.hud-rpm-bar {
+  background: linear-gradient(90deg, #ffffff 0%, #9ca3af 65%, #d92626 100%) !important;
+}
+
+.hud-rpm-labels .redline {
+  color: var(--ed-red) !important;
+}
+
+.touch-ctrl-btn {
+  border-radius: 0 !important;
+}
+
+.touch-gas-btn,
+.touch-ctrl-btn.is-pressed,
+.touch-ctrl-btn:active {
+  background: var(--ed-red) !important;
+  border-color: var(--ed-red) !important;
+}
+
+/* ============================================================================
+   09. 1966 CIRCUIT MAP & 24-HOUR CRUCIBLE (#circuit-section, #race-clock-section)
+   ============================================================================ */
+
+.circuit-section {
+  background: var(--paper-off) !important;
+  padding: 64px 28px 80px !important;
+}
+
+.circuit-header {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--ed-hairline);
+}
+
+.circuit-header .section-title {
+  font-size: clamp(2.6rem, 5vw, 4.4rem) !important;
+}
+
+.circuit-badge {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  border: 1px solid var(--ed-hairline) !important;
+  color: var(--ink-black) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.62rem !important;
+}
+
+.circuit-badge .live-dot {
+  border-radius: 0 !important;
+  background: var(--ed-red) !important;
+  box-shadow: none !important;
+}
+
+/* Light Paper Architectural Track Blueprint */
+.circuit-map-container {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
+  box-shadow: none !important;
+}
+
+.circuit-track-bg {
+  stroke: rgba(11, 12, 14, 0.12) !important;
+}
+
+.circuit-track-racing-line {
+  stroke: var(--ink-black) !important;
+  filter: none !important;
+}
+
+.circuit-hotspot .hotspot-pulse-ring {
+  stroke: var(--ed-red) !important;
+}
+
+.circuit-hotspot .hotspot-center-dot {
+  fill: var(--ed-red) !important;
+}
+
+.hotspot-svg-label {
+  fill: var(--ink-muted) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 10px !important;
+}
+
+.circuit-hotspot.active .hotspot-svg-label {
+  fill: var(--ink-black) !important;
+  font-weight: 700;
+}
+
+.circuit-telemetry-dossier {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
+  border-top: 3px solid var(--ed-red) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.dossier-french-name {
+  font-family: var(--font-ed-sans) !important;
+  color: var(--ink-muted) !important;
+}
+
+.sector-danger-badge {
+  border-radius: 0 !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.58rem !important;
+  background: var(--paper-off) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
+  color: var(--ink-black) !important;
+}
+
+.sector-danger-badge.danger-maximum {
+  background: var(--ed-red) !important;
+  border-color: var(--ed-red) !important;
+  color: #ffffff !important;
+}
+
+.dossier-title {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+  font-size: 2.3rem !important;
+  line-height: 0.94 !important;
+  color: var(--ink-black) !important;
+}
+
+.dossier-spec-item {
+  border-radius: 0 !important;
+  background: var(--paper-off) !important;
+  border: 1px solid var(--ed-hairline) !important;
+}
+
+.dossier-spec-item .spec-lbl {
+  font-family: var(--font-ed-mono) !important;
+  color: var(--ed-red) !important;
+}
+
+.dossier-spec-item .spec-num {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  color: var(--ink-black) !important;
+}
+
+.dossier-media-wrap {
+  border-radius: 0 !important;
+  border: 1px solid var(--ed-hairline);
+}
+
+.dossier-desc {
+  font-family: var(--font-ed-sans) !important;
+  color: var(--ink-charcoal) !important;
+}
+
+.dossier-quote {
+  border-left: 3px solid var(--ed-red) !important;
+  color: var(--ink-black) !important;
+  font-family: var(--font-ed-sans) !important;
+}
+
+/* 24-Hour Crucible (Retains Atmospheric Time-of-Day Sky Backdrop + White Paper Stage Sheet) */
+.race-clock-section {
+  padding: 64px 28px 80px !important;
+}
+
+.race-clock-header .section-tag {
+  color: #ffffff !important;
+}
+
+.race-clock-header .section-title {
+  color: #ffffff !important;
+  font-size: clamp(2.6rem, 5vw, 4.4rem) !important;
+}
+
+.race-clock-header .section-body {
+  color: rgba(246, 245, 242, 0.86) !important;
+}
+
+.race-clock-badge {
+  border-radius: 0 !important;
+  background: rgba(10, 11, 14, 0.72) !important;
+  border: 1px solid var(--hud-line) !important;
+  color: #ffffff !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.62rem !important;
+}
+
+.race-clock-badge .live-dot {
+  border-radius: 0 !important;
+  background: var(--ed-red) !important;
+}
+
+.race-clock-console {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  color: var(--ink-black) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter: none !important;
+}
+
+.timeline-clock-display {
+  border-radius: 0 !important;
+  background: var(--ink-black) !important;
+  border: none !important;
+  border-left: 3px solid var(--ed-red) !important;
+}
+
+.clock-time-val {
+  color: #ffffff !important;
+  font-size: 0.95rem !important;
+}
+
+.race-hour-marker {
+  border-radius: 0 !important;
+  background: var(--paper-off) !important;
+  border: 1px solid var(--ed-hairline) !important;
+  color: var(--ink-charcoal) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.62rem !important;
+}
+
+.race-hour-marker:hover {
+  border-color: var(--ink-black) !important;
+  background: var(--paper-white) !important;
+  color: var(--ink-black) !important;
+}
+
+.race-hour-marker.active {
+  background: var(--ed-red) !important;
+  border-color: var(--ed-red) !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.race-slider-track-wrap {
+  background: var(--ed-hairline) !important;
+  border-radius: 0 !important;
+}
+
+.race-slider-fill {
+  background: var(--ed-red) !important;
+  border-radius: 0 !important;
+}
+
+.race-time-slider::-webkit-slider-thumb {
+  border-radius: 0 !important;
+  background: var(--ink-black) !important;
+  border: 2px solid var(--ed-red) !important;
+  box-shadow: none !important;
+}
+
+.race-card-media {
+  border-radius: 0 !important;
+  border: 1px solid var(--ed-hairline) !important;
+  box-shadow: none !important;
+}
+
+.race-media-badge-wrap {
+  border-radius: 0 !important;
+  background: #0b0c0e !important;
+  border: none !important;
+  border-left: 2px solid var(--ed-red) !important;
+}
+
+.race-weather-tag {
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.62rem !important;
+  color: #ffffff !important;
+}
+
+.race-phase-tag {
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.66rem !important;
+  color: var(--ed-red) !important;
+}
+
+.race-phase-title {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+  font-size: clamp(2rem, 3.4vw, 2.9rem) !important;
+  line-height: 0.92 !important;
+  color: var(--ink-black) !important;
+}
+
+.attrition-monitor-box {
+  border-radius: 0 !important;
+  background: var(--paper-off) !important;
+  border: 1px solid var(--ed-hairline) !important;
+}
+
+.team-lbl,
+.datum-lbl {
+  font-family: var(--font-ed-mono) !important;
+  color: var(--ink-muted) !important;
+}
+
+.team-ford .team-count {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-size: 1.25rem !important;
+  color: var(--ink-black) !important;
+}
+
+.team-ferrari .team-count {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-size: 1.25rem !important;
+  color: var(--ed-red) !important;
+}
+
+.attrition-vs {
+  color: var(--ink-muted) !important;
+}
+
+.datum-item {
+  border-radius: 0 !important;
+  background: var(--paper-off) !important;
+  border: 1px solid var(--ed-hairline) !important;
+}
+
+.datum-val {
+  color: var(--ink-black) !important;
+  font-family: var(--font-ed-sans) !important;
+}
+
+.race-phase-desc {
+  color: var(--ink-charcoal) !important;
+  font-family: var(--font-ed-sans) !important;
+}
+
+.race-phase-quote {
+  border-left: 3px solid var(--ed-red) !important;
+  color: var(--ink-black) !important;
+  font-family: var(--font-ed-sans) !important;
+}
+
+/* ============================================================================
+   10. 1:1 AUGMENTED REALITY EXPERIENCE (#ar-section)
+   ============================================================================ */
+
+.ar-section {
+  background: var(--paper-white) !important;
+  padding: 56px 28px 80px !important;
+}
+
+.ar-header {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--ed-hairline);
+}
+
+.ar-header .section-title {
+  font-size: clamp(2.6rem, 5vw, 4.4rem) !important;
+}
+
+.ar-badge {
+  border-radius: 0 !important;
+  background: var(--paper-off) !important;
+  border: 1px solid var(--ed-hairline) !important;
+  color: var(--ink-black) !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.62rem !important;
+}
+
+.ar-badge .live-dot {
+  background: var(--ed-red) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.ar-viewer-card {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
+  box-shadow: none !important;
+}
+
+.ar-viewer-header {
+  background: var(--paper-white) !important;
+  border-bottom: 1px solid var(--ed-hairline) !important;
+}
+
+.ar-viewer-tag {
+  color: var(--ink-black) !important;
+  font-size: 0.68rem !important;
+}
+
+.ar-viewer-tag .pulse-dot {
+  border-radius: 0 !important;
+  background: var(--ed-red) !important;
+  box-shadow: none !important;
+}
+
+.ar-lighting-deck {
+  border-radius: 0 !important;
+  background: var(--paper-off) !important;
+  border: 1px solid var(--ed-hairline) !important;
+}
+
+.ar-light-btn {
+  border-radius: 0 !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.62rem !important;
+  color: var(--ink-muted) !important;
+}
+
+.ar-light-btn:hover {
+  color: var(--ink-black) !important;
+}
+
+.ar-light-btn.active {
+  background: var(--ink-black) !important;
+  border-color: var(--ink-black) !important;
+  color: #ffffff !important;
+}
+
+.ar-viewer-specs {
+  color: var(--ink-muted) !important;
+}
+
+.ar-stage-container {
+  border-radius: 0 !important;
 }
 
 .ar-hud-pill,
-.ar-compat-status,
-.p-pill,
-.chronicle-year-pill,
-.game-badge,
-.hud-tag,
-.hud-controls-pill,
-.cockpit-driver-badge {
-  border-radius: 2px !important;
-  background: rgba(8, 9, 11, 0.9) !important;
-  border: 1px solid rgba(243, 239, 230, 0.18) !important;
+.ar-compat-status {
+  border-radius: 0 !important;
+  background: rgba(10, 11, 14, 0.86) !important;
+  border: 1px solid var(--hud-line) !important;
+  color: #ffffff !important;
 }
 
-.site-footer {
-  background: #08090b !important;
-  border-top: 1px solid rgba(243, 239, 230, 0.12) !important;
+.ar-compat-status.is-ready {
+  border-left: 3px solid var(--ed-red) !important;
 }
 
-/* ---------- iPad / Mobile-Only 3D Game Touch Controls ---------- */
+.ar-mobile-launch-btn {
+  border-radius: 0 !important;
+  background: var(--ed-red) !important;
+  border: none !important;
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.14em !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+.ar-mobile-launch-btn:hover {
+  background: var(--ink-black) !important;
+}
+
+.ar-preparing-overlay {
+  background: var(--paper-off) !important;
+  color: var(--ink-black) !important;
+}
+
+.ar-preparing-title {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-size: 2rem !important;
+  color: var(--ink-black) !important;
+}
+
+.ar-progress-bar {
+  background: var(--ed-red) !important;
+}
+
+.ar-deck-card {
+  border-radius: 0 !important;
+  background: var(--paper-off) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
+  border-top: 3px solid var(--ed-red) !important;
+  box-shadow: none !important;
+}
+
+.ar-card-label {
+  color: var(--ed-red) !important;
+}
+
+.p-pill {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  border: 1px solid var(--ed-hairline) !important;
+  color: var(--ink-black) !important;
+  font-family: var(--font-ed-mono) !important;
+}
+
+.ar-card-title {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 900 !important;
+  font-size: 2.5rem !important;
+  line-height: 0.92 !important;
+  color: var(--ink-black) !important;
+}
+
+.ar-card-desc {
+  font-family: var(--font-ed-sans) !important;
+  color: var(--ink-charcoal) !important;
+}
+
+.ar-qr-frame {
+  border-radius: 0 !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
+  box-shadow: none !important;
+}
+
+.ar-qr-target-corners span {
+  border-color: var(--ed-red) !important;
+}
+
+.ar-qr-status {
+  color: var(--ink-black) !important;
+}
+
+.ar-qr-status .live-dot {
+  background: var(--ed-red) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.ar-qr-url-pill {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  border: 1px solid var(--ed-hairline) !important;
+}
+
+.qr-url-text {
+  color: var(--ink-charcoal) !important;
+}
+
+.ar-step-item {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  border: 1px solid var(--ed-hairline) !important;
+}
+
+.ar-step-item:hover {
+  border-color: var(--ed-red) !important;
+  background: var(--paper-white) !important;
+}
+
+.step-num-badge {
+  border-radius: 0 !important;
+  background: var(--ink-black) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.step-info .step-title {
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 800 !important;
+  font-size: 1.15rem !important;
+  color: var(--ink-black) !important;
+}
+
+.step-info .step-desc {
+  font-family: var(--font-ed-sans) !important;
+  color: var(--ink-charcoal) !important;
+}
+
+.mini-spec {
+  border-radius: 0 !important;
+  background: var(--paper-white) !important;
+  border: 1px solid var(--ed-hairline) !important;
+}
+
+.mini-spec .ms-lbl {
+  color: var(--ed-red) !important;
+}
+
+.mini-spec .ms-val {
+  color: var(--ink-black) !important;
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-size: 1.15rem !important;
+}
+
+/* ============================================================================
+   11. RESPONSIVE EDITORIAL ADAPTATION (DESKTOP, TABLET & MOBILE)
+   ============================================================================ */
+
+@media (max-width: 1380px) {
+  .brand-title,
+  .brand-sep {
+    display: none;
+  }
+}
+
+@media (max-width: 1200px) {
+  .journey-topbar {
+    padding: 0 12px;
+  }
+
+  .journey-progress-rail .jp-pip span:not(.pip-dot) {
+    display: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .journey-topbar {
+    flex-wrap: wrap;
+    padding: 8px 14px;
+    gap: 6px;
+  }
+
+  .journey-brand {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  .journey-topbar-actions {
+    width: 100%;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    gap: 4px !important;
+  }
+
+  .journey-top-pill,
+  .journey-telem-pill {
+    padding: 6px 10px !important;
+    min-height: 30px;
+  }
+
+  .portal-pill {
+    padding: 16px 10px !important;
+  }
+
+  .chronicle-card.spread-cover,
+  .chronicle-card.spread-feature-right,
+  .chronicle-card.spread-track,
+  .chronicle-card.spread-gallery,
+  .chronicle-card.spread-dossier,
+  .chronicle-card.spread-widescreen .chronicle-card-body {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  .chronicle-card.spread-widescreen .chronicle-card-body .section-body {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+    padding-top: 16px;
+  }
+}
+
+@media (max-width: 820px) {
+  /* Clean two-row destination navigation on mobile without right-edge clipping */
+  .portal-return-bar {
+    height: auto !important;
+    min-height: 44px;
+    padding: 8px 12px 0 !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+  }
+
+  .portal-back-btn {
+    padding: 6px 10px !important;
+    font-size: 0.56rem !important;
+  }
+
+  .portal-route-pills {
+    width: 100% !important;
+    flex: none !important;
+    justify-content: space-between !important;
+    gap: 0 !important;
+    overflow-x: auto !important;
+    border-top: 1px solid var(--ed-hairline);
+    padding-top: 2px;
+  }
+
+  .portal-pill {
+    padding: 8px 6px !important;
+    font-size: 0.54rem !important;
+    letter-spacing: 0.06em !important;
+    flex-shrink: 0;
+  }
+
+  body.dest-cockpit #act-3,
+  body.dest-exploded #act-2,
+  body.dest-game #act-3,
+  body.dest-ar #act-5 {
+    padding-top: 84px !important;
+  }
+
+  body.dest-chronicles #mission-top-bar.visible {
+    top: 78px !important;
+    padding: 4px 6px !important;
+  }
+
+  .mission-top-acts {
+    width: 100% !important;
+    justify-content: space-between !important;
+    overflow-x: auto !important;
+    gap: 1px !important;
+  }
+
+  .mission-act-pill {
+    padding: 4px 4px !important;
+    font-size: 0.49rem !important;
+    letter-spacing: 0.03em !important;
+    gap: 3px !important;
+    flex-shrink: 0;
+  }
+
+  .mission-action-pill {
+    display: none !important;
+  }
+
+  .act-chapter-line {
+    display: none !important;
+  }
+
+  .act-chapter-tag {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .act-chapter-tag::before {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    height: 2px;
+    background: var(--ed-red);
+    flex-shrink: 0;
+  }
+
+  .journey-section::after {
+    width: 100vw;
+    max-width: none;
+    height: 44vh;
+    background: linear-gradient(180deg, rgba(7, 8, 11, 0) 0%, rgba(7, 8, 11, 0.88) 70%, rgba(7, 8, 11, 0.95) 100%);
+  }
+
+  .journey-glh-card {
+    left: 16px !important;
+    right: 16px !important;
+    bottom: 20px !important;
+    max-width: none !important;
+  }
+
+  .journey-hover-prompt {
+    left: 12px !important;
+    right: 12px !important;
+    bottom: 18px !important;
+    max-width: calc(100vw - 24px) !important;
+  }
+
+  .glh-heading {
+    font-size: 2.35rem !important;
+  }
+
+  .glh-summary {
+    font-size: 0.8rem !important;
+    margin-bottom: 8px !important;
+  }
+
+  .glh-guide {
+    font-size: 0.6rem !important;
+  }
+
+  .journey-opening-cue {
+    display: none !important;
+  }
+
+  .journey-start-hud {
+    bottom: 22px !important;
+    width: calc(100vw - 24px);
+  }
+
+  .journey-start-btn {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  body.dest-chronicles #story-container {
+    padding-top: 120px !important;
+  }
+
+  .act-chapter-header {
+    padding: 36px 16px 24px !important;
+  }
+
+  .act-chronicle-slot,
+  .chronicles-timeline-wrap,
+  .chronicles-timeline-wrap.act-chronicle-pair,
+  .exploded-section,
+  .game-section,
+  .circuit-section,
+  .race-clock-section,
+  .ar-section {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .chronicle-card,
+  .chronicle-card.reverse {
+    margin-left: 0 !important;
+    padding: 20px 0 32px !important;
+  }
+
+  .chronicle-card.reverse .chronicle-card-media {
+    order: 1 !important;
+  }
+
+  .chronicle-card.reverse .chronicle-card-body {
+    order: 2 !important;
+  }
+
+  .exploded-quick-hud {
+    width: calc(100% - 24px) !important;
+    left: 12px !important;
+    bottom: 12px !important;
+  }
+
+  .exploded-telemetry-card {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin-top: 12px;
+  }
+
+  .ar-stage-hud {
+    background: var(--ink-black) !important;
+    border-top: 1px solid var(--hud-line) !important;
+  }
+
+  .ar-hud-pill,
+  .ar-compat-status {
+    white-space: normal !important;
+    text-align: center;
+  }
+
+  .ar-mobile-launch-btn {
+    width: calc(100% - 28px) !important;
+    justify-content: center !important;
+    white-space: normal !important;
+  }
+}
+
+/* ---------- Mobile-Only 3D Game Touch Controls (Preserved cleanly) ---------- */
 .game-touch-controls {
   display: none !important;
   position: absolute;
@@ -340,14 +3432,12 @@ html.is-touch-device .game-hud.active .game-touch-controls {
 .touch-ctrl-btn {
   user-select: none;
   -webkit-user-select: none;
-  -webkit-touch-callout: none;
   touch-action: none;
-  border-radius: 2px;
-  background: rgba(8, 9, 11, 0.88);
-  border: 1px solid rgba(243, 239, 230, 0.28);
-  color: #f3efe6;
-  font-family: 'Space Mono', monospace;
-  font-size: 0.72rem;
+  background: rgba(10, 11, 14, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  font-family: var(--font-ed-mono);
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   cursor: pointer;
@@ -355,21 +3445,19 @@ html.is-touch-device .game-hud.active .game-touch-controls {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  transition: background 0.1s ease, border-color 0.1s ease;
 }
 
 .touch-arrow-btn {
-  width: 62px;
-  height: 58px;
-  font-size: 1.35rem;
+  width: 60px;
+  height: 56px;
+  font-size: 1.25rem;
 }
 
 .touch-gas-btn {
-  height: 64px;
+  height: 62px;
   padding: 0 20px;
-  border-color: #e12d25;
-  background: rgba(225, 45, 37, 0.88);
-  color: #ffffff;
+  background: var(--ed-red);
+  border-color: var(--ed-red);
 }
 
 .touch-brake-btn,
@@ -381,99 +3469,11 @@ html.is-touch-device .game-hud.active .game-touch-controls {
 .touch-engine-btn {
   height: 44px;
   padding: 0 14px;
-  border-left: 3px solid #e12d25;
+  border-left: 3px solid var(--ed-red);
 }
 
 .touch-engine-btn .te-dot {
   width: 7px;
   height: 7px;
-  background: #e12d25;
-  border-radius: 1px;
-}
-
-.touch-ctrl-btn.is-pressed,
-.touch-ctrl-btn:active {
-  background: #e12d25;
-  border-color: #f3efe6;
-  color: #ffffff;
-}
-
-/* ---------- Responsive AR Section Layout (iPad Portrait/Landscape & Mobile) ---------- */
-@media (max-width: 1180px) {
-  .ar-section {
-    padding: 84px 4% 80px !important;
-  }
-  .ar-experience-grid {
-    grid-template-columns: 1fr !important;
-    gap: 22px !important;
-  }
-  .ar-viewer-header {
-    flex-direction: column;
-    align-items: flex-start !important;
-    gap: 12px !important;
-  }
-  .ar-stage-container {
-    height: clamp(340px, 50vh, 480px) !important;
-    flex-direction: column !important;
-  }
-  model-viewer#gt40-ar-viewer {
-    flex: 1 1 auto !important;
-    min-height: 0 !important;
-    width: 100% !important;
-  }
-  .ar-mobile-card {
-    flex-direction: column !important;
-  }
-  .ar-stage-hud {
-    position: static !important;
-    transform: none !important;
-    width: 100% !important;
-    padding: 10px 14px !important;
-    background: #0b0d11 !important;
-    border-top: 1px solid rgba(243, 239, 230, 0.1) !important;
-    justify-content: center !important;
-  }
-  .ar-mobile-launch-btn {
-    bottom: 16px !important;
-    padding: 12px 20px !important;
-    font-size: 0.82rem !important;
-    letter-spacing: 0.12em !important;
-  }
-  .ar-deck-card {
-    padding: 24px !important;
-  }
-  .ar-specs-mini {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-}
-
-@media (max-width: 600px) {
-  .ar-section {
-    padding: 74px 16px 70px !important;
-  }
-  .ar-header-top {
-    flex-wrap: wrap;
-    gap: 8px !important;
-  }
-  .ar-stage-container {
-    height: 320px !important;
-  }
-  .ar-hud-pill,
-  .ar-compat-status {
-    font-size: 0.6rem !important;
-    white-space: normal !important;
-    text-align: center;
-  }
-  .ar-mobile-launch-btn {
-    width: calc(100% - 32px) !important;
-    justify-content: center !important;
-    white-space: normal !important;
-    text-align: center;
-  }
-  .ar-deck-card {
-    padding: 18px !important;
-  }
-  .ar-specs-mini {
-    grid-template-columns: 1fr !important;
-  }
+  background: var(--ed-red);
 }

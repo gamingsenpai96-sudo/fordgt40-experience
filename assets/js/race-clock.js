@@ -318,7 +318,7 @@ export class LeMansRaceClock {
         particleCount: 100,
         spread: 90,
         origin: { y: 0.65 },
-        colors: ['#d4af37', '#ffffff', '#e02424', '#1e40af']
+        colors: ['#d92626', '#ffffff', '#0b0c0e', '#f6f5f2']
       });
     }
   }

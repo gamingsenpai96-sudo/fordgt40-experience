@@ -46,7 +46,7 @@
         particleCount: 90,
         spread: 80,
         origin: { y: 0.75 },
-        colors: ['#38bdf8', '#ff3b20', '#ffffff', '#ffd700', '#1e293b']
+        colors: ['#d92626', '#ffffff', '#0b0c0e', '#f6f5f2', '#646873']
       });
     }
   }
@@ -1041,11 +1041,12 @@
   function initVanillaTilt() {
     if (typeof VanillaTilt !== 'undefined') {
       try {
-        VanillaTilt.init(document.querySelectorAll('[data-tilt]'), {
-          max: 10,
+        const tiltTargets = document.querySelectorAll('[data-tilt]:not(.chronicle-card)');
+        if (!tiltTargets.length) return;
+        VanillaTilt.init(tiltTargets, {
+          max: 8,
           speed: 400,
-          glare: true,
-          'max-glare': 0.22,
+          glare: false,
           perspective: 1000
         });
       } catch (e) {
@@ -1467,7 +1468,7 @@
         topLabel: 'ACT I // 1963–1964 • THE RIVALRY',
         kicker: 'ACT I // CONFRONTATION',
         status: '7.0L V8 VS 4.0L V12',
-        primaryText: '🔊 REV GT40 V8',
+        primaryText: 'REV GT40 V8',
         nextText: 'ACT II',
         nextTarget: '#act-2'
       },
@@ -1475,7 +1476,7 @@
         topLabel: 'ACT II // SHELBY HANGAR • RE-ENGINEERING',
         kicker: 'ACT II // ANATOMY 3D',
         status: '01 PEEL BACK SHELL',
-        primaryText: '⚡ NEXT BEAT (750°C)',
+        primaryText: 'NEXT BEAT // 750°C',
         nextText: 'ACT III',
         nextTarget: '#act-3'
       },
@@ -1483,7 +1484,7 @@
         topLabel: 'ACT III // LA SARTHE TEST & COCKPIT',
         kicker: 'ACT III // DRIVER SEAT',
         status: 'RHD 427 IGNITION',
-        primaryText: '🔥 START 427 ENGINE',
+        primaryText: 'START 427 ENGINE',
         nextText: 'ACT IV',
         nextTarget: '#act-4'
       },
@@ -1491,7 +1492,7 @@
         topLabel: 'ACT IV // JUNE 18–19 • 24H CRUCIBLE',
         kicker: 'ACT IV // 24H SIEGE',
         status: '16:00 SAT → 16:00 SUN',
-        primaryText: '⏱️ ADVANCE RACE HOUR',
+        primaryText: 'ADVANCE RACE HOUR',
         nextText: 'ACT V',
         nextTarget: '#act-5'
       },
@@ -1499,7 +1500,7 @@
         topLabel: 'ACT V // KEYS BACK • P/1046 1:1 AR',
         kicker: 'ACT V // DELIVERANCE',
         status: 'CHASSIS P/1046 READY',
-        primaryText: '🌅 1966 SUNSET REVEAL',
+        primaryText: '1966 SUNSET REVEAL',
         nextText: 'SHOWROOM',
         nextTarget: 'showroom'
       }
@@ -1561,9 +1562,9 @@
     }
 
     function getBeatPrimaryCta(beat) {
-      if (beat === 1) return '🔥 INSPECT 750°C FADE';
-      if (beat === 2) return '🛠️ LOCK QUICK-CHANGE';
-      return '🔄 REPLAY TEARDOWN';
+      if (beat === 1) return 'INSPECT 750°C FADE';
+      if (beat === 2) return 'LOCK QUICK-CHANGE';
+      return 'REPLAY TEARDOWN';
     }
 
     // Track visibility only while browsing Chronicles mode

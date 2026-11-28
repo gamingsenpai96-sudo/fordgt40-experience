@@ -2458,7 +2458,7 @@ export class GT40CockpitSimulator {
       }
       if (this.btnStart) {
         this.btnStart.classList.remove('running');
-        this.btnStart.innerHTML = '<span class="action-icon">⚡</span><span class="action-text">START ENGINE</span>';
+        this.btnStart.innerHTML = '<span class="action-dot"></span><span class="action-text">START ENGINE</span>';
       }
       return;
     }
@@ -2483,7 +2483,7 @@ export class GT40CockpitSimulator {
       this.telemetryStatus.classList.remove('running');
     }
     if (this.btnStart) {
-      this.btnStart.innerHTML = '<span class="action-icon">⏳</span><span class="action-text">CRANKING...</span>';
+      this.btnStart.innerHTML = '<span class="action-dot"></span><span class="action-text">CRANKING...</span>';
     }
 
     setTimeout(() => {
@@ -2498,7 +2498,7 @@ export class GT40CockpitSimulator {
       }
       if (this.btnStart) {
         this.btnStart.classList.add('running');
-        this.btnStart.innerHTML = '<span class="action-icon">🛑</span><span class="action-text">CUT IGNITION</span>';
+        this.btnStart.innerHTML = '<span class="action-dot"></span><span class="action-text">CUT IGNITION</span>';
       }
     }, 1100);
   }
@@ -2527,7 +2527,7 @@ export class GT40CockpitSimulator {
     this.currentGear = gears[this.gearIndex];
 
     if (this.telemetryGear) this.telemetryGear.textContent = this.currentGear;
-    if (this.btnShift) this.btnShift.innerHTML = `<span class="action-icon">⚙️</span><span class="action-text">GEAR: ${this.currentGear}</span>`;
+    if (this.btnShift) this.btnShift.innerHTML = `<span class="action-text">GEAR: ${this.currentGear}</span>`;
 
     // Physically animate 3D gated shifter position
     if (this.shifterLever) {

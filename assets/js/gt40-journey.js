@@ -433,7 +433,9 @@ export class GT40LeMansJourney {
     this.scene.background = new THREE.Color(0x141b29);
     this.scene.fog = new THREE.FogExp2(0x161f30, 0.00048);
 
-    this.camera = new THREE.PerspectiveCamera(aspect < 0.85 ? 48 : 41, aspect, 0.35, 11000);
+    this.baseFov = aspect < 0.85 ? 60 : 42;
+    this.currentFov = this.baseFov;
+    this.camera = new THREE.PerspectiveCamera(this.baseFov, aspect, 0.35, 11000);
 
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
@@ -1428,8 +1430,8 @@ export class GT40LeMansJourney {
     } else {
       // Hero Front 3/4 Close-Up: bumper-to-bonnet height showcasing glowing lamps, stripes & right flank
       if (isPortrait) {
-        basePos = new THREE.Vector3(-2.12, 0.86, 3.92);
-        baseLook = new THREE.Vector3(-0.04, 0.26, 0.45);
+        basePos = new THREE.Vector3(-4.15, 1.18, 5.15);
+        baseLook = new THREE.Vector3(-0.08, 0.14, -0.10);
       } else {
         const distScale = aspect < 1.25 ? Math.min(1.18, 1.0 + (1.25 - aspect) * 0.35) : 1.0;
         basePos = new THREE.Vector3(-2.36 * distScale, 0.72 + (distScale - 1) * 0.2, 3.22 * distScale);
@@ -2135,7 +2137,8 @@ export class GT40LeMansJourney {
 
     this.isMobileViewport = window.innerWidth <= 768;
     const aspect = w / h;
-    this.baseFov = aspect < 0.85 ? 50 : 44;
+    this.baseFov = aspect < 0.85 ? 60 : 42;
+    this.currentFov = this.baseFov;
     this.camera.fov = this.baseFov;
     this.camera.aspect = aspect;
     this.camera.updateProjectionMatrix();
