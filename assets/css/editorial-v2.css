@@ -1,10 +1,12 @@
 /* ============================================================================
-   GO LIKE HELL — COMPLETE EDITORIAL PUBLICATION DESIGN SYSTEM (V6)
+   GO LIKE HELL — DARK AUTOMOTIVE EDITORIAL DESIGN SYSTEM (V7)
    Visual Direction:
-   - Big, Bold, Condensed, Italic Display Typography (Barlow Condensed 900 Italic)
-   - Tracked Uppercase Section Identifiers with Thin Racing Red Rules
-   - Light Editorial Paper Surfaces (#ffffff / #f6f5f2) for Publication Content
-   - Precision Architectural Black/Charcoal/White/Red Overlays over 3D Viewports
+   - Primary Deep Black (#080808 / #0A0A0A) & Charcoal (#151515 / #1C1C1C) Surfaces
+   - High-Contrast White (#FFFFFF), Soft Grey (#B8B8B8), Muted Grey (#858585) Ink
+   - Big, Bold, Condensed, Italic Display Typography (Barlow Condensed 800/900 Italic)
+   - Tracked Uppercase Section Identifiers with Thin Racing Red (#E3262E) Rules
+   - Prominent Racing-Red Engine Ignition Switch, Pulsing 3D Vehicle Hotspots,
+     and Strictly Proportioned 16:9 Cockpit Stage
    ============================================================================ */
 
 :root {
@@ -13,52 +15,56 @@
   --font-ed-sans: 'Plus Jakarta Sans', 'Rajdhani', sans-serif;
   --font-ed-mono: 'Space Mono', monospace;
 
-  /* Editorial Paper Tokens */
-  --paper-white: #ffffff;
-  --paper-off: #f6f5f2;
-  --paper-tint: #eceae4;
-  --ink-black: #0b0c0e;
-  --ink-charcoal: #252830;
-  --ink-muted: #646873;
-  --ink-subtle: #8b909a;
+  /* Dark Editorial Surfaces */
+  --bg-black: #080808;
+  --bg-void: #0a0a0a;
+  --bg-charcoal: #151515;
+  --bg-surface: #1c1c1c;
+  --bg-elevated: #222222;
 
-  /* Restraint Palette */
-  --ed-red: #d92626;
-  --ed-red-dark: #b41c1c;
-  --ed-hairline: rgba(11, 12, 14, 0.13);
-  --ed-hairline-strong: rgba(11, 12, 14, 0.85);
+  /* Dark Theme Typography Ink */
+  --text-white: #ffffff;
+  --text-secondary: #b8b8b8;
+  --text-muted: #858585;
+
+  /* Racing Red Accent & Hairline Rules */
+  --ed-red: #e3262e;
+  --ed-red-dark: #a8181f;
+  --ed-red-hover: #f22e36;
+  --ed-hairline: rgba(255, 255, 255, 0.13);
+  --ed-hairline-strong: rgba(255, 255, 255, 0.30);
 
   /* 3D Viewport HUD Tokens */
-  --hud-dark: rgba(10, 11, 14, 0.82);
-  --hud-deep: rgba(7, 8, 10, 0.94);
-  --hud-ink: #f6f5f2;
-  --hud-muted: rgba(246, 245, 242, 0.68);
-  --hud-line: rgba(246, 245, 242, 0.18);
+  --hud-dark: rgba(10, 10, 10, 0.88);
+  --hud-deep: rgba(8, 8, 8, 0.96);
+  --hud-ink: #ffffff;
+  --hud-muted: #b8b8b8;
+  --hud-line: rgba(255, 255, 255, 0.16);
 }
 
 /* ============================================================================
-   01. GLOBAL TYPOGRAPHY & SURFACE BASE
+   01. GLOBAL TYPOGRAPHY & DARK EDITORIAL SURFACE BASE
    ============================================================================ */
 
 body {
   font-family: var(--font-ed-sans);
-  background: #08090b;
-  color: var(--ink-black);
+  background: var(--bg-black) !important;
+  color: var(--text-white) !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 body.mode-destination {
-  background: var(--paper-white) !important;
-  color: var(--ink-black) !important;
+  background: var(--bg-black) !important;
+  color: var(--text-white) !important;
 }
 
-/* Remove legacy floating sound banner that peeked behind destination header */
+/* Hide legacy sound toggle peeking behind destination headers */
 #sound-btn {
   display: none !important;
 }
 
-/* Anchor scroll clearance under dual fixed publication headers */
+/* Anchor scroll clearance under fixed publication headers */
 .act-chapter,
 .act-chapter-header,
 .chronicle-node,
@@ -71,7 +77,7 @@ body.mode-destination {
   scroll-margin-top: 148px !important;
 }
 
-/* Reset legacy gradient-clip titles cleanly across the publication */
+/* Reset legacy gradient-clip titles cleanly across dark editorial layout */
 .section-title,
 .act-chapter-title,
 .chronicle-card-body .section-title {
@@ -84,7 +90,7 @@ body.mode-destination {
   text-transform: uppercase !important;
   letter-spacing: -0.005em !important;
   line-height: 0.90 !important;
-  color: var(--ink-black) !important;
+  color: var(--text-white) !important;
 }
 
 .section-tag {
@@ -95,7 +101,7 @@ body.mode-destination {
   font-size: 0.7rem !important;
   font-weight: 600 !important;
   letter-spacing: 0.24em !important;
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
   text-transform: uppercase !important;
   margin-bottom: 14px !important;
 }
@@ -114,11 +120,10 @@ body.mode-destination {
   font-weight: 400 !important;
   font-size: clamp(0.95rem, 1.15vw, 1.06rem) !important;
   line-height: 1.66 !important;
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
   letter-spacing: 0.005em !important;
 }
 
-/* Sharp architectural edges system-wide */
 #journey-section button,
 #portal-return-bar button,
 #story-container button,
@@ -132,10 +137,10 @@ body.mode-destination {
    ============================================================================ */
 
 .journey-section {
-  background: #0a0c10;
+  background: var(--bg-black);
 }
 
-/* Seamless feathered corner vignette behind bottom-left editorial lockup (no card box) */
+/* Feathered dark gradient scrim behind bottom-left editorial typography */
 .journey-section::after {
   content: '';
   position: absolute;
@@ -145,7 +150,7 @@ body.mode-destination {
   max-width: 680px;
   height: 52vh;
   max-height: 440px;
-  background: radial-gradient(ellipse at 0% 100%, rgba(7, 8, 11, 0.78) 0%, rgba(7, 8, 11, 0.42) 48%, rgba(7, 8, 11, 0) 80%);
+  background: radial-gradient(ellipse at 0% 100%, rgba(8, 8, 8, 0.84) 0%, rgba(8, 8, 8, 0.48) 48%, rgba(8, 8, 8, 0) 80%);
   pointer-events: none;
   z-index: 12;
   opacity: 0;
@@ -169,8 +174,8 @@ body.mode-destination {
   gap: 0;
   padding: 0 16px;
   min-height: 52px;
-  background: linear-gradient(180deg, rgba(7, 8, 11, 0.92) 0%, rgba(7, 8, 11, 0.76) 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(180deg, rgba(8, 8, 8, 0.94) 0%, rgba(10, 10, 10, 0.80) 100%);
+  border-bottom: 1px solid var(--ed-hairline);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -192,7 +197,7 @@ body.mode-destination {
   font-size: 0.64rem !important;
   font-weight: 700 !important;
   letter-spacing: 0.14em !important;
-  color: #ffffff !important;
+  color: var(--text-white) !important;
   background: transparent !important;
   border: none !important;
   padding: 0 !important;
@@ -218,12 +223,12 @@ body.mode-destination {
   font-size: 0.64rem !important;
   font-weight: 500 !important;
   letter-spacing: 0.18em !important;
-  color: rgba(246, 245, 242, 0.78) !important;
+  color: var(--text-secondary) !important;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
-/* Milestone Segmented Index (Replaces bubble rail) */
+/* Milestone Segmented Index */
 .journey-progress-rail {
   display: flex;
   align-items: center;
@@ -266,7 +271,7 @@ body.mode-destination {
   font-family: var(--font-ed-mono) !important;
   font-size: 0.56rem !important;
   letter-spacing: 0.1em !important;
-  color: rgba(246, 245, 242, 0.58) !important;
+  color: var(--text-muted) !important;
   transition: color 0.2s ease, border-color 0.2s ease !important;
 }
 
@@ -279,12 +284,12 @@ body.mode-destination {
 }
 
 .jp-pip:hover {
-  color: #ffffff !important;
+  color: var(--text-white) !important;
   background: rgba(255, 255, 255, 0.04) !important;
 }
 
 .jp-pip.done {
-  color: #ffffff !important;
+  color: var(--text-white) !important;
   border-bottom-color: var(--ed-red) !important;
   background: rgba(255, 255, 255, 0.05) !important;
 }
@@ -294,7 +299,7 @@ body.mode-destination {
   box-shadow: none !important;
 }
 
-/* Topbar Telemetry & Publication Navigation Actions */
+/* Topbar Telemetry & Navigation Actions */
 .journey-topbar-actions {
   display: flex;
   align-items: stretch;
@@ -318,7 +323,7 @@ body.mode-destination {
   font-family: var(--font-ed-mono) !important;
   font-size: 0.58rem !important;
   letter-spacing: 0.09em !important;
-  color: #ffffff !important;
+  color: var(--text-white) !important;
   max-width: none !important;
   overflow: visible !important;
 }
@@ -342,25 +347,21 @@ body.mode-destination {
   font-family: var(--font-ed-mono) !important;
   font-size: 0.58rem !important;
   letter-spacing: 0.12em !important;
-  color: rgba(246, 245, 242, 0.72) !important;
+  color: var(--text-secondary) !important;
   backdrop-filter: none !important;
   transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease !important;
 }
 
 .journey-top-pill:hover {
-  color: #ffffff !important;
+  color: var(--text-white) !important;
   background: rgba(255, 255, 255, 0.06) !important;
-  border-bottom-color: rgba(255, 255, 255, 0.6) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.65) !important;
 }
 
-.journey-top-pill.replay-pill {
-  color: #ffffff !important;
-  border-left: 1px solid var(--hud-line) !important;
-}
-
+.journey-top-pill.replay-pill,
 .journey-top-pill[data-portal-dest="chronicles"] {
+  color: var(--text-white) !important;
   border-left: 1px solid var(--hud-line) !important;
-  color: #ffffff !important;
 }
 
 .journey-top-pill.ar-trigger {
@@ -430,7 +431,7 @@ body.mode-destination {
   font-weight: 600 !important;
   font-size: 0.64rem !important;
   letter-spacing: 0.28em !important;
-  color: rgba(255, 255, 255, 0.92) !important;
+  color: var(--text-white) !important;
   text-transform: uppercase;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
 }
@@ -442,7 +443,7 @@ body.mode-destination {
   font-size: clamp(3rem, 4.8vw, 4.35rem) !important;
   letter-spacing: -0.01em !important;
   line-height: 0.86 !important;
-  color: #ffffff !important;
+  color: var(--text-white) !important;
   margin: 0 !important;
   text-transform: uppercase;
   text-shadow: 0 6px 28px rgba(0, 0, 0, 0.65);
@@ -453,7 +454,7 @@ body.mode-destination {
   font-style: italic !important;
   font-weight: 300 !important;
   font-size: 1.02rem !important;
-  color: rgba(246, 245, 242, 0.9) !important;
+  color: var(--text-secondary) !important;
   margin: 9px 0 0 0 !important;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
 }
@@ -463,7 +464,7 @@ body.mode-destination {
   font-weight: 400 !important;
   font-size: 0.88rem !important;
   line-height: 1.58 !important;
-  color: rgba(246, 245, 242, 0.88) !important;
+  color: var(--text-secondary) !important;
   margin: 0 0 12px 0 !important;
   max-width: 44ch;
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95);
@@ -471,7 +472,7 @@ body.mode-destination {
 
 .glh-summary strong,
 .glh-summary em {
-  color: #ffffff;
+  color: var(--text-white);
   font-weight: 600;
 }
 
@@ -482,19 +483,19 @@ body.mode-destination {
   line-height: 1.55 !important;
   letter-spacing: 0.08em !important;
   text-transform: uppercase;
-  color: rgba(246, 245, 242, 0.84) !important;
+  color: var(--text-secondary) !important;
   padding-top: 10px !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95);
 }
 
 .glh-guide strong {
-  color: #ffffff !important;
+  color: var(--text-white) !important;
   font-weight: 700 !important;
   border-bottom: 1.5px solid var(--ed-red) !important;
 }
 
-/* ---------- 2C. Opening Engine-Start Interaction (#journey-start-hud) ---------- */
+/* ---------- 2C. Prominent Racing Red Engine Ignition Control ---------- */
 .journey-start-hud {
   bottom: 34px !important;
   gap: 10px !important;
@@ -507,8 +508,9 @@ body.mode-destination {
   font-family: var(--font-ed-mono) !important;
   font-size: 0.62rem !important;
   letter-spacing: 0.22em !important;
-  color: rgba(255, 255, 255, 0.92) !important;
-  background: rgba(7, 8, 11, 0.72);
+  color: var(--text-white) !important;
+  background: rgba(8, 8, 8, 0.88);
+  border: 1px solid var(--ed-hairline);
   padding: 5px 12px;
   text-shadow: none !important;
 }
@@ -520,47 +522,59 @@ body.mode-destination {
   flex-shrink: 0;
 }
 
+/* Primary Idle Red Switch */
 .journey-start-btn {
+  position: relative !important;
+  overflow: hidden !important;
   border-radius: 0 !important;
-  padding: 12px 26px 12px 14px !important;
-  background: rgba(9, 10, 13, 0.92) !important;
-  border: 1px solid rgba(255, 255, 255, 0.22) !important;
-  border-left: 3px solid var(--ed-red) !important;
-  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.75) !important;
+  padding: 15px 28px 17px 16px !important;
+  background: var(--ed-red) !important;
+  border: 1px solid rgba(255, 255, 255, 0.34) !important;
+  border-bottom: 3px solid #7d1015 !important;
+  color: #ffffff !important;
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.78), 0 0 0 1px rgba(227, 38, 46, 0.4) !important;
   gap: 16px !important;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease !important;
 }
 
 .journey-start-btn:hover {
-  background: #12141a !important;
-  border-color: rgba(255, 255, 255, 0.6) !important;
-  border-left-color: var(--ed-red) !important;
+  background: var(--ed-red-hover) !important;
+  border-color: #ffffff !important;
+  border-bottom-color: #8f1218 !important;
   transform: translateY(-2px) !important;
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.85), 0 0 28px rgba(227, 38, 46, 0.38) !important;
 }
 
+/* Active / Pressed Ignition State */
+.journey-start-btn:active,
 .journey-start-btn.is-cranking {
-  background: #1a0c0e !important;
-  border-color: var(--ed-red) !important;
-  box-shadow: 0 18px 46px rgba(217, 38, 38, 0.35) !important;
+  background: var(--ed-red-dark) !important;
+  border-color: #ffffff !important;
+  border-bottom-color: #ffffff !important;
+  transform: translateY(2px) scale(0.988) !important;
+  box-shadow: 0 10px 30px rgba(227, 38, 46, 0.55) !important;
 }
 
 .jsh-ring-wrap {
   width: 46px !important;
   height: 46px !important;
+  flex-shrink: 0;
 }
 
 .jsh-ring-track {
-  fill: rgba(255, 255, 255, 0.04) !important;
-  stroke: rgba(255, 255, 255, 0.16) !important;
+  fill: rgba(0, 0, 0, 0.22) !important;
+  stroke: rgba(255, 255, 255, 0.35) !important;
   stroke-width: 4 !important;
 }
 
 .jsh-ring-fill {
-  stroke: var(--ed-red) !important;
+  stroke: #ffffff !important;
   stroke-width: 5 !important;
 }
 
-.journey-start-btn.is-cranking .jsh-ring-fill {
-  stroke: #ffffff !important;
+.journey-start-btn.is-cranking .jsh-ring-track {
+  fill: rgba(0, 0, 0, 0.38) !important;
+  stroke: rgba(255, 255, 255, 0.55) !important;
 }
 
 .jsh-bolt {
@@ -568,26 +582,53 @@ body.mode-destination {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.journey-start-btn.is-cranking .jsh-bolt {
+  transform: scale(1.12);
 }
 
 .jsh-label {
   font-family: var(--font-ed-display) !important;
   font-style: italic !important;
-  font-weight: 800 !important;
-  font-size: 1.38rem !important;
+  font-weight: 900 !important;
+  font-size: 1.44rem !important;
   letter-spacing: 0.04em !important;
   line-height: 1 !important;
   color: #ffffff !important;
+  white-space: nowrap;
 }
 
 .jsh-sub {
   font-family: var(--font-ed-mono) !important;
-  font-size: 0.56rem !important;
+  font-size: 0.58rem !important;
   letter-spacing: 0.14em !important;
-  color: rgba(246, 245, 242, 0.62) !important;
+  color: rgba(255, 255, 255, 0.90) !important;
 }
 
-/* ---------- 2D. Countdown, Opening Cue & Interactive Hotspots ---------- */
+/* Linear Ignition Activation Bar along switch bottom edge */
+.jsh-progress-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: rgba(0, 0, 0, 0.34);
+  pointer-events: none;
+}
+
+.jsh-progress-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.05s linear;
+}
+
+/* ---------- 2D. Countdown, Opening Guidance & Interactive 3D Hotspots ---------- */
 .jc-num {
   font-family: var(--font-ed-display) !important;
   font-style: italic !important;
@@ -598,110 +639,240 @@ body.mode-destination {
 
 .jc-label {
   border-radius: 0 !important;
-  background: rgba(7, 8, 11, 0.88) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  background: rgba(8, 8, 8, 0.92) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
   border-left: 3px solid var(--ed-red) !important;
   font-family: var(--font-ed-mono) !important;
   letter-spacing: 0.24em !important;
   color: #ffffff !important;
 }
 
-/* Subtle bottom-center cue — hidden automatically when Go Like Hell lockup is active */
+/* Upper Instructional Cue Near Vehicle: SELECT A COMPONENT TO EXPLORE */
 .journey-opening-cue {
-  bottom: 24px !important;
-  background: transparent !important;
-  border: none !important;
-  padding: 0 !important;
-  box-shadow: none !important;
+  position: absolute !important;
+  top: 66px !important;
+  bottom: auto !important;
+  left: 50% !important;
+  transform: translateX(-50%) translateY(-6px) !important;
+  z-index: 22 !important;
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 10px !important;
+  background: rgba(10, 10, 10, 0.86) !important;
+  border: 1px solid var(--ed-hairline) !important;
+  border-left: 2px solid var(--ed-red) !important;
+  padding: 7px 16px !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65) !important;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease, transform 0.45s ease !important;
 }
 
-.journey-opening-cue.faded,
-.journey-section:has(.journey-glh-card.visible) .journey-opening-cue {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
+.journey-opening-cue.visible {
+  opacity: 0.96 !important;
+  transform: translateX(-50%) translateY(0) !important;
+}
+
+.journey-opening-cue.faded {
+  opacity: 0.34 !important;
+  visibility: visible !important;
+}
+
+.journey-opening-cue .ed-rule {
+  width: 14px;
+  height: 2px;
+  background: var(--ed-red);
+  flex-shrink: 0;
 }
 
 .explore-main {
   font-family: var(--font-ed-display) !important;
   font-style: italic !important;
   font-weight: 800 !important;
-  font-size: 1.25rem !important;
-  letter-spacing: 0.12em !important;
-  color: #ffffff !important;
+  font-size: 0.96rem !important;
+  letter-spacing: 0.14em !important;
+  color: var(--text-white) !important;
+  white-space: nowrap;
 }
 
-.explore-sub {
-  border-radius: 0 !important;
-  background: rgba(7, 8, 11, 0.8) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  border-left: 2px solid var(--ed-red) !important;
-  font-family: var(--font-ed-mono) !important;
-  font-size: 0.56rem !important;
-  letter-spacing: 0.16em !important;
-  padding: 4px 12px !important;
+/* Established Racing-Red Pulsing 3D Vehicle Hotspots (44x44px hit box) */
+@keyframes hotspotSonarPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.85);
+    opacity: 0.85;
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(1.75);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.75);
+    opacity: 0;
+  }
 }
 
-/* Architectural White-Paper / Red-Core Vehicle Hotspots */
 .journey-hotspot {
-  width: 24px !important;
-  height: 24px !important;
-  margin: -12px 0 0 -12px !important;
+  width: 44px !important;
+  height: 44px !important;
+  margin: -22px 0 0 -22px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+  position: absolute;
+  overflow: visible !important;
+}
+
+.journey-hotspot .jh-pulse-outer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ed-red);
+  transform: translate(-50%, -50%) scale(0.85);
+  pointer-events: none;
+  animation: hotspotSonarPulse 2.5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
 .journey-hotspot .jh-ring {
-  left: 0 !important;
-  top: 0 !important;
-  width: 24px !important;
-  height: 24px !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  width: 22px !important;
+  height: 22px !important;
+  margin: 0 !important;
   border-radius: 50% !important;
-  transform: none !important;
-  border: 1px solid rgba(255, 255, 255, 0.72) !important;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+  transform: translate(-50%, -50%) !important;
+  border: 2px solid var(--ed-red) !important;
+  background: rgba(8, 8, 8, 0.56) !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.32), 0 4px 16px rgba(0, 0, 0, 0.72) !important;
+  transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease !important;
 }
 
 .journey-hotspot .jh-dot {
-  width: 7px !important;
-  height: 7px !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  width: 8px !important;
+  height: 8px !important;
+  margin: 0 !important;
+  transform: translate(-50%, -50%) !important;
   border-radius: 50% !important;
-  background: var(--ed-red) !important;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9) !important;
+  background: #ffffff !important;
+  box-shadow: 0 0 0 1.5px var(--ed-red) !important;
+  transition: transform 0.22s ease, background 0.22s ease !important;
+}
+
+.journey-hotspot .jh-callout {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  pointer-events: auto;
+  transform: translate(11px, -50%);
+  transition: transform 0.22s ease;
+}
+
+.journey-hotspot[data-align="left"] .jh-callout {
+  flex-direction: row-reverse;
+  transform: translate(calc(-100% - 11px), -50%);
+}
+
+.journey-hotspot[data-align="top"] .jh-callout {
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  transform: translate(-12px, calc(-100% - 11px));
+}
+
+.journey-hotspot .jh-line {
+  width: 20px;
+  height: 1.5px;
+  background: var(--ed-red);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+  transition: width 0.22s ease, height 0.22s ease, background 0.22s ease;
+}
+
+.journey-hotspot[data-align="top"] .jh-line {
+  width: 1.5px !important;
+  height: 14px !important;
+  margin-left: 11px;
 }
 
 .journey-hotspot .jh-pill {
-  left: 34px !important;
+  position: static !important;
+  left: auto !important;
+  transform: none !important;
+  opacity: 0.94 !important;
   border-radius: 0 !important;
-  background: #ffffff !important;
-  color: var(--ink-black) !important;
-  border: none !important;
-  border-left: 3px solid var(--ed-red) !important;
-  font-family: var(--font-ed-mono) !important;
-  font-size: 0.58rem !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.14em !important;
-  padding: 5px 11px !important;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.48) !important;
+  background: rgba(10, 10, 10, 0.92) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-left: 2.5px solid var(--ed-red) !important;
+  font-family: var(--font-ed-display) !important;
+  font-style: italic !important;
+  font-weight: 800 !important;
+  font-size: 0.86rem !important;
+  letter-spacing: 0.1em !important;
+  padding: 4px 10px !important;
+  line-height: 1.1 !important;
+  white-space: nowrap !important;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.72) !important;
   backdrop-filter: none !important;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease !important;
+}
+
+.journey-hotspot[data-align="left"] .jh-pill {
+  border-left: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-right: 2.5px solid var(--ed-red) !important;
+}
+
+.journey-hotspot[data-align="top"] .jh-pill {
+  border-left: 2.5px solid var(--ed-red) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.22) !important;
 }
 
 .journey-hotspot .jh-pill::before {
-  content: '';
-  position: absolute;
-  left: -13px;
-  top: 50%;
-  width: 10px;
-  height: 1px;
-  background: #ffffff;
+  display: none !important;
+}
+
+.journey-hotspot:hover .jh-ring,
+.journey-hotspot.hovered .jh-ring,
+.journey-hotspot.is-tapped .jh-ring {
+  transform: translate(-50%, -50%) scale(1.26) !important;
+  border-color: #ffffff !important;
+  background: rgba(227, 38, 46, 0.34) !important;
+  box-shadow: 0 0 18px rgba(227, 38, 46, 0.75) !important;
 }
 
 .journey-hotspot:hover .jh-dot,
-.journey-hotspot.hovered .jh-dot {
-  transform: scale(1.25) !important;
+.journey-hotspot.hovered .jh-dot,
+.journey-hotspot.is-tapped .jh-dot {
+  transform: translate(-50%, -50%) scale(1.22) !important;
   background: var(--ed-red) !important;
-  box-shadow: 0 0 0 2px #ffffff, 0 0 12px rgba(217, 38, 38, 0.85) !important;
+  box-shadow: 0 0 0 2px #ffffff !important;
 }
 
-/* Restrained Hover Component Prompt (Anchored Bottom-Right, clear of left title lockup) */
+.journey-hotspot:hover .jh-line,
+.journey-hotspot.hovered .jh-line,
+.journey-hotspot.is-tapped .jh-line {
+  width: 26px;
+  background: #ffffff;
+}
+
+.journey-hotspot:hover .jh-pill,
+.journey-hotspot.hovered .jh-pill,
+.journey-hotspot.is-tapped .jh-pill {
+  background: var(--ed-red) !important;
+  border-color: #ffffff !important;
+  color: #ffffff !important;
+}
+
+/* Restrained Hover Component Prompt (Bottom-Right, dark charcoal surface) */
 .journey-hover-prompt {
   bottom: 34px !important;
   left: auto !important;
@@ -709,10 +880,10 @@ body.mode-destination {
   transform: translateY(10px) !important;
   border-radius: 0 !important;
   padding: 9px 18px !important;
-  background: #0b0c0e !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  background: rgba(10, 10, 10, 0.94) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
   border-left: 3px solid var(--ed-red) !important;
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.65) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.78) !important;
 }
 
 .journey-hover-prompt.visible {
@@ -734,26 +905,22 @@ body.mode-destination {
   color: #ffffff !important;
 }
 
-/* Two-Stage Door Choice Overlay */
+/* Two-Stage Door Choice Overlay — Dark Editorial Cards */
 .door-choice-target {
   border-radius: 0 !important;
-  background: rgba(255, 255, 255, 0.96) !important;
-  border: none !important;
+  background: rgba(14, 14, 14, 0.95) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
   border-left: 3px solid var(--ed-red) !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   padding: 10px 16px !important;
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.52) !important;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.72) !important;
   backdrop-filter: none !important;
 }
 
 .door-choice-target:hover,
 .door-choice-target.hovered {
-  background: #0b0c0e !important;
-  color: #ffffff !important;
-}
-
-.door-choice-target:hover .dc-label,
-.door-choice-target.hovered .dc-label {
+  background: var(--ed-red) !important;
+  border-color: #ffffff !important;
   color: #ffffff !important;
 }
 
@@ -762,9 +929,19 @@ body.mode-destination {
   background: var(--ed-red) !important;
 }
 
+.door-choice-target:hover .dc-dot,
+.door-choice-target.hovered .dc-dot {
+  background: #ffffff !important;
+}
+
 .dc-kicker {
   font-family: var(--font-ed-mono) !important;
-  color: var(--ink-muted) !important;
+  color: var(--text-muted) !important;
+}
+
+.door-choice-target:hover .dc-kicker,
+.door-choice-target.hovered .dc-kicker {
+  color: rgba(255, 255, 255, 0.85) !important;
 }
 
 .dc-label {
@@ -773,13 +950,13 @@ body.mode-destination {
   font-weight: 800 !important;
   font-size: 1.08rem !important;
   letter-spacing: 0.06em !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .door-choice-close {
   border-radius: 0 !important;
-  background: #0b0c0e !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  background: var(--bg-void) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
   border-left: 3px solid var(--ed-red) !important;
   font-family: var(--font-ed-mono) !important;
   color: #ffffff !important;
@@ -793,17 +970,17 @@ body.mode-destination {
 /* In-Motion Front Bonnet / Wheel Inspection Bar */
 .journey-callout-pin {
   border-radius: 0 !important;
-  background: rgba(255, 255, 255, 0.94) !important;
-  color: var(--ink-black) !important;
-  border: 1px solid rgba(11, 12, 14, 0.22) !important;
-  border-left: 2px solid var(--ed-red) !important;
+  background: rgba(12, 12, 12, 0.94) !important;
+  color: #ffffff !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
+  border-left: 2.5px solid var(--ed-red) !important;
   font-family: var(--font-ed-mono) !important;
   backdrop-filter: none !important;
 }
 
 .journey-callout-pin.active,
 .journey-callout-pin:hover {
-  background: #0b0c0e !important;
+  background: var(--ed-red) !important;
   color: #ffffff !important;
   border-color: #ffffff !important;
 }
@@ -813,13 +990,18 @@ body.mode-destination {
   box-shadow: none !important;
 }
 
+.journey-callout-pin.active .cp-dot,
+.journey-callout-pin:hover .cp-dot {
+  background: #ffffff !important;
+}
+
 .journey-inspect-bar {
   border-radius: 0 !important;
-  background: rgba(255, 255, 255, 0.96) !important;
-  border: none !important;
+  background: rgba(14, 14, 14, 0.96) !important;
+  border: 1px solid var(--ed-hairline) !important;
   border-top: 3px solid var(--ed-red) !important;
-  color: var(--ink-black) !important;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55) !important;
+  color: #ffffff !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.78) !important;
   backdrop-filter: none !important;
 }
 
@@ -835,12 +1017,12 @@ body.mode-destination {
   font-weight: 900 !important;
   font-size: 1.65rem !important;
   letter-spacing: 0.02em !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .inspect-desc {
   font-family: var(--font-ed-sans) !important;
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
 }
 
 .inspect-btn-primary {
@@ -854,28 +1036,29 @@ body.mode-destination {
 }
 
 .inspect-btn-primary:hover {
-  background: var(--ink-black) !important;
-  border-color: var(--ink-black) !important;
+  background: #ffffff !important;
+  border-color: #ffffff !important;
+  color: var(--bg-black) !important;
 }
 
 .inspect-btn-secondary {
   border-radius: 0 !important;
-  background: var(--paper-off) !important;
+  background: var(--bg-surface) !important;
   border: 1px solid var(--ed-hairline-strong) !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.66rem !important;
 }
 
 .inspect-btn-secondary:hover {
-  background: var(--ink-black) !important;
-  color: #ffffff !important;
+  background: #ffffff !important;
+  color: var(--bg-black) !important;
 }
 
-/* Progressive Loader & Fallback */
+/* Dark Progressive Loader & Fallback */
 .journey-loader {
-  background: var(--paper-white) !important;
-  color: var(--ink-black) !important;
+  background: var(--bg-black) !important;
+  color: #ffffff !important;
 }
 
 .loader-kicker {
@@ -889,15 +1072,15 @@ body.mode-destination {
   font-weight: 900 !important;
   font-size: clamp(3rem, 6vw, 4.4rem) !important;
   letter-spacing: -0.01em !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .loader-status {
-  color: var(--ink-muted) !important;
+  color: var(--text-muted) !important;
 }
 
 .loader-track {
-  background: rgba(11, 12, 14, 0.12) !important;
+  background: rgba(255, 255, 255, 0.14) !important;
   border-radius: 0 !important;
   height: 2px !important;
 }
@@ -908,8 +1091,8 @@ body.mode-destination {
 
 .fallback-card {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
-  color: var(--ink-black) !important;
+  background: var(--bg-charcoal) !important;
+  color: #ffffff !important;
   border: 1px solid var(--ed-hairline-strong) !important;
 }
 
@@ -918,7 +1101,7 @@ body.mode-destination {
    ============================================================================ */
 
 .portal-return-bar {
-  background: rgba(255, 255, 255, 0.96) !important;
+  background: rgba(8, 8, 8, 0.96) !important;
   border-bottom: 1px solid var(--ed-hairline) !important;
   backdrop-filter: blur(12px) !important;
   -webkit-backdrop-filter: blur(12px) !important;
@@ -927,8 +1110,8 @@ body.mode-destination {
 
 .portal-back-btn {
   border-radius: 0 !important;
-  background: var(--ink-black) !important;
-  border: none !important;
+  background: var(--bg-charcoal) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
   border-left: 3px solid var(--ed-red) !important;
   color: #ffffff !important;
   font-family: var(--font-ed-mono) !important;
@@ -940,6 +1123,7 @@ body.mode-destination {
 
 .portal-back-btn:hover {
   background: var(--ed-red) !important;
+  border-color: var(--ed-red) !important;
   color: #ffffff !important;
   transform: none !important;
 }
@@ -953,7 +1137,7 @@ body.mode-destination {
   background: transparent !important;
   border: none !important;
   border-bottom: 2px solid transparent !important;
-  color: var(--ink-muted) !important;
+  color: var(--text-muted) !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.64rem !important;
   letter-spacing: 0.14em !important;
@@ -961,14 +1145,14 @@ body.mode-destination {
 }
 
 .portal-pill:hover {
-  color: var(--ink-black) !important;
-  border-bottom-color: rgba(11, 12, 14, 0.3) !important;
+  color: #ffffff !important;
+  border-bottom-color: rgba(255, 255, 255, 0.35) !important;
   background: transparent !important;
 }
 
 .portal-pill.active {
   background: transparent !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-weight: 700 !important;
   border-bottom: 2px solid var(--ed-red) !important;
   box-shadow: none !important;
@@ -983,7 +1167,7 @@ body.mode-destination {
   width: 100%;
   transform: translateY(-100%) !important;
   border-radius: 0 !important;
-  background: rgba(246, 245, 242, 0.96) !important;
+  background: rgba(16, 16, 16, 0.96) !important;
   border: none !important;
   border-bottom: 1px solid var(--ed-hairline) !important;
   box-shadow: none !important;
@@ -1012,12 +1196,12 @@ body.dest-chronicles #mission-top-bar.visible {
 
 .mission-act-code,
 .mission-score-pill {
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .mission-act-pill {
   border-radius: 0 !important;
-  color: var(--ink-muted) !important;
+  color: var(--text-muted) !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.62rem !important;
   padding: 5px 11px !important;
@@ -1028,23 +1212,24 @@ body.dest-chronicles #mission-top-bar.visible {
 }
 
 .mission-act-pill .act-check {
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .mission-act-pill:hover {
-  color: var(--ink-black) !important;
-  background: rgba(11, 12, 14, 0.05) !important;
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.06) !important;
 }
 
 .mission-act-pill.active {
-  background: var(--ink-black) !important;
+  background: var(--bg-surface) !important;
   color: #ffffff !important;
-  border-color: var(--ink-black) !important;
+  border-color: var(--ed-red) !important;
+  border-bottom: 2px solid var(--ed-red) !important;
   box-shadow: none !important;
 }
 
 .mission-act-pill.active .act-num {
-  color: #ffffff !important;
+  color: var(--ed-red) !important;
 }
 
 /* Minimal Editorial Side Index Wayfinder */
@@ -1054,9 +1239,9 @@ body.dest-chronicles #mission-top-bar.visible {
 
 .wayfinder-rail {
   border-radius: 0 !important;
-  background: rgba(255, 255, 255, 0.9) !important;
+  background: rgba(15, 15, 15, 0.92) !important;
   border: 1px solid var(--ed-hairline) !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5) !important;
   padding: 12px 9px !important;
 }
 
@@ -1067,8 +1252,8 @@ body.dest-chronicles #mission-top-bar.visible {
 
 .node-pip {
   border-radius: 0 !important;
-  border-color: rgba(11, 12, 14, 0.3) !important;
-  background: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.32) !important;
+  background: var(--bg-black) !important;
 }
 
 .node-pip::after {
@@ -1083,26 +1268,26 @@ body.dest-chronicles #mission-top-bar.visible {
 
 .node-label {
   border-radius: 0 !important;
-  background: var(--ink-black) !important;
+  background: var(--bg-charcoal) !important;
   color: #ffffff !important;
-  border: none !important;
+  border: 1px solid var(--ed-hairline) !important;
   border-left: 2px solid var(--ed-red) !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.6rem !important;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.55) !important;
 }
 
-/* Bottom Contextual Action Strip in Chronicles (Anchored Bottom-Right, clear of content) */
+/* Bottom Contextual Action Strip in Chronicles (Anchored Bottom-Right) */
 .mission-action-pill {
   left: auto !important;
   right: 24px !important;
   bottom: 18px !important;
   transform: translateY(24px) !important;
   border-radius: 0 !important;
-  background: rgba(255, 255, 255, 0.96) !important;
+  background: rgba(16, 16, 16, 0.96) !important;
   border: 1px solid var(--ed-hairline-strong) !important;
   border-left: 3px solid var(--ed-red) !important;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.72) !important;
   padding: 6px 10px 6px 14px !important;
 }
 
@@ -1119,7 +1304,7 @@ body.dest-chronicles #mission-top-bar.visible {
 }
 
 .pill-status {
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-display) !important;
   font-style: italic !important;
   font-size: 1.05rem !important;
@@ -1142,29 +1327,30 @@ body.dest-chronicles #mission-top-bar.visible {
 }
 
 .pill-primary-action:hover {
-  background: var(--ink-black) !important;
+  background: #ffffff !important;
+  color: var(--bg-black) !important;
   box-shadow: none !important;
 }
 
 .pill-next-btn {
   border-radius: 0 !important;
-  background: var(--paper-off) !important;
+  background: var(--bg-surface) !important;
   border: 1px solid var(--ed-hairline) !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.64rem !important;
   padding: 9px 14px !important;
 }
 
 .pill-next-btn:hover {
-  background: var(--ink-black) !important;
-  color: #ffffff !important;
+  background: #ffffff !important;
+  color: var(--bg-black) !important;
 }
 
-/* Chapter Bridge Rules (Replaces cyan streamline ribbons) */
+/* Chapter Bridge Rules */
 .velocity-bridge {
   height: 76px !important;
-  background: var(--paper-white);
+  background: var(--bg-black) !important;
 }
 
 .streamline {
@@ -1177,10 +1363,10 @@ body.dest-chronicles #mission-top-bar.visible {
 
 .bridge-telemetry-badge {
   border-radius: 0 !important;
-  background: var(--paper-off) !important;
+  background: var(--bg-charcoal) !important;
   border: 1px solid var(--ed-hairline) !important;
   border-left: 2px solid var(--ed-red) !important;
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.62rem !important;
   letter-spacing: 0.16em !important;
@@ -1194,12 +1380,12 @@ body.dest-chronicles #mission-top-bar.visible {
 }
 
 /* ============================================================================
-   04. CHRONICLES LIGHT-PAPER EDITORIAL SPREADS
+   04. CHRONICLES DARK-EDITORIAL SPREADS
    ============================================================================ */
 
 #story-container {
-  background: var(--paper-white) !important;
-  color: var(--ink-black) !important;
+  background: var(--bg-black) !important;
+  color: var(--text-white) !important;
 }
 
 #story-container::before {
@@ -1211,15 +1397,15 @@ body.dest-chronicles #story-container {
 }
 
 .act-chapter {
-  background: var(--paper-white);
+  background: var(--bg-black) !important;
   padding-top: 12px !important;
 }
 
 .act-chapter:nth-of-type(even) {
-  background: var(--paper-off);
+  background: #0d0d0d !important;
 }
 
-/* Presentation Reference Act Openers: Short Red Rule + Tracked Label + Big Italic Condensed Black Headline */
+/* Act Opener Header: Short Red Rule + Tracked Label + Big Condensed Italic White Headline */
 .act-chapter-header {
   max-width: 1240px !important;
   margin: 0 auto !important;
@@ -1236,8 +1422,8 @@ body.dest-chronicles #story-container {
 
 .act-chapter-badge {
   border-radius: 0 !important;
-  background: var(--ink-black) !important;
-  border: none !important;
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
   color: #ffffff !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.64rem !important;
@@ -1256,7 +1442,7 @@ body.dest-chronicles #story-container {
   font-size: 0.68rem !important;
   font-weight: 600 !important;
   letter-spacing: 0.24em !important;
-  color: var(--ink-muted) !important;
+  color: var(--text-muted) !important;
 }
 
 .act-chapter-title {
@@ -1264,6 +1450,7 @@ body.dest-chronicles #story-container {
   line-height: 0.88 !important;
   margin-bottom: 16px !important;
   max-width: 14ch;
+  color: var(--text-white) !important;
 }
 
 .act-chapter-desc {
@@ -1274,10 +1461,9 @@ body.dest-chronicles #story-container {
   font-weight: 400 !important;
   font-size: clamp(1rem, 1.35vw, 1.16rem) !important;
   line-height: 1.58 !important;
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
 }
 
-/* Remove vertical timeline spine clutter in paper spreads */
 .chronicles-timeline-wrap {
   max-width: 1240px !important;
   padding: 36px 28px 64px !important;
@@ -1301,7 +1487,7 @@ body.dest-chronicles #story-container {
   min-height: auto !important;
 }
 
-/* Core Chronicle Reset — Pure Editorial Paper (NO Dark Blurred Boxes) */
+/* Open Dark Editorial Spreads (No bright card outlines or glass boxes) */
 .chronicle-card {
   max-width: 1240px !important;
   width: 100%;
@@ -1324,7 +1510,7 @@ body.dest-chronicles #story-container {
 
 .chronicle-card-media {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-charcoal) !important;
   border: 1px solid var(--ed-hairline) !important;
   width: fit-content !important;
   max-width: 100% !important;
@@ -1359,14 +1545,14 @@ body.dest-chronicles #story-container {
   display: block;
   width: 100%;
   padding: 10px 14px !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-void) !important;
   border: none !important;
   border-top: 1px solid var(--ed-hairline) !important;
   border-radius: 0 !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.64rem !important;
   letter-spacing: 0.18em !important;
-  color: var(--ink-muted) !important;
+  color: var(--text-muted) !important;
   backdrop-filter: none !important;
 }
 
@@ -1377,27 +1563,25 @@ body.dest-chronicles #story-container {
 .chronicle-card-body .section-title {
   font-size: clamp(2.4rem, 4.2vw, 3.85rem) !important;
   margin-bottom: 18px !important;
+  color: var(--text-white) !important;
 }
 
 .chronicle-card-body .section-body {
   font-size: clamp(0.98rem, 1.15vw, 1.06rem) !important;
   line-height: 1.72 !important;
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
   margin-bottom: 0 !important;
 }
 
 /* ----- Varied Editorial Spreads Across Chapters ----- */
-/* Spread 1: Asymmetric Lead Cover (Wide left photo + editorial column) */
 .chronicle-card.spread-cover {
   grid-template-columns: 1.25fr 0.95fr !important;
 }
 
-/* Spread 2: Feature Right Split */
 .chronicle-card.spread-feature-right {
   grid-template-columns: 0.95fr 1.15fr !important;
 }
 
-/* Spread 3: Full-Width Widescreen Blueprint Above Two-Column Headline/Copy */
 .chronicle-card.spread-widescreen {
   grid-template-columns: 1fr !important;
   gap: 28px !important;
@@ -1423,15 +1607,13 @@ body.dest-chronicles #story-container {
   grid-column: 2;
   grid-row: 1 / span 2;
   padding-top: 26px;
-  border-top: 2px solid var(--ink-black);
+  border-top: 2px solid var(--ed-red);
 }
 
-/* Spread 4: Track Feature (Image Right) */
 .chronicle-card.spread-track {
   grid-template-columns: 1fr 1.2fr !important;
 }
 
-/* Spread 5: Panoramic Victory Feature (Full-Width Above Centered Statement) */
 .chronicle-card.spread-panoramic {
   grid-template-columns: 1fr !important;
   gap: 32px !important;
@@ -1448,12 +1630,11 @@ body.dest-chronicles #story-container {
   justify-content: center;
 }
 
-/* Spread 6: Portraits & Legacy Gallery Split */
 .chronicle-card.spread-gallery {
   grid-template-columns: 1fr 1.15fr !important;
 }
 
-/* Spread 7: Bruce McLaren Structured Driver Dossier */
+/* Bruce McLaren Structured Driver Dossier */
 #bruce-mclaren-dossier {
   margin-top: 0 !important;
 }
@@ -1466,13 +1647,13 @@ body.dest-chronicles #story-container {
 .driver-stat-strip {
   margin: 22px 0 0 !important;
   gap: 0 !important;
-  border-top: 2px solid var(--ink-black);
+  border-top: 2px solid var(--ed-red);
   border-bottom: 1px solid var(--ed-hairline);
 }
 
 .ds-cell {
   border-radius: 0 !important;
-  background: transparent !important;
+  background: var(--bg-charcoal) !important;
   border: none !important;
   border-right: 1px solid var(--ed-hairline) !important;
   padding: 12px 14px !important;
@@ -1492,22 +1673,22 @@ body.dest-chronicles #story-container {
   font-style: italic !important;
   font-weight: 800 !important;
   font-size: 1.12rem !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 /* Showroom VS Duel Section (#slide-2-showroom) */
 .showroom-vs-hud {
   border-radius: 0 !important;
-  background: rgba(10, 11, 14, 0.92) !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.72) !important;
+  background: rgba(12, 12, 12, 0.94) !important;
+  border: 1px solid var(--ed-hairline) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.78) !important;
   padding: 8px 12px !important;
 }
 
 .vs-rev-pill {
   border-radius: 0 !important;
-  border: 1px solid rgba(255, 255, 255, 0.16) !important;
-  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid var(--ed-hairline) !important;
+  background: var(--bg-charcoal) !important;
   padding: 8px 16px !important;
 }
 
@@ -1524,6 +1705,7 @@ body.dest-chronicles #story-container {
   font-weight: 800 !important;
   font-size: 1.05rem !important;
   letter-spacing: 0.06em !important;
+  color: #ffffff !important;
 }
 
 .vs-badge-sub {
@@ -1535,17 +1717,18 @@ body.dest-chronicles #story-container {
   font-style: italic !important;
   font-weight: 900 !important;
   font-size: 1.6rem !important;
+  color: #ffffff !important;
 }
 
-/* Minimal Editorial Colophon Footer */
+/* Minimal Dark Colophon Footer */
 .site-footer {
-  background: var(--paper-white) !important;
-  border-top: 1px solid var(--ed-hairline-strong) !important;
+  background: var(--bg-black) !important;
+  border-top: 1px solid var(--ed-hairline) !important;
   padding: 36px 24px !important;
 }
 
 .site-footer p {
-  color: var(--ink-black) !important;
+  color: var(--text-muted) !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.68rem !important;
   letter-spacing: 0.32em !important;
@@ -1556,21 +1739,21 @@ body.dest-chronicles #story-container {
    ============================================================================ */
 
 .exp-modal {
-  background: var(--paper-off) !important;
-  color: var(--ink-black) !important;
+  background: var(--bg-black) !important;
+  color: var(--text-white) !important;
   backdrop-filter: none !important;
 }
 
 .modal-header {
-  background: var(--paper-white) !important;
+  background: var(--bg-void) !important;
   border-bottom: 1px solid var(--ed-hairline) !important;
   backdrop-filter: none !important;
 }
 
 .modal-back-btn {
   border-radius: 0 !important;
-  background: var(--ink-black) !important;
-  border: none !important;
+  background: var(--bg-charcoal) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
   border-left: 3px solid var(--ed-red) !important;
   color: #ffffff !important;
   font-family: var(--font-ed-mono) !important;
@@ -1588,7 +1771,7 @@ body.dest-chronicles #story-container {
 .modal-title-meta {
   font-family: var(--font-ed-mono) !important;
   font-size: 0.64rem !important;
-  color: var(--ink-muted) !important;
+  color: var(--text-muted) !important;
 }
 
 .badge-ford,
@@ -1598,9 +1781,9 @@ body.dest-chronicles #story-container {
 
 .modal-rev-btn {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-charcoal) !important;
   border: 1px solid var(--ed-hairline-strong) !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.64rem !important;
 }
@@ -1614,9 +1797,9 @@ body.dest-chronicles #story-container {
 
 .modal-close-btn {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-charcoal) !important;
   border: 1px solid var(--ed-hairline) !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .modal-close-btn:hover {
@@ -1626,7 +1809,7 @@ body.dest-chronicles #story-container {
 }
 
 .modal-subnav-bar {
-  background: var(--paper-white) !important;
+  background: var(--bg-charcoal) !important;
   border-bottom: 1px solid var(--ed-hairline) !important;
   padding: 0 24px !important;
 }
@@ -1636,14 +1819,14 @@ body.dest-chronicles #story-container {
   font-family: var(--font-ed-mono) !important;
   font-size: 0.64rem !important;
   letter-spacing: 0.16em !important;
-  color: var(--ink-muted) !important;
+  color: var(--text-muted) !important;
   padding: 14px 16px !important;
   border: none !important;
   border-bottom: 2px solid transparent !important;
 }
 
 .subnav-pill:hover {
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   background: transparent !important;
 }
 
@@ -1651,7 +1834,7 @@ body.dest-chronicles #story-container {
 .active-ford,
 .active-ferrari {
   background: transparent !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-weight: 700 !important;
   border-bottom: 2px solid var(--ed-red) !important;
 }
@@ -1664,7 +1847,7 @@ body.dest-chronicles #story-container {
   font-weight: 600 !important;
   font-size: 0.68rem !important;
   letter-spacing: 0.24em !important;
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
 }
 
 .exp-eyebrow::before {
@@ -1681,25 +1864,25 @@ body.dest-chronicles #story-container {
   font-weight: 900 !important;
   font-size: clamp(2.8rem, 6vw, 4.8rem) !important;
   line-height: 0.90 !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .exp-desc {
   font-family: var(--font-ed-sans) !important;
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
   font-weight: 400 !important;
 }
 
 .exp-card {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-charcoal) !important;
   border: 1px solid var(--ed-hairline) !important;
-  border-top: 3px solid var(--ink-black) !important;
+  border-top: 3px solid var(--ed-hairline-strong) !important;
 }
 
 .exp-card:hover {
-  background: var(--paper-white) !important;
-  border-color: var(--ink-black) !important;
+  background: var(--bg-surface) !important;
+  border-color: var(--ed-hairline-strong) !important;
   border-top-color: var(--ed-red) !important;
 }
 
@@ -1713,12 +1896,12 @@ body.dest-chronicles #story-container {
   font-style: italic !important;
   font-weight: 800 !important;
   font-size: 1.85rem !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .exp-card-desc {
   font-family: var(--font-ed-sans) !important;
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
 }
 
 .exp-card-footer,
@@ -1729,7 +1912,7 @@ body.dest-chronicles #story-container {
 
 .exp-specs-table {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-charcoal) !important;
   border: 1px solid var(--ed-hairline-strong) !important;
 }
 
@@ -1738,14 +1921,14 @@ body.dest-chronicles #story-container {
 }
 
 .exp-specs-table th {
-  background: var(--paper-off) !important;
-  color: var(--ink-charcoal) !important;
+  background: var(--bg-surface) !important;
+  color: var(--text-muted) !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.66rem !important;
 }
 
 .exp-specs-table td {
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-sans) !important;
   font-weight: 500 !important;
 }
@@ -1753,18 +1936,18 @@ body.dest-chronicles #story-container {
 .exp-quote-box,
 .exp-quote-box.ferrari-quote {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-charcoal) !important;
   border: 1px solid var(--ed-hairline) !important;
   border-left: 3px solid var(--ed-red) !important;
 }
 
 .exp-quote-text {
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-sans) !important;
 }
 
 .exp-quote-author {
-  color: var(--ink-muted) !important;
+  color: var(--text-muted) !important;
   font-family: var(--font-ed-mono) !important;
 }
 
@@ -1774,19 +1957,19 @@ body.dest-chronicles #story-container {
 .collage-roster-item {
   border-radius: 0 !important;
   border: 1px solid var(--ed-hairline) !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-charcoal) !important;
   box-shadow: none !important;
 }
 
 .exp-profile-meta {
-  background: var(--paper-white) !important;
-  color: var(--ink-black) !important;
+  background: var(--bg-surface) !important;
+  color: #ffffff !important;
   border-top: 1px solid var(--ed-hairline) !important;
   font-family: var(--font-ed-mono) !important;
 }
 
 .collage-caption {
-  background: rgba(11, 12, 14, 0.88) !important;
+  background: rgba(8, 8, 8, 0.90) !important;
   font-family: var(--font-ed-mono) !important;
 }
 
@@ -1796,17 +1979,25 @@ body.dest-chronicles #story-container {
 }
 
 /* ============================================================================
-   06. COCKPIT 3D INTERFACE (#cockpit-sim-section)
+   06. COCKPIT 3D INTERFACE — 16:9 CENTERED DARK VIEWPORT (#cockpit-sim-section)
    ============================================================================ */
 
-.cockpit-sim-section {
-  background: var(--paper-off) !important;
+.cockpit-sim-section,
+body.dest-cockpit #cockpit-sim-section {
+  background: var(--bg-void) !important;
+  padding: 20px 28px 40px !important;
+}
+
+body.dest-cockpit .cockpit-sim-wrapper,
+.cockpit-sim-wrapper {
+  max-width: 1240px !important;
+  margin: 0 auto !important;
 }
 
 body.dest-cockpit .cockpit-header {
   text-align: left !important;
-  margin-bottom: 18px !important;
-  padding-bottom: 16px;
+  margin-bottom: 16px !important;
+  padding-bottom: 14px;
   border-bottom: 1px solid var(--ed-hairline);
 }
 
@@ -1816,19 +2007,21 @@ body.dest-cockpit .cockpit-header-top {
 }
 
 body.dest-cockpit .cockpit-header .section-title {
-  font-size: clamp(2.4rem, 4.4vw, 3.8rem) !important;
+  font-size: clamp(2.2rem, 3.8vw, 3.35rem) !important;
 }
 
 body.dest-cockpit .cockpit-header .section-body {
   margin-left: 0 !important;
+  max-width: 68ch !important;
   font-style: italic;
+  color: var(--text-secondary) !important;
 }
 
 .cockpit-badge {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-charcoal) !important;
   border: 1px solid var(--ed-hairline) !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.62rem !important;
   box-shadow: none !important;
@@ -1840,13 +2033,32 @@ body.dest-cockpit .cockpit-header .section-body {
   box-shadow: none !important;
 }
 
+/* Strictly Proportioned, Horizontally Centered 16:9 Cockpit Viewport */
+body.dest-cockpit .cockpit-stage,
 .cockpit-stage {
+  position: relative !important;
+  width: 100% !important;
+  max-width: min(1088px, calc((100dvh - 210px) * 16 / 9)) !important;
+  min-height: 0 !important;
+  aspect-ratio: 16 / 9 !important;
+  height: auto !important;
+  margin: 0 auto !important;
+  background: var(--bg-black) !important;
   border-radius: 0 !important;
   border: 1px solid var(--ed-hairline-strong) !important;
-  box-shadow: 0 24px 64px rgba(11, 12, 14, 0.18) !important;
+  box-shadow: 0 28px 72px rgba(0, 0, 0, 0.85) !important;
+  overflow: hidden !important;
 }
 
-/* Minimal HUD Inside Cockpit Stage (Zero Dashboard Obstruction) */
+body.dest-cockpit #cockpit-canvas,
+#cockpit-canvas {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: 16 / 9;
+}
+
+/* Minimal Dark HUD Inside Cockpit Stage */
 .cockpit-viewport-badge .cad-indicator {
   border-radius: 0 !important;
   background: var(--hud-dark) !important;
@@ -1859,18 +2071,19 @@ body.dest-cockpit .cockpit-header .section-body {
 
 .cockpit-viewport-badge .cad-coords {
   border-radius: 0 !important;
-  background: rgba(10, 11, 14, 0.68) !important;
-  border-left: 2px solid rgba(255, 255, 255, 0.4) !important;
+  background: rgba(10, 10, 10, 0.78) !important;
+  border-left: 2px solid rgba(255, 255, 255, 0.45) !important;
   font-family: var(--font-ed-mono) !important;
-  font-size: 0.62rem !important;
+  font-size: 0.6rem !important;
+  color: var(--text-secondary) !important;
 }
 
 .cockpit-driver-badge {
   border-radius: 0 !important;
-  background: #ffffff !important;
-  border: none !important;
+  background: var(--bg-charcoal) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
   border-left: 3px solid var(--ed-red) !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-mono) !important;
   font-weight: 700 !important;
 }
@@ -1878,6 +2091,7 @@ body.dest-cockpit .cockpit-header .section-body {
 .cockpit-driver-badge:hover,
 .cockpit-driver-badge.highlighted {
   background: var(--ed-red) !important;
+  border-color: var(--ed-red) !important;
   color: #ffffff !important;
 }
 
@@ -1894,7 +2108,7 @@ body.dest-cockpit .cockpit-header .section-body {
 
 .telem-box {
   border-radius: 0 !important;
-  background: rgba(10, 11, 14, 0.72) !important;
+  background: rgba(10, 10, 10, 0.80) !important;
   border: 1px solid var(--hud-line) !important;
   box-shadow: none !important;
 }
@@ -1902,15 +2116,16 @@ body.dest-cockpit .cockpit-header .section-body {
 .telem-lbl {
   font-family: var(--font-ed-mono) !important;
   font-size: 0.52rem !important;
-  color: var(--hud-muted) !important;
+  color: var(--text-muted) !important;
 }
 
 .telem-val {
   font-family: var(--font-ed-display) !important;
   font-style: italic !important;
   font-weight: 800 !important;
-  font-size: 1.45rem !important;
+  font-size: 1.4rem !important;
   line-height: 1 !important;
+  color: #ffffff !important;
 }
 
 .telem-val.highlight-gold {
@@ -1920,7 +2135,7 @@ body.dest-cockpit .cockpit-header .section-body {
 
 .status-val {
   font-family: var(--font-ed-mono) !important;
-  font-size: 0.64rem !important;
+  font-size: 0.62rem !important;
   color: var(--ed-red) !important;
 }
 
@@ -1931,25 +2146,67 @@ body.dest-cockpit .cockpit-header .section-body {
 
 .cockpit-drag-hint {
   top: auto !important;
-  bottom: 136px !important;
+  bottom: 92px !important;
+  left: 50% !important;
   transform: translateX(-50%) !important;
   border-radius: 0 !important;
-  background: rgba(10, 11, 14, 0.82) !important;
+  background: rgba(10, 10, 10, 0.90) !important;
   border: 1px solid var(--hud-line) !important;
   border-left: 2px solid var(--ed-red) !important;
   font-family: var(--font-ed-mono) !important;
-  font-size: 0.6rem !important;
-  letter-spacing: 0.16em !important;
+  font-size: 0.56rem !important;
+  letter-spacing: 0.14em !important;
+  color: var(--text-secondary) !important;
   box-shadow: none !important;
   animation: none !important;
+  white-space: nowrap !important;
+  z-index: 12 !important;
 }
 
-.cockpit-actions-bar,
-.cockpit-presets-group {
+.cockpit-quick-hud {
+  bottom: 8px !important;
+  left: 10px !important;
+  right: 10px !important;
+  gap: 5px !important;
+  flex-wrap: wrap !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.cockpit-actions-bar {
+  order: 1;
   border-radius: 0 !important;
-  background: rgba(10, 11, 14, 0.86) !important;
+  background: rgba(10, 10, 10, 0.92) !important;
   border: 1px solid var(--hud-line) !important;
   box-shadow: none !important;
+  padding: 4px 6px !important;
+  gap: 5px !important;
+}
+
+.cockpit-actions-group {
+  order: 2;
+  margin-left: auto;
+}
+
+.cockpit-presets-group {
+  order: 3;
+  width: 100%;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important;
+  border-radius: 0 !important;
+  background: rgba(10, 10, 10, 0.92) !important;
+  border: 1px solid var(--hud-line) !important;
+  box-shadow: none !important;
+  padding: 4px 8px !important;
+  gap: 4px !important;
+}
+
+.cockpit-presets-group .hud-label {
+  font-family: var(--font-ed-mono) !important;
+  font-size: 0.52rem !important;
+  color: var(--ed-red) !important;
+  white-space: nowrap;
+  margin-right: 4px !important;
 }
 
 .cockpit-action-btn,
@@ -1958,10 +2215,11 @@ body.dest-cockpit .cockpit-header .section-body {
   border-radius: 0 !important;
   background: transparent !important;
   border: 1px solid rgba(255, 255, 255, 0.16) !important;
-  color: var(--hud-ink) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-mono) !important;
-  font-size: 0.58rem !important;
-  letter-spacing: 0.1em !important;
+  font-size: 0.52rem !important;
+  letter-spacing: 0.06em !important;
+  padding: 4px 7px !important;
   white-space: nowrap !important;
   box-shadow: none !important;
 }
@@ -1984,14 +2242,14 @@ body.dest-cockpit .cockpit-header .section-body {
 .btn-wipers.active {
   background: #ffffff !important;
   border-color: #ffffff !important;
-  color: var(--ink-black) !important;
+  color: var(--bg-black) !important;
   box-shadow: none !important;
 }
 
 .cockpit-preset-btn.active {
   background: #ffffff !important;
   border-color: #ffffff !important;
-  color: var(--ink-black) !important;
+  color: var(--bg-black) !important;
   box-shadow: none !important;
 }
 
@@ -2002,13 +2260,14 @@ body.dest-cockpit .cockpit-header .section-body {
 }
 
 .cockpit-takeover-banner {
-  background: rgba(11, 12, 14, 0.78) !important;
+  background: rgba(8, 8, 8, 0.85) !important;
 }
 
 .ctb-title {
   font-family: var(--font-ed-display) !important;
   font-style: italic !important;
   font-weight: 900 !important;
+  color: #ffffff !important;
   text-shadow: none !important;
 }
 
@@ -2022,8 +2281,8 @@ body.dest-exploded .act2-beat-hud {
 
 body.dest-exploded #exploded-section,
 .exploded-section {
-  background: var(--paper-off) !important;
-  padding: 12px 28px 20px !important;
+  background: var(--bg-black) !important;
+  padding: 12px 28px 24px !important;
   align-items: flex-start !important;
 }
 
@@ -2050,9 +2309,9 @@ body.dest-exploded #exploded-section,
 
 .exploded-badge {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-charcoal) !important;
   border: 1px solid var(--ed-hairline) !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.62rem !important;
 }
@@ -2072,9 +2331,10 @@ body.dest-exploded #exploded-section,
   max-width: 96ch;
   font-size: 0.85rem !important;
   line-height: 1.44 !important;
+  color: var(--text-secondary) !important;
 }
 
-/* Clean Architectural Subsystem Index Bar */
+/* Dark Subsystem Index Bar */
 .exploded-nav-bar {
   justify-content: flex-start !important;
   gap: 4px !important;
@@ -2083,7 +2343,7 @@ body.dest-exploded #exploded-section,
 
 .exploded-env-switcher {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-charcoal) !important;
   border: 1px solid var(--ed-hairline-strong) !important;
   padding: 4px 8px !important;
 }
@@ -2098,23 +2358,27 @@ body.dest-exploded #exploded-section,
   border-radius: 0 !important;
   background: transparent !important;
   border: none !important;
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.62rem !important;
   padding: 5px 10px !important;
 }
 
+.exploded-env-btn:hover {
+  color: #ffffff !important;
+}
+
 .exploded-env-btn.active {
-  background: var(--ink-black) !important;
+  background: var(--ed-red) !important;
   color: #ffffff !important;
   box-shadow: none !important;
 }
 
 .exploded-system-btn {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-charcoal) !important;
   border: 1px solid var(--ed-hairline) !important;
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.56rem !important;
   letter-spacing: 0.08em !important;
@@ -2130,30 +2394,31 @@ body.dest-exploded #exploded-section,
 
 .exploded-system-btn:hover {
   transform: none !important;
-  border-color: var(--ink-black) !important;
-  background: var(--paper-white) !important;
-  color: var(--ink-black) !important;
+  border-color: var(--ed-hairline-strong) !important;
+  background: var(--bg-surface) !important;
+  color: #ffffff !important;
   box-shadow: none !important;
 }
 
 .exploded-system-btn.active {
-  background: var(--ink-black) !important;
-  border-color: var(--ink-black) !important;
+  background: var(--bg-surface) !important;
+  border-color: var(--ed-hairline-strong) !important;
   border-left: 3px solid var(--ed-red) !important;
   color: #ffffff !important;
   box-shadow: none !important;
 }
 
 .exploded-system-btn.active .btn-code {
-  color: #ffffff;
+  color: var(--ed-red);
 }
 
-/* 3D Exploded Stage Overlays — Fits cleanly within 900px desktop fold */
+/* 3D Exploded Stage */
 .exploded-stage-container {
   height: clamp(460px, calc(100dvh - 285px), 575px) !important;
   border-radius: 0 !important;
   border: 1px solid var(--ed-hairline-strong) !important;
-  box-shadow: 0 24px 64px rgba(11, 12, 14, 0.18) !important;
+  background: var(--bg-void) !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.72) !important;
 }
 
 .exploded-viewport-badge .cad-indicator {
@@ -2170,37 +2435,38 @@ body.dest-exploded #exploded-section,
   border-radius: 0 !important;
   font-family: var(--font-ed-mono) !important;
   border-left: 2px solid rgba(255, 255, 255, 0.45) !important;
+  color: var(--text-secondary) !important;
 }
 
-/* Unified White/Black/Red Hotspot Markers (Overrides Rainbow Accent Variables) */
+/* Unified Dark/Red Hotspot Markers in Exploded Stage */
 .hotspot-pin {
-  --accent: #d92626 !important;
+  --accent: #e3262e !important;
 }
 
 .pin-ring {
-  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  border: 1.5px solid var(--ed-red) !important;
 }
 
 .pin-dot {
   width: 9px !important;
   height: 9px !important;
   margin: 11px !important;
-  background: var(--ed-red) !important;
-  box-shadow: 0 0 0 2px #ffffff !important;
+  background: #ffffff !important;
+  box-shadow: 0 0 0 2px var(--ed-red) !important;
 }
 
 .pin-label {
   border-radius: 0 !important;
-  background: #ffffff !important;
-  border: none !important;
-  border-left: 2px solid var(--ed-red) !important;
-  color: var(--ink-black) !important;
+  background: rgba(10, 10, 10, 0.92) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
+  border-left: 2.5px solid var(--ed-red) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.54rem !important;
   font-weight: 700 !important;
   letter-spacing: 0.1em !important;
   padding: 2px 7px !important;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.65) !important;
   backdrop-filter: none !important;
 }
 
@@ -2210,23 +2476,29 @@ body.dest-exploded #exploded-section,
 
 .hotspot-pin:hover .pin-label,
 .hotspot-pin.active .pin-label {
-  background: #0b0c0e !important;
+  background: var(--ed-red) !important;
+  border-color: #ffffff !important;
   color: #ffffff !important;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6) !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.75) !important;
 }
 
-/* Technical Spec Sheet on Right of 3D Stage */
+.hotspot-pin:hover .pin-label span,
+.hotspot-pin.active .pin-label span {
+  color: #ffffff !important;
+}
+
+/* Technical Spec Sheet on Right — Dark Charcoal Panel */
 .exploded-telemetry-card {
   top: 12px !important;
   right: 12px !important;
   width: 312px !important;
   max-height: calc(100% - 24px) !important;
   border-radius: 0 !important;
-  background: rgba(255, 255, 255, 0.96) !important;
-  border: none !important;
+  background: rgba(21, 21, 21, 0.96) !important;
+  border: 1px solid var(--ed-hairline-strong) !important;
   border-top: 3px solid var(--ed-red) !important;
-  color: var(--ink-black) !important;
-  box-shadow: 0 24px 52px rgba(0, 0, 0, 0.45) !important;
+  color: #ffffff !important;
+  box-shadow: 0 24px 52px rgba(0, 0, 0, 0.78) !important;
   backdrop-filter: none !important;
 }
 
@@ -2247,7 +2519,7 @@ body.dest-exploded #exploded-section,
 
 .telemetry-status-tag {
   font-family: var(--font-ed-mono) !important;
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
 }
 
 .telemetry-status-tag::before {
@@ -2262,14 +2534,14 @@ body.dest-exploded #exploded-section,
   font-weight: 900 !important;
   font-size: 1.52rem !important;
   line-height: 0.95 !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .telemetry-desc {
   font-family: var(--font-ed-sans) !important;
   font-size: 0.78rem !important;
   line-height: 1.42 !important;
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
 }
 
 .telemetry-specs-grid {
@@ -2279,7 +2551,7 @@ body.dest-exploded #exploded-section,
 
 .telemetry-spec-item {
   border-radius: 0 !important;
-  background: var(--paper-off) !important;
+  background: var(--bg-surface) !important;
   border: 1px solid var(--ed-hairline) !important;
   padding: 5px 8px !important;
 }
@@ -2287,7 +2559,7 @@ body.dest-exploded #exploded-section,
 .spec-label {
   font-family: var(--font-ed-mono) !important;
   font-size: 0.52rem !important;
-  color: var(--ink-muted) !important;
+  color: var(--text-muted) !important;
 }
 
 .spec-value {
@@ -2295,7 +2567,7 @@ body.dest-exploded #exploded-section,
   font-style: italic !important;
   font-weight: 700 !important;
   font-size: 0.96rem !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .telemetry-audio-row {
@@ -2313,7 +2585,8 @@ body.dest-exploded #exploded-section,
 }
 
 .rev-engine-btn:hover {
-  background: var(--ink-black) !important;
+  background: #ffffff !important;
+  color: var(--bg-black) !important;
   box-shadow: none !important;
 }
 
@@ -2324,7 +2597,7 @@ body.dest-exploded #exploded-section,
 
 .exploded-quick-hud {
   border-radius: 0 !important;
-  background: rgba(10, 11, 14, 0.92) !important;
+  background: rgba(12, 12, 12, 0.94) !important;
   border: 1px solid var(--hud-line) !important;
   border-left: 3px solid var(--ed-red) !important;
   box-shadow: none !important;
@@ -2336,6 +2609,7 @@ body.dest-exploded #exploded-section,
 .hud-tool-btn {
   font-family: var(--font-ed-mono) !important;
   border-radius: 0 !important;
+  color: #ffffff !important;
 }
 
 .slider-fill-track {
@@ -2350,7 +2624,7 @@ body.dest-exploded #exploded-section,
 
 .act2-beat-hud {
   border-radius: 0 !important;
-  background: rgba(10, 11, 14, 0.92) !important;
+  background: rgba(12, 12, 12, 0.94) !important;
   border: 1px solid var(--hud-line) !important;
   border-left: 3px solid var(--ed-red) !important;
 }
@@ -2378,19 +2652,19 @@ body.dest-exploded #exploded-section,
 }
 
 .exploded-loader-overlay {
-  background: var(--paper-white) !important;
-  color: var(--ink-black) !important;
+  background: var(--bg-black) !important;
+  color: #ffffff !important;
 }
 
 .exploded-loader-title {
   font-family: var(--font-ed-display) !important;
   font-style: italic !important;
   font-size: 1.8rem !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .exploded-loader-sub {
-  color: var(--ink-muted) !important;
+  color: var(--text-muted) !important;
 }
 
 .exploded-loader-fill {
@@ -2402,7 +2676,7 @@ body.dest-exploded #exploded-section,
    ============================================================================ */
 
 .game-section {
-  background: var(--paper-white) !important;
+  background: var(--bg-void) !important;
   padding: 52px 28px 80px !important;
 }
 
@@ -2425,11 +2699,11 @@ body.dest-exploded #exploded-section,
 .game-container {
   border-radius: 0 !important;
   border: 1px solid var(--ed-hairline-strong) !important;
-  box-shadow: 0 24px 64px rgba(11, 12, 14, 0.18) !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.78) !important;
 }
 
 .game-overlay {
-  background: rgba(8, 9, 12, 0.88) !important;
+  background: rgba(8, 8, 8, 0.90) !important;
   backdrop-filter: blur(8px) !important;
 }
 
@@ -2450,18 +2724,21 @@ body.dest-exploded #exploded-section,
   font-weight: 900 !important;
   font-size: clamp(3rem, 6vw, 4.8rem) !important;
   line-height: 0.9 !important;
+  color: #ffffff !important;
 }
 
 .game-prompt-sub {
   font-family: var(--font-ed-mono) !important;
   font-size: 0.68rem !important;
   letter-spacing: 0.22em !important;
+  color: var(--text-secondary) !important;
 }
 
 .game-start-btn {
   border-radius: 0 !important;
   background: var(--ed-red) !important;
   border: none !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.72rem !important;
   letter-spacing: 0.2em !important;
@@ -2471,14 +2748,14 @@ body.dest-exploded #exploded-section,
 
 .game-start-btn:hover {
   background: #ffffff !important;
-  color: var(--ink-black) !important;
+  color: var(--bg-black) !important;
   transform: translateY(-2px) !important;
 }
 
 .key-item {
   border-radius: 0 !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  background: var(--bg-charcoal) !important;
+  border: 1px solid var(--ed-hairline) !important;
 }
 
 .key-item kbd {
@@ -2489,20 +2766,20 @@ body.dest-exploded #exploded-section,
 .key-item span {
   font-family: var(--font-ed-mono) !important;
   font-size: 0.58rem !important;
+  color: var(--text-secondary) !important;
 }
 
 .game-loader-fill {
   background: var(--ed-red) !important;
 }
 
-/* Active Driving Telemetry HUD */
 .hud-tag,
 .hud-lap-timing,
 .game-exit-btn,
 .hud-cluster,
 .hud-controls-pill {
   border-radius: 0 !important;
-  background: rgba(8, 9, 12, 0.84) !important;
+  background: rgba(8, 8, 8, 0.88) !important;
   border: 1px solid var(--hud-line) !important;
   box-shadow: none !important;
   font-family: var(--font-ed-mono) !important;
@@ -2545,7 +2822,7 @@ body.dest-exploded #exploded-section,
 }
 
 .hud-rpm-bar {
-  background: linear-gradient(90deg, #ffffff 0%, #9ca3af 65%, #d92626 100%) !important;
+  background: linear-gradient(90deg, #ffffff 0%, #858585 65%, #e3262e 100%) !important;
 }
 
 .hud-rpm-labels .redline {
@@ -2568,7 +2845,7 @@ body.dest-exploded #exploded-section,
    ============================================================================ */
 
 .circuit-section {
-  background: var(--paper-off) !important;
+  background: var(--bg-black) !important;
   padding: 64px 28px 80px !important;
 }
 
@@ -2583,9 +2860,9 @@ body.dest-exploded #exploded-section,
 
 .circuit-badge {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-charcoal) !important;
   border: 1px solid var(--ed-hairline) !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.62rem !important;
 }
@@ -2596,20 +2873,20 @@ body.dest-exploded #exploded-section,
   box-shadow: none !important;
 }
 
-/* Light Paper Architectural Track Blueprint */
+/* Dark Architectural Track Blueprint */
 .circuit-map-container {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-charcoal) !important;
   border: 1px solid var(--ed-hairline-strong) !important;
   box-shadow: none !important;
 }
 
 .circuit-track-bg {
-  stroke: rgba(11, 12, 14, 0.12) !important;
+  stroke: rgba(255, 255, 255, 0.14) !important;
 }
 
 .circuit-track-racing-line {
-  stroke: var(--ink-black) !important;
+  stroke: #ffffff !important;
   filter: none !important;
 }
 
@@ -2622,19 +2899,19 @@ body.dest-exploded #exploded-section,
 }
 
 .hotspot-svg-label {
-  fill: var(--ink-muted) !important;
+  fill: var(--text-muted) !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 10px !important;
 }
 
 .circuit-hotspot.active .hotspot-svg-label {
-  fill: var(--ink-black) !important;
+  fill: #ffffff !important;
   font-weight: 700;
 }
 
 .circuit-telemetry-dossier {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-charcoal) !important;
   border: 1px solid var(--ed-hairline-strong) !important;
   border-top: 3px solid var(--ed-red) !important;
   box-shadow: none !important;
@@ -2643,16 +2920,16 @@ body.dest-exploded #exploded-section,
 
 .dossier-french-name {
   font-family: var(--font-ed-sans) !important;
-  color: var(--ink-muted) !important;
+  color: var(--text-muted) !important;
 }
 
 .sector-danger-badge {
   border-radius: 0 !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.58rem !important;
-  background: var(--paper-off) !important;
+  background: var(--bg-surface) !important;
   border: 1px solid var(--ed-hairline-strong) !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .sector-danger-badge.danger-maximum {
@@ -2667,12 +2944,12 @@ body.dest-exploded #exploded-section,
   font-weight: 900 !important;
   font-size: 2.3rem !important;
   line-height: 0.94 !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .dossier-spec-item {
   border-radius: 0 !important;
-  background: var(--paper-off) !important;
+  background: var(--bg-surface) !important;
   border: 1px solid var(--ed-hairline) !important;
 }
 
@@ -2684,7 +2961,7 @@ body.dest-exploded #exploded-section,
 .dossier-spec-item .spec-num {
   font-family: var(--font-ed-display) !important;
   font-style: italic !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .dossier-media-wrap {
@@ -2694,16 +2971,16 @@ body.dest-exploded #exploded-section,
 
 .dossier-desc {
   font-family: var(--font-ed-sans) !important;
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
 }
 
 .dossier-quote {
   border-left: 3px solid var(--ed-red) !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-sans) !important;
 }
 
-/* 24-Hour Crucible (Retains Atmospheric Time-of-Day Sky Backdrop + White Paper Stage Sheet) */
+/* 24-Hour Crucible (Dark Sky Backdrop + Dark Charcoal Telemetry Console) */
 .race-clock-section {
   padding: 64px 28px 80px !important;
 }
@@ -2718,12 +2995,12 @@ body.dest-exploded #exploded-section,
 }
 
 .race-clock-header .section-body {
-  color: rgba(246, 245, 242, 0.86) !important;
+  color: var(--text-secondary) !important;
 }
 
 .race-clock-badge {
   border-radius: 0 !important;
-  background: rgba(10, 11, 14, 0.72) !important;
+  background: rgba(10, 10, 10, 0.85) !important;
   border: 1px solid var(--hud-line) !important;
   color: #ffffff !important;
   font-family: var(--font-ed-mono) !important;
@@ -2737,17 +3014,17 @@ body.dest-exploded #exploded-section,
 
 .race-clock-console {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
-  color: var(--ink-black) !important;
+  background: var(--bg-charcoal) !important;
+  color: #ffffff !important;
   border: 1px solid var(--ed-hairline-strong) !important;
-  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45) !important;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.78) !important;
   backdrop-filter: none !important;
 }
 
 .timeline-clock-display {
   border-radius: 0 !important;
-  background: var(--ink-black) !important;
-  border: none !important;
+  background: var(--bg-black) !important;
+  border: 1px solid var(--ed-hairline) !important;
   border-left: 3px solid var(--ed-red) !important;
 }
 
@@ -2758,17 +3035,17 @@ body.dest-exploded #exploded-section,
 
 .race-hour-marker {
   border-radius: 0 !important;
-  background: var(--paper-off) !important;
+  background: var(--bg-surface) !important;
   border: 1px solid var(--ed-hairline) !important;
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.62rem !important;
 }
 
 .race-hour-marker:hover {
-  border-color: var(--ink-black) !important;
-  background: var(--paper-white) !important;
-  color: var(--ink-black) !important;
+  border-color: var(--ed-hairline-strong) !important;
+  background: var(--bg-elevated) !important;
+  color: #ffffff !important;
 }
 
 .race-hour-marker.active {
@@ -2790,7 +3067,7 @@ body.dest-exploded #exploded-section,
 
 .race-time-slider::-webkit-slider-thumb {
   border-radius: 0 !important;
-  background: var(--ink-black) !important;
+  background: #ffffff !important;
   border: 2px solid var(--ed-red) !important;
   box-shadow: none !important;
 }
@@ -2803,8 +3080,8 @@ body.dest-exploded #exploded-section,
 
 .race-media-badge-wrap {
   border-radius: 0 !important;
-  background: #0b0c0e !important;
-  border: none !important;
+  background: var(--bg-void) !important;
+  border: 1px solid var(--ed-hairline) !important;
   border-left: 2px solid var(--ed-red) !important;
 }
 
@@ -2826,26 +3103,26 @@ body.dest-exploded #exploded-section,
   font-weight: 900 !important;
   font-size: clamp(2rem, 3.4vw, 2.9rem) !important;
   line-height: 0.92 !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .attrition-monitor-box {
   border-radius: 0 !important;
-  background: var(--paper-off) !important;
+  background: var(--bg-surface) !important;
   border: 1px solid var(--ed-hairline) !important;
 }
 
 .team-lbl,
 .datum-lbl {
   font-family: var(--font-ed-mono) !important;
-  color: var(--ink-muted) !important;
+  color: var(--text-muted) !important;
 }
 
 .team-ford .team-count {
   font-family: var(--font-ed-display) !important;
   font-style: italic !important;
   font-size: 1.25rem !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .team-ferrari .team-count {
@@ -2856,37 +3133,37 @@ body.dest-exploded #exploded-section,
 }
 
 .attrition-vs {
-  color: var(--ink-muted) !important;
+  color: var(--text-muted) !important;
 }
 
 .datum-item {
   border-radius: 0 !important;
-  background: var(--paper-off) !important;
+  background: var(--bg-surface) !important;
   border: 1px solid var(--ed-hairline) !important;
 }
 
 .datum-val {
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-sans) !important;
 }
 
 .race-phase-desc {
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
   font-family: var(--font-ed-sans) !important;
 }
 
 .race-phase-quote {
   border-left: 3px solid var(--ed-red) !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-sans) !important;
 }
 
 /* ============================================================================
-   10. 1:1 AUGMENTED REALITY EXPERIENCE (#ar-section)
+   10. 1:1 AUGMENTED REALITY EXPERIENCE (#ar-section) — DARK EDITORIAL THEME
    ============================================================================ */
 
 .ar-section {
-  background: var(--paper-white) !important;
+  background: var(--bg-void) !important;
   padding: 56px 28px 80px !important;
 }
 
@@ -2901,9 +3178,9 @@ body.dest-exploded #exploded-section,
 
 .ar-badge {
   border-radius: 0 !important;
-  background: var(--paper-off) !important;
+  background: var(--bg-charcoal) !important;
   border: 1px solid var(--ed-hairline) !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.62rem !important;
 }
@@ -2916,18 +3193,18 @@ body.dest-exploded #exploded-section,
 
 .ar-viewer-card {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-charcoal) !important;
   border: 1px solid var(--ed-hairline-strong) !important;
   box-shadow: none !important;
 }
 
 .ar-viewer-header {
-  background: var(--paper-white) !important;
+  background: var(--bg-surface) !important;
   border-bottom: 1px solid var(--ed-hairline) !important;
 }
 
 .ar-viewer-tag {
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-size: 0.68rem !important;
 }
 
@@ -2939,7 +3216,7 @@ body.dest-exploded #exploded-section,
 
 .ar-lighting-deck {
   border-radius: 0 !important;
-  background: var(--paper-off) !important;
+  background: var(--bg-charcoal) !important;
   border: 1px solid var(--ed-hairline) !important;
 }
 
@@ -2947,31 +3224,32 @@ body.dest-exploded #exploded-section,
   border-radius: 0 !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.62rem !important;
-  color: var(--ink-muted) !important;
+  color: var(--text-muted) !important;
 }
 
 .ar-light-btn:hover {
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .ar-light-btn.active {
-  background: var(--ink-black) !important;
-  border-color: var(--ink-black) !important;
+  background: var(--ed-red) !important;
+  border-color: var(--ed-red) !important;
   color: #ffffff !important;
 }
 
 .ar-viewer-specs {
-  color: var(--ink-muted) !important;
+  color: var(--text-muted) !important;
 }
 
 .ar-stage-container {
   border-radius: 0 !important;
+  background: var(--bg-black) !important;
 }
 
 .ar-hud-pill,
 .ar-compat-status {
   border-radius: 0 !important;
-  background: rgba(10, 11, 14, 0.86) !important;
+  background: rgba(10, 10, 10, 0.90) !important;
   border: 1px solid var(--hud-line) !important;
   color: #ffffff !important;
 }
@@ -2983,27 +3261,28 @@ body.dest-exploded #exploded-section,
 .ar-mobile-launch-btn {
   border-radius: 0 !important;
   background: var(--ed-red) !important;
-  border: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-mono) !important;
   font-size: 0.72rem !important;
   letter-spacing: 0.14em !important;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65) !important;
 }
 
 .ar-mobile-launch-btn:hover {
-  background: var(--ink-black) !important;
+  background: var(--ed-red-dark) !important;
 }
 
 .ar-preparing-overlay {
-  background: var(--paper-off) !important;
-  color: var(--ink-black) !important;
+  background: var(--bg-charcoal) !important;
+  color: #ffffff !important;
 }
 
 .ar-preparing-title {
   font-family: var(--font-ed-display) !important;
   font-style: italic !important;
   font-size: 2rem !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .ar-progress-bar {
@@ -3012,7 +3291,7 @@ body.dest-exploded #exploded-section,
 
 .ar-deck-card {
   border-radius: 0 !important;
-  background: var(--paper-off) !important;
+  background: var(--bg-charcoal) !important;
   border: 1px solid var(--ed-hairline-strong) !important;
   border-top: 3px solid var(--ed-red) !important;
   box-shadow: none !important;
@@ -3024,9 +3303,9 @@ body.dest-exploded #exploded-section,
 
 .p-pill {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-surface) !important;
   border: 1px solid var(--ed-hairline) !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-mono) !important;
 }
 
@@ -3036,17 +3315,19 @@ body.dest-exploded #exploded-section,
   font-weight: 900 !important;
   font-size: 2.5rem !important;
   line-height: 0.92 !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .ar-card-desc {
   font-family: var(--font-ed-sans) !important;
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
 }
 
+/* Keep crisp white optical contrast behind QR module grid ONLY for camera scanning */
 .ar-qr-frame {
   border-radius: 0 !important;
   border: 1px solid var(--ed-hairline-strong) !important;
+  background: #ffffff !important;
   box-shadow: none !important;
 }
 
@@ -3055,7 +3336,7 @@ body.dest-exploded #exploded-section,
 }
 
 .ar-qr-status {
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .ar-qr-status .live-dot {
@@ -3066,30 +3347,30 @@ body.dest-exploded #exploded-section,
 
 .ar-qr-url-pill {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-surface) !important;
   border: 1px solid var(--ed-hairline) !important;
 }
 
 .qr-url-text {
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
 }
 
 .ar-step-item {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-surface) !important;
   border: 1px solid var(--ed-hairline) !important;
 }
 
 .ar-step-item:hover {
   border-color: var(--ed-red) !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-elevated) !important;
 }
 
 .step-num-badge {
   border-radius: 0 !important;
-  background: var(--ink-black) !important;
+  background: var(--bg-black) !important;
   color: #ffffff !important;
-  border: none !important;
+  border: 1px solid var(--ed-red) !important;
 }
 
 .step-info .step-title {
@@ -3097,17 +3378,17 @@ body.dest-exploded #exploded-section,
   font-style: italic !important;
   font-weight: 800 !important;
   font-size: 1.15rem !important;
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
 }
 
 .step-info .step-desc {
   font-family: var(--font-ed-sans) !important;
-  color: var(--ink-charcoal) !important;
+  color: var(--text-secondary) !important;
 }
 
 .mini-spec {
   border-radius: 0 !important;
-  background: var(--paper-white) !important;
+  background: var(--bg-surface) !important;
   border: 1px solid var(--ed-hairline) !important;
 }
 
@@ -3116,7 +3397,7 @@ body.dest-exploded #exploded-section,
 }
 
 .mini-spec .ms-val {
-  color: var(--ink-black) !important;
+  color: #ffffff !important;
   font-family: var(--font-ed-display) !important;
   font-style: italic !important;
   font-size: 1.15rem !important;
@@ -3189,8 +3470,92 @@ body.dest-exploded #exploded-section,
   }
 }
 
+/* Strict 16:9 Cockpit Viewport + Accessible Docked Controls on Tablet / Mobile */
+@media (max-width: 900px) {
+  body.dest-cockpit .cockpit-stage,
+  .cockpit-stage {
+    max-width: 100% !important;
+    width: 100% !important;
+    aspect-ratio: auto !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: var(--bg-charcoal) !important;
+  }
+
+  body.dest-cockpit #cockpit-canvas,
+  #cockpit-canvas {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9 !important;
+    order: 1;
+  }
+
+  .cockpit-viewport-badge {
+    position: static !important;
+    order: 2;
+    width: 100% !important;
+    padding: 8px 12px 4px !important;
+    background: var(--bg-charcoal);
+    border-top: 1px solid var(--ed-hairline);
+    max-width: 100% !important;
+  }
+
+  .cockpit-viewport-badge .cad-indicator,
+  .cockpit-viewport-badge .cad-coords {
+    white-space: normal !important;
+    word-break: break-word !important;
+    line-height: 1.35 !important;
+    max-width: 100% !important;
+  }
+
+  .cockpit-live-telemetry {
+    position: static !important;
+    order: 3;
+    width: 100% !important;
+    padding: 4px 12px 8px !important;
+    background: var(--bg-charcoal);
+    justify-content: flex-start !important;
+    flex-wrap: wrap !important;
+  }
+
+  .cockpit-drag-hint {
+    position: static !important;
+    transform: none !important;
+    order: 4;
+    width: calc(100% - 24px) !important;
+    margin: 0 12px 8px !important;
+    white-space: normal !important;
+    text-align: center !important;
+  }
+
+  .cockpit-quick-hud {
+    position: static !important;
+    order: 5;
+    width: 100% !important;
+    padding: 0 12px 12px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+
+  .cockpit-actions-bar,
+  .cockpit-presets-group {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    gap: 6px !important;
+  }
+
+  .cockpit-actions-group {
+    order: 4;
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+}
+
 @media (max-width: 820px) {
-  /* Clean two-row destination navigation on mobile without right-edge clipping */
   .portal-return-bar {
     height: auto !important;
     min-height: 44px;
@@ -3276,7 +3641,36 @@ body.dest-exploded #exploded-section,
     width: 100vw;
     max-width: none;
     height: 44vh;
-    background: linear-gradient(180deg, rgba(7, 8, 11, 0) 0%, rgba(7, 8, 11, 0.88) 70%, rgba(7, 8, 11, 0.95) 100%);
+    background: linear-gradient(180deg, rgba(8, 8, 8, 0) 0%, rgba(8, 8, 8, 0.88) 70%, rgba(8, 8, 8, 0.96) 100%);
+  }
+
+  .journey-opening-cue {
+    top: 132px !important;
+    padding: 5px 12px !important;
+  }
+
+  .explore-main {
+    font-size: 0.84rem !important;
+    letter-spacing: 0.11em !important;
+  }
+
+  .journey-hotspot .jh-line {
+    width: 12px !important;
+  }
+
+  .journey-hotspot .jh-callout {
+    display: inline-flex !important;
+  }
+
+  .journey-hotspot .jh-pill {
+    display: inline-block !important;
+    font-size: 0.72rem !important;
+    padding: 3px 7px !important;
+  }
+
+  .jsh-label {
+    white-space: normal !important;
+    font-size: 1.24rem !important;
   }
 
   .journey-glh-card {
@@ -3306,10 +3700,6 @@ body.dest-exploded #exploded-section,
     font-size: 0.6rem !important;
   }
 
-  .journey-opening-cue {
-    display: none !important;
-  }
-
   .journey-start-hud {
     bottom: 22px !important;
     width: calc(100vw - 24px);
@@ -3318,6 +3708,10 @@ body.dest-exploded #exploded-section,
   .journey-start-btn {
     width: 100%;
     justify-content: flex-start;
+  }
+
+  .jsh-label {
+    font-size: 1.24rem !important;
   }
 
   body.dest-chronicles #story-container {
@@ -3335,7 +3729,8 @@ body.dest-exploded #exploded-section,
   .game-section,
   .circuit-section,
   .race-clock-section,
-  .ar-section {
+  .ar-section,
+  body.dest-cockpit #cockpit-sim-section {
     padding-left: 16px !important;
     padding-right: 16px !important;
   }
@@ -3370,7 +3765,7 @@ body.dest-exploded #exploded-section,
   }
 
   .ar-stage-hud {
-    background: var(--ink-black) !important;
+    background: var(--bg-black) !important;
     border-top: 1px solid var(--hud-line) !important;
   }
 
@@ -3433,8 +3828,8 @@ html.is-touch-device .game-hud.active .game-touch-controls {
   user-select: none;
   -webkit-user-select: none;
   touch-action: none;
-  background: rgba(10, 11, 14, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(10, 10, 10, 0.92);
+  border: 1px solid var(--ed-hairline-strong);
   color: #ffffff;
   font-family: var(--font-ed-mono);
   font-size: 0.7rem;

@@ -99,9 +99,12 @@ const COMPONENT_PROMPTS = {
 
 export function prepareLeMansTrackClone(trackScene) {
   const groundKeywords = [
-    'road', 'start', 'asphalt', 'grass', 'sand',
-    'gravel', 'curb', 'kerb', 'floor', 'tertre', 'pit',
-    'run', 'white', 'rmbl', 'soil', 'ground'
+    'road', 'asphalt', 'rdtrans', 'start', 'pit',
+    'curb', 'kerb', 'rmbl', 'grass', 'sand', 'gravel', 'floor', 'tertre', 'ground'
+  ];
+  const nonGroundKeywords = [
+    'wall', 'twall', 'cmwlc', 'grd', 'fence', 'tree', 'brnch', 'leaf',
+    'leaves', 'bush', 'plant', 'bld', 'banner', 'sign', 'flag', 'truck', 'suv', 'fire'
   ];
 
   const groundMeshes = [];
@@ -130,11 +133,12 @@ export function prepareLeMansTrackClone(trackScene) {
       ? [child.material]
       : [];
 
-    let isGround = groundKeywords.some((k) => mname.includes(k) || cname.includes(k));
+    const hasBlocker = nonGroundKeywords.some((k) => mname.includes(k) || cname.includes(k));
+    let isGround = !hasBlocker && groundKeywords.some((k) => mname.includes(k) || cname.includes(k));
 
     mats.forEach((mat) => {
       const name = (mat.name || child.name || '').toLowerCase();
-      if (groundKeywords.some((k) => name.includes(k))) {
+      if (!nonGroundKeywords.some((k) => name.includes(k)) && groundKeywords.some((k) => name.includes(k))) {
         isGround = true;
       }
 
@@ -230,6 +234,7 @@ export class GT40LeMansJourney {
     this.startHudEl = document.getElementById('journey-start-hud');
     this.startBtnEl = document.getElementById('journey-start-btn');
     this.startRingEl = document.getElementById('start-ring-progress');
+    this.startLinearFillEl = document.getElementById('start-linear-fill');
     this.startSubEl = document.getElementById('journey-start-sub');
     this.countdownEl = document.getElementById('journey-countdown');
     this.countdownNumEl = document.getElementById('journey-countdown-num');
@@ -364,6 +369,10 @@ export class GT40LeMansJourney {
     this._tanNext = new THREE.Vector3();
     this._probeFront = new THREE.Vector3();
     this._probeRear = new THREE.Vector3();
+    this._probeFL = new THREE.Vector3();
+    this._probeFR = new THREE.Vector3();
+    this._probeRL = new THREE.Vector3();
+    this._probeRR = new THREE.Vector3();
     this._upVec = new THREE.Vector3(0, 1, 0);
     this._sideVec = new THREE.Vector3();
     this._lookMat = new THREE.Matrix4();
@@ -376,8 +385,8 @@ export class GT40LeMansJourney {
 
     // Main interactive hotspots along the exterior moving GT40 (Door & Rear Engine only)
     this.hotspotDefs = [
-      { key: 'driver_door', badge: '01', short: 'DOOR • COCKPIT', anchor: null, localOffset: new THREE.Vector3(-0.79, 0.24, 0.02) },
-      { key: 'rear_engine', badge: '02', short: 'ENGINE • ENGINEERING 3D', anchor: null, localOffset: new THREE.Vector3(-0.34, 0.45, -1.25) }
+      { key: 'driver_door', badge: '01', short: "DRIVER'S DOOR", align: 'right', anchor: null, localOffset: new THREE.Vector3(-0.79, 0.24, 0.02) },
+      { key: 'rear_engine', badge: '02', short: 'REAR ENGINE', align: 'left', anchor: null, localOffset: new THREE.Vector3(-0.34, 0.45, -1.25) }
     ];
     this.hotspotNodes = new Map();
     this.calloutNodes = [];
@@ -1179,7 +1188,7 @@ export class GT40LeMansJourney {
     this.buildStructuralBackingDetails(driverDoorOffset, passengerDoorOffset);
     this.calibrateTireGrounding();
 
-    // Soft underbody AO contact shadow for realistic road grounding
+    // Soft underbody AO contact shadow positioned precisely just above road plane (y = 0.004 in 1x)
     const aoCanvas = document.createElement('canvas');
     aoCanvas.width = 128;
     aoCanvas.height = 256;
@@ -1201,8 +1210,9 @@ export class GT40LeMansJourney {
       })
     );
     aoPlane.rotation.x = -Math.PI / 2;
-    aoPlane.position.set(0, -0.325, 0.05);
+    aoPlane.position.set(0, -this.carFloorOffset + 0.005, 0.05);
     this.chassisGroup.add(aoPlane);
+    this.aoPlane = aoPlane;
 
     // Place 1966 driver Bruce McLaren (race_car_driver.glb in Gulf cream suit) in RHD bucket seat
     this.exteriorDriver = buildBruceMcLarenDriver(THREE, { cockpitObserverMode: false });
@@ -1377,30 +1387,82 @@ export class GT40LeMansJourney {
   }
 
   calibrateTireGrounding() {
+    // Measure strictly in 1x unscaled space so carGroup.scale (3.0x) never distorts tirePitch or floor offset
+    const prevPos = this.carGroup.position.clone();
+    const prevQuat = this.carGroup.quaternion.clone();
+    const prevScale = this.carGroup.scale.clone();
+
+    this.carGroup.position.set(0, 0, 0);
+    this.carGroup.quaternion.identity();
+    this.carGroup.scale.set(1, 1, 1);
     this.chassisGroup.position.set(0, 0, 0);
-    this.chassisGroup.rotation.x = 0;
-    this.chassisGroup.updateMatrixWorld(true);
+    this.chassisGroup.rotation.set(0, 0, 0);
+    this.carGroup.updateMatrixWorld(true);
 
-    const boxF = new THREE.Box3().setFromObject(this.wheelPivots.FR.pivot);
-    const boxR = new THREE.Box3().setFromObject(this.wheelPivots.RR.pivot);
-
-    if (Number.isFinite(boxF.min.y) && Number.isFinite(boxR.min.y)) {
-      this.tirePitch = Math.atan2(boxF.min.y - boxR.min.y, 1.23 - (-1.107));
-      this.chassisGroup.rotation.x = this.tirePitch;
-      this.chassisGroup.updateMatrixWorld(true);
-
-      const allWheels = new THREE.Box3();
-      ['FL', 'FR', 'RL', 'RR'].forEach((wk) => {
-        allWheels.union(new THREE.Box3().setFromObject(this.wheelPivots[wk].pivot));
+    const measureWheelMinMaxY = (pivotGroup) => {
+      let minY = Infinity;
+      let maxY = -Infinity;
+      const v = new THREE.Vector3();
+      pivotGroup.traverse((child) => {
+        if (!child.isMesh || !(child.name || '').toLowerCase().includes('wheels')) return;
+        const pos = child.geometry?.attributes?.position;
+        const idx = child.geometry?.index;
+        if (!pos) return;
+        child.updateMatrixWorld(true);
+        const m = child.matrixWorld;
+        if (idx) {
+          const arr = idx.array;
+          for (let i = 0; i < arr.length; i++) {
+            v.fromBufferAttribute(pos, arr[i]).applyMatrix4(m);
+            if (v.y < minY) minY = v.y;
+            if (v.y > maxY) maxY = v.y;
+          }
+        } else {
+          for (let i = 0; i < pos.count; i++) {
+            v.fromBufferAttribute(pos, i).applyMatrix4(m);
+            if (v.y < minY) minY = v.y;
+            if (v.y > maxY) maxY = v.y;
+          }
+        }
       });
-      const avgRadius = (allWheels.max.y - allWheels.min.y) * 0.5;
-      if (Number.isFinite(avgRadius) && avgRadius > 0.2) this.wheelRadius = avgRadius;
-      if (Number.isFinite(allWheels.min.y)) {
-        // Vertical lift in 1x local space so lowest tire contact patch hits Y = 0
-        this.carFloorOffset = -allWheels.min.y;
+      return { minY, maxY };
+    };
+
+    const fl = measureWheelMinMaxY(this.wheelPivots.FL.pivot);
+    const fr = measureWheelMinMaxY(this.wheelPivots.FR.pivot);
+    const rl = measureWheelMinMaxY(this.wheelPivots.RL.pivot);
+    const rr = measureWheelMinMaxY(this.wheelPivots.RR.pivot);
+
+    const frontMinY = Math.min(fl.minY, fr.minY);
+    const rearMinY = Math.min(rl.minY, rr.minY);
+
+    if (Number.isFinite(frontMinY) && Number.isFinite(rearMinY)) {
+      this.tirePitch = Math.atan2(frontMinY - rearMinY, 1.23 - (-1.107));
+      this.chassisGroup.rotation.x = this.tirePitch;
+      this.carGroup.updateMatrixWorld(true);
+
+      const postFL = measureWheelMinMaxY(this.wheelPivots.FL.pivot);
+      const postFR = measureWheelMinMaxY(this.wheelPivots.FR.pivot);
+      const postRL = measureWheelMinMaxY(this.wheelPivots.RL.pivot);
+      const postRR = measureWheelMinMaxY(this.wheelPivots.RR.pivot);
+
+      const allMinY = Math.min(postFL.minY, postFR.minY, postRL.minY, postRR.minY);
+      const allMaxY = Math.max(postFL.maxY, postFR.maxY, postRL.maxY, postRR.maxY);
+      const avgRadius = (allMaxY - allMinY) * 0.5;
+      if (Number.isFinite(avgRadius) && avgRadius > 0.2) {
+        this.wheelRadius = avgRadius;
+      }
+      if (Number.isFinite(allMinY)) {
+        // Vertical lift in 1x local space (+0.008 keeps rubber contact patch flush on asphalt & grid stripes)
+        this.carFloorOffset = -allMinY + 0.008;
       }
     }
+
     this.chassisGroup.position.y = this.carFloorOffset;
+    this.carGroup.position.copy(prevPos);
+    this.carGroup.quaternion.copy(prevQuat);
+    this.carGroup.scale.copy(prevScale);
+    this.carGroup.updateMatrixWorld(true);
   }
 
   // =========================================================================
@@ -1859,13 +1921,22 @@ export class GT40LeMansJourney {
       btn.type = 'button';
       btn.className = 'journey-hotspot';
       btn.dataset.zone = def.key;
+      btn.dataset.align = def.align || 'right';
       const promptInfo = COMPONENT_PROMPTS[def.key];
       btn.setAttribute('aria-label', promptInfo ? promptInfo.prompt : def.short);
       btn.innerHTML = `
-        <span class="jh-ring"></span>
-        <span class="jh-dot"></span>
-        <span class="jh-pill">${def.short}</span>
+        <span class="jh-pulse-outer" aria-hidden="true"></span>
+        <span class="jh-ring" aria-hidden="true"></span>
+        <span class="jh-dot" aria-hidden="true"></span>
+        <span class="jh-callout">
+          <span class="jh-line" aria-hidden="true"></span>
+          <span class="jh-pill">${def.short}</span>
+        </span>
       `;
+      btn.addEventListener('touchstart', () => {
+        btn.classList.add('is-tapped');
+        this.setHoveredZone(def.key);
+      }, { passive: true });
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         this.triggerComponentInteraction(def.key);
@@ -1893,8 +1964,8 @@ export class GT40LeMansJourney {
       meshes.forEach((m) => {
         if (m.material && m.material.emissive) {
           if (zoneKey === zKey) {
-            m.material.emissive.setHex(0xfbbf24);
-            m.material.emissiveIntensity = 0.08;
+            m.material.emissive.setHex(0xe3262e);
+            m.material.emissiveIntensity = 0.14;
           } else {
             m.material.emissive.setHex(0x000000);
             m.material.emissiveIntensity = 0.0;
@@ -2308,6 +2379,9 @@ export class GT40LeMansJourney {
       const circumference = 289.03; // 2 * PI * 46
       this.startRingEl.style.strokeDashoffset = (circumference * (1 - p)).toFixed(2);
     }
+    if (this.startLinearFillEl) {
+      this.startLinearFillEl.style.transform = `scaleX(${p.toFixed(3)})`;
+    }
     if (this.startBtnEl) {
       this.startBtnEl.classList.toggle('is-cranking', this.isHoldingStart && p > 0);
     }
@@ -2431,6 +2505,8 @@ export class GT40LeMansJourney {
     this.distanceAlongTrack = 0.0;
     this.launchElapsed = 99;
     this.countdownValue = 0;
+    this._groundPoseInit = false;
+    this._smoothedSlopePitch = undefined;
     this.cameraPresetIndex = 0;
     this.userOrbit.yaw = 0;
     this.userOrbit.pitch = 0;
@@ -2535,19 +2611,26 @@ export class GT40LeMansJourney {
   // =========================================================================
 
   sampleGroundY(worldX, refY, worldZ) {
-    if (this.groundMeshes.length === 0) return refY;
-    this._downRay.set(new THREE.Vector3(worldX, refY + 14.0, worldZ), this._downDir);
-    this._downRay.far = 36.0;
+    if (this.groundMeshes.length === 0) return null;
+    this._downRay.set(new THREE.Vector3(worldX, refY + 18.0, worldZ), this._downDir);
+    this._downRay.far = 42.0;
     const hits = this._downRay.intersectObjects(this.groundMeshes, false);
-    if (hits.length > 0) {
-      // Prefer main asphalt/road surface to avoid micro-steps from overlapping line/curb meshes
-      const roadHit = hits.find((h) => {
-        const n = (h.object?.material?.name || h.object?.name || '').toLowerCase();
-        return n.includes('road') || n.includes('asphalt') || n.includes('start');
-      });
-      return (roadHit || hits[0]).point.y;
+    if (hits.length === 0) return null;
+
+    // Prefer main drivable asphalt/road surface to avoid micro-steps from curb lines/painted stripes
+    const roadHits = hits.filter((h) => {
+      const n = (h.object?.material?.name || h.object?.name || '').toLowerCase();
+      return n.includes('road') || n.includes('asphalt') || n.includes('rdtrans') || n.includes('start');
+    });
+    const candidates = roadHits.length > 0 ? roadHits : hits;
+    let bestY = null;
+    for (let i = 0; i < candidates.length; i++) {
+      const py = candidates[i].point.y;
+      if (Math.abs(py - refY) <= 4.5 && (bestY === null || py > bestY)) {
+        bestY = py;
+      }
     }
-    return refY;
+    return bestY;
   }
 
   updateCarPoseOnCircuit(dt) {
@@ -2580,18 +2663,42 @@ export class GT40LeMansJourney {
     this.trackCurve.getTangentAt(u, this._tanOnSpline).normalize();
     this.trackCurve.getTangentAt(uAhead, this._tanNext).normalize();
 
-    // Raycast road height smoothly below car (clamped near smooth spline Y to prevent spikes)
-    const rawRayY = this.sampleGroundY(this._posOnSpline.x, this._posOnSpline.y, this._posOnSpline.z);
-    const clampedRayY = THREE.MathUtils.clamp(rawRayY, this._posOnSpline.y - 0.35, this._posOnSpline.y + 0.35);
-    this.lastSmoothedGroundY += (clampedRayY - this.lastSmoothedGroundY) * Math.min(1.0, dt * 4.5);
+    // Derive road-aligned forward & lateral vectors for 4-wheel contact probing
+    const flatForward = new THREE.Vector3(this._tanOnSpline.x, 0, this._tanOnSpline.z).normalize();
+    const rightAxis = new THREE.Vector3().crossVectors(this._upVec, flatForward).normalize();
+    const upNorm = new THREE.Vector3().crossVectors(flatForward, rightAxis).normalize();
 
-    this._probeFront.copy(this._posOnSpline).addScaledVector(this._tanOnSpline, 3.6);
-    this._probeRear.copy(this._posOnSpline).addScaledVector(this._tanOnSpline, -3.6);
-    const frontRoadY = this.sampleGroundY(this._probeFront.x, this._posOnSpline.y, this._probeFront.z);
-    const rearRoadY = this.sampleGroundY(this._probeRear.x, this._posOnSpline.y, this._probeRear.z);
-    const rawSlopePitch = THREE.MathUtils.clamp(Math.atan2(frontRoadY - rearRoadY, 7.2), -0.14, 0.14);
-    this._smoothedSlopePitch = (this._smoothedSlopePitch ?? rawSlopePitch);
-    this._smoothedSlopePitch += (rawSlopePitch - this._smoothedSlopePitch) * Math.min(1.0, dt * 4.5);
+    const refTrackY = Number.isFinite(this.lastSmoothedGroundY) && this._groundPoseInit
+      ? (Math.abs(this.lastSmoothedGroundY - this._posOnSpline.y) < 5.0 ? this.lastSmoothedGroundY : this._posOnSpline.y)
+      : this._posOnSpline.y;
+
+    const scale = this.carScale;
+    this._probeFront.copy(this._posOnSpline).addScaledVector(flatForward, 1.23 * scale);
+    this._probeRear.copy(this._posOnSpline).addScaledVector(flatForward, -1.107 * scale);
+    this._probeFL.copy(this._posOnSpline).addScaledVector(rightAxis, 0.699 * scale).addScaledVector(flatForward, 1.23 * scale);
+    this._probeFR.copy(this._posOnSpline).addScaledVector(rightAxis, -0.699 * scale).addScaledVector(flatForward, 1.23 * scale);
+    this._probeRL.copy(this._posOnSpline).addScaledVector(rightAxis, 0.703 * scale).addScaledVector(flatForward, -1.107 * scale);
+    this._probeRR.copy(this._posOnSpline).addScaledVector(rightAxis, -0.703 * scale).addScaledVector(flatForward, -1.107 * scale);
+
+    const centerY = this.sampleGroundY(this._posOnSpline.x, refTrackY, this._posOnSpline.z);
+    const yFL = this.sampleGroundY(this._probeFL.x, refTrackY, this._probeFL.z);
+    const yFR = this.sampleGroundY(this._probeFR.x, refTrackY, this._probeFR.z);
+    const yRL = this.sampleGroundY(this._probeRL.x, refTrackY, this._probeRL.z);
+    const yRR = this.sampleGroundY(this._probeRR.x, refTrackY, this._probeRR.z);
+
+    const frontHits = [yFL, yFR].filter((v) => v !== null);
+    const rearHits = [yRL, yRR].filter((v) => v !== null);
+    const frontRoadY = frontHits.length ? frontHits.reduce((a, b) => a + b, 0) / frontHits.length : (this.sampleGroundY(this._probeFront.x, refTrackY, this._probeFront.z) ?? this._posOnSpline.y);
+    const rearRoadY = rearHits.length ? rearHits.reduce((a, b) => a + b, 0) / rearHits.length : (this.sampleGroundY(this._probeRear.x, refTrackY, this._probeRear.z) ?? this._posOnSpline.y);
+
+    const wheelbaseWorld = (1.23 - (-1.107)) * scale;
+    const rawSlopePitch = THREE.MathUtils.clamp(Math.atan2(frontRoadY - rearRoadY, wheelbaseWorld), -0.18, 0.18);
+    if (!this._groundPoseInit || this.mode === 'idle_grid') {
+      this._smoothedSlopePitch = rawSlopePitch;
+    } else {
+      this._smoothedSlopePitch = this._smoothedSlopePitch ?? rawSlopePitch;
+      this._smoothedSlopePitch += (rawSlopePitch - this._smoothedSlopePitch) * Math.min(1.0, dt * 18.0);
+    }
     const slopePitch = this._smoothedSlopePitch;
 
     // Subtle lateral cornering roll derived from cross-product of tangent change
@@ -2600,41 +2707,74 @@ export class GT40LeMansJourney {
     const targetRoll = THREE.MathUtils.clamp(cornerTurn * 0.42 * speedFactor, -0.045, 0.045);
 
     const t = performance.now() * 0.001;
-    const tarmacRipple = 0.0;
 
-    this.carGroup.position.set(
-      this._posOnSpline.x,
-      this.lastSmoothedGroundY + tarmacRipple,
-      this._posOnSpline.z
-    );
-
-    // Align +Z axis of GT40 model cleanly tangent along circuit
-    const flatForward = new THREE.Vector3(this._tanOnSpline.x, 0, this._tanOnSpline.z).normalize();
-    const rightAxis = new THREE.Vector3().crossVectors(this._upVec, flatForward).normalize();
-    const upNorm = new THREE.Vector3().crossVectors(flatForward, rightAxis).normalize();
-    this._lookMat.makeBasis(rightAxis, upNorm, flatForward);
-    this._targetQuat.setFromRotationMatrix(this._lookMat);
-    this.carGroup.quaternion.slerp(this._targetQuat, Math.min(1.0, dt * 12.0));
-
-    // Engine starter crank vibration, V8 idle lope & launch torque squat
+    // Engine starter crank vibration, V8 idle lope & launch torque squat (non-sinking compliance)
     let engineHeave = 0;
     let engineRoll = 0;
     let squatPitch = 0;
     if (this.mode === 'cranking') {
-      engineHeave = Math.sin(t * 38) * 0.0055;
+      engineHeave = Math.abs(Math.sin(t * 38)) * 0.004;
       engineRoll = Math.sin(t * 44) * 0.011;
     } else if (this.engineRunning) {
       const idleAmt = Math.max(0, 1.0 - speedFactor * 3.0);
-      engineHeave = Math.sin(t * 28) * 0.0018 * idleAmt;
+      engineHeave = Math.abs(Math.sin(t * 28)) * 0.0015 * idleAmt;
       engineRoll = Math.cos(t * 19) * 0.003 * idleAmt;
       if (this.mode === 'cruise' && this.launchElapsed < 1.6) {
-        squatPitch = -0.024 * Math.sin((this.launchElapsed / 1.6) * Math.PI);
+        squatPitch = -0.022 * Math.sin((this.launchElapsed / 1.6) * Math.PI);
       }
     }
 
+    const netPitch = -slopePitch + squatPitch;
+    const netRoll = targetRoll + engineRoll;
+    const sinPitch = Math.sin(netPitch);
+    const sinRoll = Math.sin(netRoll);
+
+    // Per-wheel contact constraint solver: guarantees NO wheel ever dips beneath the road mesh
+    const wheelContacts = [
+      { wx: 0.699, wz: 1.230, y: yFL },
+      { wx: -0.699, wz: 1.230, y: yFR },
+      { wx: 0.703, wz: -1.107, y: yRL },
+      { wx: -0.703, wz: -1.107, y: yRR }
+    ];
+    let desiredGroundY = centerY !== null ? centerY : -Infinity;
+    for (let i = 0; i < wheelContacts.length; i++) {
+      const wc = wheelContacts[i];
+      if (wc.y === null) continue;
+      const wheelVerticalDelta = scale * (-wc.wz * sinPitch + wc.wx * sinRoll + engineHeave);
+      const neededCenterY = wc.y - wheelVerticalDelta;
+      if (neededCenterY > desiredGroundY) desiredGroundY = neededCenterY;
+    }
+    if (!Number.isFinite(desiredGroundY) || desiredGroundY === -Infinity) {
+      desiredGroundY = this._posOnSpline.y;
+    }
+
+    // Immediate upward lock eliminates uphill sinking lag while smooth fast downward settle prevents float
+    if (!this._groundPoseInit || this.mode === 'idle_grid') {
+      this.lastSmoothedGroundY = desiredGroundY;
+      this._groundPoseInit = true;
+    } else if (desiredGroundY >= this.lastSmoothedGroundY) {
+      this.lastSmoothedGroundY = desiredGroundY;
+    } else {
+      this.lastSmoothedGroundY += (desiredGroundY - this.lastSmoothedGroundY) * Math.min(1.0, dt * 24.0);
+      if (this.lastSmoothedGroundY - desiredGroundY > 0.035) {
+        this.lastSmoothedGroundY = desiredGroundY + 0.035;
+      }
+    }
+
+    this.carGroup.position.set(
+      this._posOnSpline.x,
+      this.lastSmoothedGroundY,
+      this._posOnSpline.z
+    );
+
+    // Align +Z axis of GT40 model cleanly tangent along circuit
+    this._lookMat.makeBasis(rightAxis, upNorm, flatForward);
+    this._targetQuat.setFromRotationMatrix(this._lookMat);
+    this.carGroup.quaternion.slerp(this._targetQuat, Math.min(1.0, dt * 16.0));
+
     this.chassisGroup.position.y = this.carFloorOffset + engineHeave;
-    this.chassisGroup.rotation.x += (this.tirePitch - slopePitch + squatPitch - this.chassisGroup.rotation.x) * Math.min(1.0, dt * 10.0);
-    this.chassisGroup.rotation.z += (targetRoll + engineRoll - this.chassisGroup.rotation.z) * Math.min(1.0, dt * 8.0);
+    this.chassisGroup.rotation.x += (this.tirePitch + netPitch - this.chassisGroup.rotation.x) * Math.min(1.0, dt * 16.0);
+    this.chassisGroup.rotation.z += (netRoll - this.chassisGroup.rotation.z) * Math.min(1.0, dt * 12.0);
 
     // Synchronous physically accurate rotation of all 4 Goodyear tires + Halibrand rims
     const dTheta = ds / Math.max(0.25, this.wheelRadius * this.carScale);
@@ -2737,6 +2877,14 @@ export class GT40LeMansJourney {
         el.style.opacity = '0';
         el.style.pointerEvents = 'none';
         return;
+      }
+
+      if (isHotspots) {
+        if (def.align === 'left') {
+          el.dataset.align = sx < 135 ? 'top' : 'left';
+        } else if (def.align === 'right') {
+          el.dataset.align = sx > w - 135 ? 'top' : 'right';
+        }
       }
 
       el.style.opacity = '1';

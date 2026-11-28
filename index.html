@@ -11,7 +11,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css?v=6.0" />
-    <link rel="stylesheet" href="assets/css/editorial-v2.css?v=6.0" />
+    <link rel="stylesheet" href="assets/css/editorial-v2.css?v=7.2" />
     <script type="importmap">
     {
       "imports": {
@@ -210,6 +210,9 @@
             <strong class="jsh-label">CLICK AND HOLD TO START ENGINE</strong>
             <span class="jsh-sub" id="journey-start-sub">PRESS &amp; HOLD BUTTON, TOUCH OR [SPACE] FOR IGNITION</span>
           </span>
+          <span class="jsh-progress-bar" aria-hidden="true">
+            <span class="jsh-progress-fill" id="start-linear-fill"></span>
+          </span>
         </button>
       </div>
 
@@ -250,8 +253,8 @@
 
       <!-- Subtle Opening Visual Guidance Cue -->
       <div id="journey-opening-cue" class="journey-opening-cue">
-        <span class="explore-main">EXPLORE THE MACHINE</span>
-        <span class="explore-sub">SELECT ANY PART OF THE GT40 TO BEGIN YOUR JOURNEY.</span>
+        <span class="ed-rule" aria-hidden="true"></span>
+        <span class="explore-main">SELECT A COMPONENT TO EXPLORE</span>
       </div>
 
       <!-- Go Like Hell Interactive Editorial Lockup (Bottom-Left during Cruise) -->
@@ -1079,7 +1082,7 @@
                 <path id="circuit-track-line" class="circuit-track-racing-line" d="M 180 390 L 130 380 Q 90 340 100 270 L 130 180 Q 150 140 190 120 L 250 100 Q 290 90 330 110 L 370 140 Q 400 150 430 140 L 710 140 Q 750 140 760 170 L 760 210 Q 750 240 710 240 L 450 260 Q 420 270 400 300 L 370 360 Q 350 400 300 410 L 220 400 Z" filter="url(#track-glow)" />
 
                 <!-- Directional Arrow Overlays -->
-                <path class="track-flow-arrow" d="M 520 135 L 560 140 L 520 145 Z" fill="#d92626" />
+                <path class="track-flow-arrow" d="M 520 135 L 560 140 L 520 145 Z" fill="#e3262e" />
 
                 <!-- Hotspot Beacons -->
                 <!-- 01: Start / Finish -->
@@ -2296,7 +2299,7 @@
     <script src="assets/js/vendor/tsparticles.slim.bundle.min.js" defer></script>
 
     <!-- Project Application Scripts -->
-    <script src="main.js?v=6.0"></script>
+    <script src="main.js?v=7.0"></script>
     <script type="module">
       // On ?ar=true or #ar-section, skip heavy 3D modules (lemans.glb + 3D viewers) until user navigates away
       const isARDirect = new URLSearchParams(location.search).has('ar') || location.hash === '#ar-section';
@@ -2305,7 +2308,7 @@
       window.ensureExperiencesInitialized = async function() {
         if (window._heavyModulesReady) return;
         window._heavyModulesReady = true;
-        const { GT40LeMansJourney } = await import('./assets/js/gt40-journey.js?v=6.0');
+        const { GT40LeMansJourney } = await import('./assets/js/gt40-journey.js?v=7.2');
         window.gt40Journey = new GT40LeMansJourney();
 
         // Load secondary destination modules right after primary Journey begins booting
@@ -2315,9 +2318,9 @@
             { LeMansTrackExperience },
             { LeMansRaceClock }
           ] = await Promise.all([
-            import('./assets/js/cockpit-sim.js?v=5.0'),
+            import('./assets/js/cockpit-sim.js?v=7.0'),
             import('./assets/js/lemans-track.js?v=5.0'),
-            import('./assets/js/race-clock.js?v=5.0'),
+            import('./assets/js/race-clock.js?v=7.0'),
             import('./assets/js/game.js?v=5.0'),
             import('./assets/js/exploded-view.js?v=5.0')
           ]);

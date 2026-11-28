@@ -79,8 +79,8 @@ export class GT40CockpitSimulator {
     // Integrated In-Car Telemetry Screen, Interactive Driver & Drive Takeover State
     this.baseEyePosition = this.eyePosition.clone();
     this.targetEyePosition = this.eyePosition.clone();
-    this.baseFov = 64;
-    this.targetFov = 64;
+    this.baseFov = 58;
+    this.targetFov = 58;
     this.screenZoomActive = false;
     this.screenTakeoverTriggered = false;
     this.screenTakeoverTimer = null;
@@ -440,10 +440,10 @@ export class GT40CockpitSimulator {
     this.scene.background = new THREE.Color(0x7389a3); // Authentic overcast 1966 Le Mans sky
     this.scene.fog = new THREE.FogExp2(0x7389a3, 0.0035);
 
-    // 2. Camera: Wide immersive cockpit perspective with near clipping set to 4cm
-    const width = this.canvas.clientWidth || (this.container ? this.container.clientWidth : 0) || window.innerWidth || 1440;
-    const height = this.canvas.clientHeight || (this.container ? this.container.clientHeight : 0) || 680;
-    this.camera = new THREE.PerspectiveCamera(64, width / height, 0.04, 350);
+    // 2. Camera: Natural 16:9 cockpit perspective with near clipping set to 4cm
+    const width = this.canvas.clientWidth || (this.container ? this.container.clientWidth : 0) || window.innerWidth || 1280;
+    const height = this.canvas.clientHeight || (this.container ? this.container.clientHeight : 0) || 720;
+    this.camera = new THREE.PerspectiveCamera(this.baseFov, width / height, 0.04, 350);
     this.camera.position.copy(this.eyePosition);
 
     // 3. Renderer with HDR ACES Filmic Tone Mapping
@@ -454,7 +454,14 @@ export class GT40CockpitSimulator {
       powerPreference: 'high-performance',
       preserveDrawingBuffer: true
     });
-    this.renderer.setSize(width, height);
+    this.renderer.setSize(width, height, false);
+    if (window.ResizeObserver) {
+      this._resizeObserver = new ResizeObserver(() => this.onResize());
+      this._resizeObserver.observe(this.canvas);
+      if (this.container && this.container !== this.canvas) {
+        this._resizeObserver.observe(this.container);
+      }
+    }
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.15;
@@ -3044,12 +3051,13 @@ export class GT40CockpitSimulator {
 
   onResize() {
     if (!this.canvas || !this.camera || !this.renderer) return;
-    const width = this.canvas.clientWidth || (this.container ? this.container.clientWidth : 0) || window.innerWidth || 1440;
-    const height = this.canvas.clientHeight || (this.container ? this.container.clientHeight : 0) || 680;
+    const width = this.canvas.clientWidth || (this.container ? this.container.clientWidth : 0) || window.innerWidth || 1280;
+    const height = this.canvas.clientHeight || (this.container ? this.container.clientHeight : 0) || 720;
+    if (!width || !height) return;
 
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(width, height);
+    this.renderer.setSize(width, height, false);
   }
 
   startLoop() {
